@@ -18,9 +18,11 @@ if err != nil {
 ```
 </CodeGroup>
 
+Every function below has the same call shape: fill in `hb` (everything except `Body` — the function marshals the request and sets `Body` itself), call it, and check `err`. See [Core Conventions](/concepts/conventions) for the full pattern.
+
 ### `GetOAuthURL`
 
-GetOAuthURL calls the SNAP Get OAuth URL endpoint (Service Code 10, path .../\{version\}/get-auth-code). hb must already carry every field snap.HeaderBuilder needs except Method and Body, which GetOAuthURL sets itself: Method to GET and Body to nil, since this is a read-only, query-string-only call. hb.EndpointURL must be an http(s) URL with a host, no userinfo, and no query string or fragment (same defensive check as CardRegistrationInquiry, this package's other URL-building endpoint) — GetOAuthURL rejects one that isn't, rather than silently overwriting or merging into a caller-supplied query string.
+Starts the OAuth account-binding flow by building an authorization URL (Service Code 10). This is a read-only GET call: `hb.EndpointURL` must be a bare http(s) URL with no query string or fragment — it errors instead of silently merging into one.
 
 ```go
 func GetOAuthURL(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req GetOAuthURLRequest) (GetOAuthURLResponse, error)
@@ -28,8 +30,7 @@ func GetOAuthURL(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, 
 
 **Request &mdash; `GetOAuthURLRequest`**
 
-GetOAuthURLRequest holds API Get OAuth URL's parameters (Service Code 10, Registrasi group). Unlike every other calling function in this package, these are never JSON-marshaled — the Guides tab documents them as a query string, not a request body — so this type carries no json tags; GetOAuthURL builds a url.Values query string from it directly. RedirectURL, Scopes, and State are Mandatory; every other field is Optional except SeamlessSign, which is Conditional ("must be filled if seamlessData is present") — this package validates wire shape only, never business rules, so SeamlessSign is simply omitted from the query when empty, the same as every other Optional field here.
-
+Unlike every other endpoint here, this isn't JSON — `GetOAuthURL` builds a URL query string directly from these fields. `RedirectURL`, `Scopes`, and `State` are Mandatory; `SeamlessSign` is Conditional (required only if `SeamlessData` is set); everything else is Optional.
 
 | Query parameter | Type | Presence |
 |---|---|---|
@@ -49,7 +50,7 @@ GetOAuthURLRequest holds API Get OAuth URL's parameters (Service Code 10, Regist
 
 **Response &mdash; `GetOAuthURLResponse`**
 
-GetOAuthURLResponse is the response body for API Get OAuth URL. Every field is Mandatory.
+Every field is Mandatory.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -63,9 +64,9 @@ GetOAuthURLResponse is the response body for API Get OAuth URL. Every field is M
 
 ### `AccountCreation`
 
-AccountCreation calls the SNAP Account Creation endpoint (Service Code 06, path .../\{version\}/registration-account-creation). hb must already carry every field snap.HeaderBuilder needs except Body, which AccountCreation sets itself so the exact marshaled bytes are used for both signing and the wire body.
+Creates an account (Service Code 06).
 
-This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call (e.g. after a network error) should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it — a fresh X-EXTERNAL-ID on retry risks creating a second account.
+Not idempotent. On retry, reuse the same `X-EXTERNAL-ID` — a fresh one risks creating a second account.
 
 ```go
 func AccountCreation(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req AccountCreationRequest) (AccountCreationResponse, error)
@@ -73,7 +74,7 @@ func AccountCreation(ctx context.Context, t *snap.Transport, hb snap.HeaderBuild
 
 **Request &mdash; `AccountCreationRequest`**
 
-AccountCreationRequest is the request body for API Account Creation (Service Code 06). Every field is optional per the standard — this endpoint supports several onboarding flows (seamless data, OAuth redirect, direct creation) that each use a different subset of fields.
+Every field is Optional — this endpoint covers several onboarding flows (seamless data, OAuth redirect, direct creation), each using a different subset of fields.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -111,7 +112,7 @@ DeviceInfo describes the device initiating a registration request.
 
 **Response &mdash; `AccountCreationResponse`**
 
-AccountCreationResponse is the response body for API Account Creation. APIKey is typed json.RawMessage, not string or a numeric type: the standard's Guides table labels it "Numeric" with no worked example to confirm whether the server actually quotes it as JSON, and no fixed type dominates both possibilities — a numeric type rejects a quoted value, while a plain string field fails the ENTIRE decode (discarding ReferenceNo/AccountID/AuthCode too) if the server sends it unquoted, for what is a non-idempotent operation where the account may already exist. json.RawMessage accepts either wire shape without loss; a caller strips surrounding quotes themselves if the value is quoted. A JSON null decodes to a non-nil RawMessage("null"), distinct from an absent key (nil) — a third shape a caller checking for presence should account for.
+`apiKey` is `json.RawMessage` because the standard doesn't say whether it's sent as a quoted string or a bare number — this accepts either without failing the whole decode.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -130,9 +131,9 @@ AccountCreationResponse is the response body for API Account Creation. APIKey is
 
 ### `AccountBinding`
 
-AccountBinding calls the SNAP Account Binding endpoint (Service Code 07, path .../\{version\}/registration-account-binding). hb must already carry every field snap.HeaderBuilder needs except Body, which AccountBinding sets itself so the exact marshaled bytes are used for both signing and the wire body.
+Binds a customer account for B2B2C use (Service Code 07).
 
-This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it — a fresh X-EXTERNAL-ID on retry risks a duplicate binding or a second token issuance.
+Not idempotent. On retry, reuse the same `X-EXTERNAL-ID` — a fresh one risks a duplicate binding or a second token issuance.
 
 ```go
 func AccountBinding(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req AccountBindingRequest) (AccountBindingResponse, error)
@@ -140,7 +141,7 @@ func AccountBinding(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilde
 
 **Request &mdash; `AccountBindingRequest`**
 
-AccountBindingRequest is the request body for API Account Binding (Service Code 07). MerchantID is the only mandatory field.
+`MerchantID` is the only Mandatory field.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -168,7 +169,7 @@ AccountBindingRequest is the request body for API Account Binding (Service Code 
 | `additionalInfo` | `json.RawMessage` | Optional |
 
 <Accordion title="BindingSuccessParams fields">
-BindingSuccessParams is the request-side "successParams" object for Account Binding.
+The request-side `successParams` object.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -179,8 +180,6 @@ BindingSuccessParams is the request-side "successParams" object for Account Bind
 </Accordion>
 
 **Response &mdash; `AccountBindingResponse`**
-
-AccountBindingResponse is the response body for API Account Binding.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -201,7 +200,7 @@ AccountBindingResponse is the response body for API Account Binding.
 | `additionalInfo` | `json.RawMessage` | Optional |
 
 <Accordion title="BindingAccessTokenInfo fields">
-BindingAccessTokenInfo is the response-side "accessTokenInfo" object for Account Binding. ExpiresIn/ReExpiresIn here are ISO 8601 datetime strings per the Guides tab ("Datetime of token expiration. Format: ISO 8601") — deliberately not the same shape as Token.ExpiresIn (a time.Duration parsed from a seconds-count string, per the separate B2B/B2B2C access-token endpoints in token.go). Same field name, different endpoint, different meaning.
+The response-side `accessTokenInfo` object. `expiresIn`/`reExpiresIn` here are ISO 8601 datetime strings — a different shape from the B2B/B2B2C access-token endpoints' `Token.ExpiresIn` (a duration parsed from a seconds count). Same field name, different endpoint, different meaning.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -214,7 +213,7 @@ BindingAccessTokenInfo is the response-side "accessTokenInfo" object for Account
 </Accordion>
 
 <Accordion title="BindingUserInfo fields">
-BindingUserInfo is the response-side "userInfo" object for Account Binding.
+The response-side `userInfo` object.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -227,7 +226,7 @@ BindingUserInfo is the response-side "userInfo" object for Account Binding.
 
 ### `AccountBindingInquiry`
 
-AccountBindingInquiry calls the SNAP Account Binding Inquiry endpoint (Service Code 08). hb must already carry every field snap.HeaderBuilder needs except Body, which AccountBindingInquiry sets itself so the exact marshaled bytes are used for both signing and the wire body.
+Looks up a bound account's details (Service Code 08).
 
 ```go
 func AccountBindingInquiry(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req AccountBindingInquiryRequest) (AccountBindingInquiryResponse, error)
@@ -235,7 +234,7 @@ func AccountBindingInquiry(ctx context.Context, t *snap.Transport, hb snap.Heade
 
 **Request &mdash; `AccountBindingInquiryRequest`**
 
-AccountBindingInquiryRequest is the request body for API Account Binding Inquiry (Service Code 08, path .../\{version\}/registration-account-inquiry — note the URL segment drops the word "binding", per the portal). Neither the Guides tab's field table nor this type defines an account identifier field, and the portal's worked example carries only a plain B2B Authorization header — how a given PJP identifies which account to report is not specified here; a caller whose PJP needs a consumer identifier for this call places it in AdditionalInfo.
+The standard doesn't define an account-identifier field for this call; if your PJP needs one, put it in `AdditionalInfo`.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -244,9 +243,7 @@ AccountBindingInquiryRequest is the request body for API Account Binding Inquiry
 
 **Response &mdash; `AccountBindingInquiryResponse`**
 
-AccountBindingInquiryResponse is the response body for API Account Binding Inquiry. Unlike AccountBindingResponse (Service Code 07), this response is flat — no accessTokenInfo/userInfo nesting.
-
-AccountTransactionLimit is typed json.RawMessage, not string or a numeric type, for the same reason as AccountCreationResponse.APIKey: the Guides tab labels it "Numeric", and while this portal's one worked example renders it as a quoted wire value ("accountTransactionLimit":"1000000"), SNAP is a multi-PJP standard and one example from one PJP is thin evidence about what every issuer sends. A plain string field would fail the ENTIRE decode (discarding ResponseCode, AccountNo, AccountName, etc. too) if some other issuer sends it unquoted, for a field this package has no way to retry around. json.RawMessage accepts either wire shape without loss; a caller strips surrounding quotes themselves if the value is quoted. A JSON null decodes to a non-nil RawMessage("null"), distinct from an absent key (nil) — a third shape a caller checking for presence should account for.
+Flatter than `AccountBindingResponse` — no `accessTokenInfo`/`userInfo` nesting. `accountTransactionLimit` is `json.RawMessage` since the standard doesn't guarantee it's always sent as a quoted string across every PJP.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -267,9 +264,9 @@ AccountTransactionLimit is typed json.RawMessage, not string or a numeric type, 
 
 ### `AccountUnbinding`
 
-AccountUnbinding calls the SNAP Account Unbinding endpoint (Service Code 09). hb must already carry every field snap.HeaderBuilder needs except Body, which AccountUnbinding sets itself so the exact marshaled bytes are used for both signing and the wire body.
+Removes an account binding (Service Code 09).
 
-This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it.
+Not idempotent. On retry, reuse the same `X-EXTERNAL-ID`.
 
 ```go
 func AccountUnbinding(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req AccountUnbindingRequest) (AccountUnbindingResponse, error)
@@ -277,7 +274,7 @@ func AccountUnbinding(ctx context.Context, t *snap.Transport, hb snap.HeaderBuil
 
 **Request &mdash; `AccountUnbindingRequest`**
 
-AccountUnbindingRequest is the request body for API Account Unbinding (Service Code 09, path .../\{version\}/registration-account-unbinding). MerchantID is the only mandatory field per the Guides tab; LinkID and TokenID — the fields that would actually identify which binding to remove — are both Optional. The Guides tab's M/O split is the standard's own ambiguity here, not a gap this package fills: this type does not enforce that at least one of LinkID/TokenID is present, matching this package's established stance (see BalanceInquiryRequest) that the server validates business rules the wire shape alone doesn't capture.
+`MerchantID` is the only Mandatory field. `LinkID` and `TokenID` — which actually identify the binding to remove — are both Optional per the standard; this package doesn't enforce that at least one is set, since that's a business rule, not a wire-shape rule.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -289,8 +286,6 @@ AccountUnbindingRequest is the request body for API Account Unbinding (Service C
 | `additionalInfo` | `json.RawMessage` | Optional |
 
 **Response &mdash; `AccountUnbindingResponse`**
-
-AccountUnbindingResponse is the response body for API Account Unbinding. UnlinkResult is typed string, not a bool: the sample value ("success") reads status-like, but the Guides tab lists no enumerated values.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -309,9 +304,9 @@ AccountUnbindingResponse is the response body for API Account Unbinding. UnlinkR
 
 ### `OTP`
 
-OTP calls the SNAP API OTP endpoint (Service Code 81). hb must already carry every field snap.HeaderBuilder needs except Body, which OTP sets itself so the exact marshaled bytes are used for both signing and the wire body.
+Triggers OTP delivery, e.g. SMS (Service Code 81).
 
-This operation triggers a real external side effect (an OTP delivery, e.g. SMS) and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it — a fresh X-EXTERNAL-ID on retry risks a duplicate OTP delivery.
+Triggers a real external side effect. On retry, reuse the same `X-EXTERNAL-ID` — a fresh one risks a duplicate OTP delivery.
 
 ```go
 func OTP(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req OTPRequest) (OTPResponse, error)
@@ -319,11 +314,7 @@ func OTP(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req OTPR
 
 **Request &mdash; `OTPRequest`**
 
-OTPRequest is the request body for API OTP (Service Code 81, path v1.0/otp — note this endpoint's path is not templated by \{version\} like every other endpoint in this package; the portal's own path is the literal "v1.0/otp"). JourneyID is the only mandatory field per the Guides tab.
-
-This endpoint's worked example is the package's first to include an Authorization-Customer header — a B2B2C-shaped call. This type takes no special parameter for that: a caller sets snap.HeaderBuilder.B2B2C (and AuthorizationCustomer/DeviceID, which snap.HeaderBuilder.Build already requires when B2B2C is true) the same way as for any other B2B2C call.
-
-SubMerchant is named without an "Id" suffix, unlike subMerchantId in every other endpoint in this package — the standard's own inconsistency, kept as-is. BankCardToken is Conditional per the Guides tab (the only Conditional-marked field found across the researched Registrasi group); it carries omitempty the same as every Optional field, since the field's presence rather than its JSON tag is what makes it conditional. TrxDateTime is typed string despite being labeled "Date" (a unique type label in this whole document — every other date-like field elsewhere is labeled "String"): JSON has no date primitive, and the worked example is a plain quoted ISO-8601 string, so string is unambiguous regardless of the unique label — same reasoning as CardRegistrationUnbindingResponse.UnsubscribeDate.
+`JourneyID` is the only Mandatory field. For a B2B2C-shaped call, set `HeaderBuilder.B2B2C` (and `AuthorizationCustomer`/`DeviceID`) the same as for any other B2B2C endpoint — no special field is needed here. `BankCardToken` is Conditional.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -333,7 +324,7 @@ SubMerchant is named without an "Id" suffix, unlike subMerchantId in every other
 | `subMerchant` | `string` | Optional |
 | `externalStoreId` | `string` | Optional |
 | `trxDateTime` | `string` | Optional |
-| `bankCardToken` | `string` | Optional |
+| `bankCardToken` | `string` | Conditional |
 | `otpTrxCode` | `string` | Optional |
 | `otpReasonCode` | `string` | Optional |
 | `otpReasonMessage` | `string` | Optional |
@@ -341,7 +332,7 @@ SubMerchant is named without an "Id" suffix, unlike subMerchantId in every other
 
 **Response &mdash; `OTPResponse`**
 
-OTPResponse is the response body for API OTP. ChargeToken is mandatory here, unlike the Optional ChargeToken on CardRegistrationResponse (Service Code 01) — same field name, different endpoint, different mandatory-ness.
+`chargeToken` is Mandatory here (it's Optional on `CardRegistrationResponse` — same field name, different endpoint).
 
 | Field | Type | Presence |
 |---|---|---|
@@ -357,9 +348,9 @@ OTPResponse is the response body for API OTP. ChargeToken is mandatory here, unl
 
 ### `VerifyOTP`
 
-VerifyOTP calls the SNAP Verify OTP (Direct Integration) endpoint (Service Code 04). hb must already carry every field snap.HeaderBuilder needs except Body, which VerifyOTP sets itself so the exact marshaled bytes are used for both signing and the wire body.
+Verifies a previously issued OTP (Service Code 04, Direct Integration).
 
-This operation consumes server-side state — it invalidates the OTP being verified and, plausibly, increments an attempt counter — so this package treats it as non-idempotent and does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it; a fresh X-EXTERNAL-ID on retry risks burning an extra OTP attempt or re-processing a call the server already completed.
+Not idempotent — verifying consumes server-side state (invalidates the OTP, likely counts as an attempt). On retry, reuse the same `X-EXTERNAL-ID` — a fresh one risks burning an extra attempt or re-processing an already-completed call.
 
 ```go
 func VerifyOTP(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req VerifyOTPRequest) (VerifyOTPResponse, error)
@@ -367,7 +358,7 @@ func VerifyOTP(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, re
 
 **Request &mdash; `VerifyOTPRequest`**
 
-VerifyOTPRequest is the request body for API Verify OTP (Direct Integration) (Service Code 04, path .../\{version\}/otp-verification). Every field is Optional per the Guides tab.
+Every field is Optional.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -381,12 +372,6 @@ VerifyOTPRequest is the request body for API Verify OTP (Direct Integration) (Se
 | `additionalInfo` | `json.RawMessage` | Optional |
 
 **Response &mdash; `VerifyOTPResponse`**
-
-VerifyOTPResponse is the response body for API Verify OTP (Direct Integration).
-
-TransactionTimestamp is a source artifact, not reconciled: the Guides tab's description for this field ("Random String to generate validation for webview") doesn't match its name, and the worked example holds a random-string-looking value, not an actual timestamp.
-
-QParamsURL's wire tag is "qParamsURL" (capital URL), per the portal's own worked example — unlike every other URL field elsewhere in this package (redirectUrl, merchantLogoUrl, pinWebViewUrl), which use lowercase "Url". Kept exactly as the source shows it, not "corrected" to match sibling endpoints' casing.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -417,9 +402,9 @@ QParamsURL's wire tag is "qParamsURL" (capital URL), per the portal's own worked
 
 ### `CardRegistration`
 
-CardRegistration calls the SNAP Card Registration endpoint (Service Code 01). It mints a BankCardToken, so this operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it — a fresh X-EXTERNAL-ID on retry risks a duplicate card bind.
+Registers a card and mints a `BankCardToken` (Service Code 01).
 
-hb must already carry every field snap.HeaderBuilder needs except Body, which CardRegistration sets itself so the exact marshaled bytes are used for both signing and the wire body.
+Not idempotent — it mints a new token each call. On retry, reuse the same `X-EXTERNAL-ID` — a fresh one risks a duplicate card bind.
 
 ```go
 func CardRegistration(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req CardRegistrationRequest) (CardRegistrationResponse, error)
@@ -427,9 +412,7 @@ func CardRegistration(ctx context.Context, t *snap.Transport, hb snap.HeaderBuil
 
 **Request &mdash; `CardRegistrationRequest`**
 
-CardRegistrationRequest is the request body for API Card Registration (Service Code 01, path .../\{version\}/registration-card-bind). BankCardNo and CustIDMerchant are the two mandatory fields per the Guides tab — CardData's own Mandatory column is blank/unmarked, not "M". An earlier revision of this doc comment briefly claimed CardData was mandatory too and removed its omitempty, based on a misread of the Guides tab (the "Encrypted Object" Data Type cell was mistaken for a Mandatory marker); a go-review pass re-fetched the raw table directly and caught the misreading before it shipped, so this is back to its original, correct form.
-
-CardData and Limit are typed json.RawMessage: the Guides tab labels CardData "Encrypted Object" and Limit "decimal", each permitting a non-string JSON representation (a bare object, a bare number), even though the portal's one worked example renders both as a quoted string. A caller assigning a plain Go string must quote it first — e.g. json.RawMessage(`"1000000"`), not json.RawMessage(limitStr), and json.RawMessage(`"`+cardDataBase64+`"`), not json.RawMessage(cardDataBase64) — to match the worked examples' wire shape. Getting this wrong is NOT always caught by json.Marshal: if the unquoted value happens to itself be a complete, valid JSON value (e.g. Limit set to the bare digits "1000000", with no leading zero — JSON numbers forbid leading zeros, so "01000000" fails instead), it marshals fine as that JSON type and is sent as a bare number/object/string — silently diverging from the worked example's quoted-string shape, with no error. Only a value that is not itself a valid JSON value (a comma-formatted decimal, a base64 blob starting with a letter, a digit string with a leading zero) fails json.Marshal and returns an "encode request" error before any request is sent — this is a narrower, less reliable safety net than it looks, not a guarantee. Two other shapes: an empty json.RawMessage is dropped by omitempty (the field is absent from the wire body, not sent empty), while json.RawMessage("null") is NOT dropped — it is sent as an explicit "limit":null / "cardData":null, since omitempty only skips a zero-length slice.
+`BankCardNo` and `CustIDMerchant` are the two Mandatory fields. `CardData` and `Limit` are `json.RawMessage` — the standard allows a non-string JSON form (a bare object or number) for both. If you're assigning a Go string, quote it yourself first (e.g. `json.RawMessage(`"1000000"`)`, not `json.RawMessage(limitStr)`) so it matches the expected wire shape.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -461,8 +444,6 @@ CardData and Limit are typed json.RawMessage: the Guides tab labels CardData "En
 
 **Response &mdash; `CardRegistrationResponse`**
 
-CardRegistrationResponse is the response body for API Card Registration.
-
 | Field | Type | Presence |
 |---|---|---|
 | `responseCode` | `string` | Mandatory |
@@ -480,9 +461,7 @@ CardRegistrationResponse is the response body for API Card Registration.
 
 ### `CardRegistrationInquiry`
 
-CardRegistrationInquiry calls the SNAP Card Registration Inquiry endpoint (Service Code 03, path .../\{version\}/registration-card-inquiry/custIdMerchant/\{value\} — a URL path parameter, not a JSON body field). hb must already carry every field snap.HeaderBuilder needs except Method and Body, which CardRegistrationInquiry sets itself: Method to GET and Body to nil, since this is the package's only read-only GET endpoint and a caller should not need to configure protocol details specific to it. hb.EndpointURL must be an http(s) URL with a host, no userinfo, and no query string or fragment — CardRegistrationInquiry rejects one that isn't, rather than silently mishandling it (e.g. a fragment is never transmitted by net/http at all, so appending after one would silently drop custIDMerchant from the actual request with no error).
-
-custIDMerchant is validated against custIDMerchantPattern (see its doc comment), then joined onto hb.EndpointURL's path via url.URL.JoinPath — this is the package's first caller input that reaches a URL path rather than a JSON body, and the first place this package parses a URL rather than building one by concatenation. JoinPath does NOT "leave RawPath alone": it rebuilds the joined path from u.EscapedPath() and then re-derives both Path and RawPath from that already-escaped string (net/url's setPath). Encoding already present in EndpointURL survives because it's carried through EscapedPath(), not because RawPath is untouched — RawPath is in fact always overwritten. Getting this distinction wrong matters here specifically: an earlier version of this function set u.Path directly (the decoded form) and cleared u.RawPath to force re-derivation FROM THE DECODED PATH, which silently turned an encoded "%2F"/"%2E%2E" already in the caller's own EndpointURL into a real path boundary before the request was ever sent. JoinPath avoids that because it starts from EscapedPath(), not Path.
+Looks up registered card accounts by merchant customer ID (Service Code 03). This is the package's only read-only GET endpoint; `custIDMerchant` is passed as a URL path segment, validated and safely joined onto `hb.EndpointURL`.
 
 ```go
 func CardRegistrationInquiry(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, custIDMerchant string) (CardRegistrationInquiryResponse, error)
@@ -492,8 +471,6 @@ This endpoint takes no typed request body beyond the call parameters shown above
 
 **Response &mdash; `CardRegistrationInquiryResponse`**
 
-CardRegistrationInquiryResponse is the response body for API Card Registration Inquiry (Service Code 03).
-
 | Field | Type | Presence |
 |---|---|---|
 | `responseCode` | `string` | Mandatory |
@@ -502,7 +479,7 @@ CardRegistrationInquiryResponse is the response body for API Card Registration I
 | `additionalInfo` | `json.RawMessage` | Optional |
 
 <Accordion title="CardRegistrationInquiryAccount fields">
-CardRegistrationInquiryAccount is one entry in CardRegistrationInquiryResponse's AccountList. It wraps AccountData rather than flattening it, mirroring the wire shape's extra nesting level exactly (\{"accountList":[\{"accountData":\{...\}\}]\}).
+One entry in `accountList`, wrapping the nested `accountData` object.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -511,7 +488,7 @@ CardRegistrationInquiryAccount is one entry in CardRegistrationInquiryResponse's
 </Accordion>
 
 <Accordion title="CardRegistrationInquiryAccountData fields">
-CardRegistrationInquiryAccountData is the "accountData" object nested inside each API Card Registration Inquiry accountList entry. MaxLimit and CredentialNo are typed string: both are masked/formatted display values on the wire (e.g. "800000", "************0750"), not the raw numeric limit CardRegistrationSetLimitRequest.Limit sets — unambiguous per the Guides tab, unlike Phase 7's limit/cardData.
+The nested `accountData` object. `maxLimit` and `credentialNo` are masked/formatted display strings (e.g. `"************0750"`), not raw values.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -529,7 +506,7 @@ CardRegistrationInquiryAccountData is the "accountData" object nested inside eac
 
 ### `CardRegistrationSetLimit`
 
-CardRegistrationSetLimit calls the SNAP Card Registration – Set Limit endpoint (Service Code 02). hb must already carry every field snap.HeaderBuilder needs except Body, which CardRegistrationSetLimit sets itself so the exact marshaled bytes are used for both signing and the wire body.
+Sets a spending limit on a registered card (Service Code 02).
 
 ```go
 func CardRegistrationSetLimit(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req CardRegistrationSetLimitRequest) (CardRegistrationSetLimitResponse, error)
@@ -537,9 +514,7 @@ func CardRegistrationSetLimit(ctx context.Context, t *snap.Transport, hb snap.He
 
 **Request &mdash; `CardRegistrationSetLimitRequest`**
 
-CardRegistrationSetLimitRequest is the request body for API Card Registration – Set Limit (Service Code 02, path .../\{version\}/registration/card-bind-limit — note the "/" where sibling endpoints use "-"; this is the standard's own path). BankCardToken is the only mandatory field per the Guides tab.
-
-Limit is typed json.RawMessage for the same reason as CardRegistrationRequest.Limit: the Guides tab labels it "decimal", which permits a non-string JSON representation even though the portal's one worked example renders it as a quoted string. A caller assigning a plain Go string must quote it first — e.g. json.RawMessage(`"1000000"`), not json.RawMessage(limitStr) — to match the worked example's wire shape. Getting this wrong is NOT always caught by json.Marshal: an unquoted bare-digit value (e.g. the worked example's own 1000000) is itself valid JSON, so it marshals fine and is sent as a bare number — silently diverging from the worked example's quoted-string shape, with no error. Only a value that is not valid JSON on its own (a comma-formatted decimal like "1,000,000") fails json.Marshal and returns an "encode request" error before any request is sent. Two other shapes: an empty json.RawMessage is dropped by omitempty (the field is absent from the wire body, not sent empty), while json.RawMessage("null") is NOT dropped — it is sent as an explicit "limit":null, since omitempty only skips a zero-length slice.
+`BankCardToken` is the only Mandatory field. `Limit` is `json.RawMessage` for the same reason as in `CardRegistrationRequest` — quote a Go string yourself before assigning it (e.g. `json.RawMessage(`"1000000"`)`).
 
 | Field | Type | Presence |
 |---|---|---|
@@ -552,8 +527,6 @@ Limit is typed json.RawMessage for the same reason as CardRegistrationRequest.Li
 | `additionalInfo` | `json.RawMessage` | Optional |
 
 **Response &mdash; `CardRegistrationSetLimitResponse`**
-
-CardRegistrationSetLimitResponse is the response body for API Card Registration – Set Limit.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -568,9 +541,9 @@ CardRegistrationSetLimitResponse is the response body for API Card Registration 
 
 ### `CardRegistrationUnbinding`
 
-CardRegistrationUnbinding calls the SNAP Card Registration Unbinding endpoint (Service Code 05). hb must already carry every field snap.HeaderBuilder needs except Body, which CardRegistrationUnbinding sets itself so the exact marshaled bytes are used for both signing and the wire body.
+Removes a card registration (Service Code 05).
 
-This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it — matching AccountUnbinding's stance, which carries the same note despite also minting nothing: the note is about server-side duplicate detection on a mutating call, not specifically about minting a new resource.
+Not idempotent. On retry, reuse the same `X-EXTERNAL-ID`.
 
 ```go
 func CardRegistrationUnbinding(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req CardRegistrationUnbindingRequest) (CardRegistrationUnbindingResponse, error)
@@ -578,9 +551,7 @@ func CardRegistrationUnbinding(ctx context.Context, t *snap.Transport, hb snap.H
 
 **Request &mdash; `CardRegistrationUnbindingRequest`**
 
-CardRegistrationUnbindingRequest is the request body for API Card Registration Unbinding (Service Code 05, path .../\{version\}/registration-card-unbind). Token is the only mandatory field per the Guides tab.
-
-Part is a source artifact, not reconciled: the Guides tab's description text for Part is identical to MerchantID's description on the portal, and the worked example sets both fields to the same value. Kept as its own field since the Guides tab lists it as a distinct field name.
+`Token` is the only Mandatory field.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -599,8 +570,6 @@ Part is a source artifact, not reconciled: the Guides tab's description text for
 
 **Response &mdash; `CardRegistrationUnbindingResponse`**
 
-CardRegistrationUnbindingResponse is the response body for API Card Registration Unbinding. UnsubscribeDate is typed string despite being the only field in the researched Registrasi group labeled "Datetime" (every other date-like field is labeled "String"): JSON has no datetime primitive, and the worked example is a plain quoted ISO-8601 string, so string is unambiguous regardless of the unique label.
-
 | Field | Type | Presence |
 |---|---|---|
 | `responseCode` | `string` | Mandatory |
@@ -611,4 +580,3 @@ CardRegistrationUnbindingResponse is the response body for API Card Registration
 | `customerId` | `string` | Optional |
 | `unsubscribeDate` | `string` | Optional |
 | `additionalInfo` | `json.RawMessage` | Optional |
-

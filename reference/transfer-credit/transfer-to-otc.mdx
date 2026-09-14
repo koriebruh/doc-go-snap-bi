@@ -59,7 +59,7 @@ TransferToOTCCreatePaymentResponse is the response body for API Transfer To OTC 
 
 ### `TransferToOTCCancelPayment`
 
-TransferToOTCCancelPayment calls the SNAP Transfer To OTC - Cancel Payment endpoint (Service Code 46, HTTP POST — no method override). The path is documented two conflicting ways: the portal's Overview tab says .../\{version\}/emoney/otc-cancel, but the Code Snippet tab's own request line reads POST .../v1.0/otc/cashout/cancel — research explicitly flags this as unresolved, needing sandbox/Postman verification before hardcoding either reading (research §6 item 5). This package uses the Overview reading in this comment, consistent with the sub-group's other two endpoints' emoney/otc-* naming, but makes no runtime assumption either way: hb must already carry every field snap.HeaderBuilder needs, including EndpointURL, which the caller always supplies. TransferToOTCCancelPayment sets Body itself so the exact marshaled bytes are used for both signing and the wire body.
+TransferToOTCCancelPayment calls the SNAP Transfer To OTC - Cancel Payment endpoint (Service Code 46, HTTP POST). The standard's own docs disagree on the exact path (`.../emoney/otc-cancel` vs `.../otc/cashout/cancel`) — this package makes no assumption either way and always uses the `EndpointURL` you supply in `hb`. It sets `Body` itself so the exact marshaled bytes are used for both signing and the wire body.
 
 This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it.
 
@@ -81,7 +81,7 @@ TransferToOTCCancelPaymentRequest is the request body for API Transfer To OTC - 
 
 **Response &mdash; `TransferToOTCCancelPaymentResponse`**
 
-TransferToOTCCancelPaymentResponse is the response body for API Transfer To OTC - Cancel Payment. OriginalReferenceNo is Mandatory here, unlike Conditional on the request — research §5.8 explicitly notes this flip. CancelTime is Conditional ("must be filled if cancelled transaction success" — a data-dependent condition this package cannot express in the type system), so it is Optional here.
+TransferToOTCCancelPaymentResponse is the response body for API Transfer To OTC - Cancel Payment. OriginalReferenceNo is Mandatory here (it was Conditional on the request). CancelTime is Conditional — required only if the cancellation succeeded — so it's modeled Optional.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -104,7 +104,7 @@ func TransferToOTCTransferStatus(ctx context.Context, t *snap.Transport, hb snap
 
 **Request &mdash; `TransferToOTCTransferStatusRequest`**
 
-TransferToOTCTransferStatusRequest is the request body for API Transfer To OTC - Transfer Status (Service Code 45). Per research §5.8, this endpoint uses the same originalX/serviceCode/status pattern as TransactionStatusInquiryBank (Phase 16) but "adds customerNumber M, amount M on request" — CustomerNumber and Amount are additions beyond that base pattern, and Amount is Mandatory here (a plain snap.Money value, not *snap.Money, per the established rule), unlike the base pattern's Optional *snap.Money. AdditionalInfo is kept from the base pattern (research §5.8 names only the two additions above, not a subtraction, and §5.4's base request documents additionalInfo — go-review round 1 caught this field's initial, undocumented omission). ServiceCode and CustomerNumber are mandatory per the Guides tab.
+TransferToOTCTransferStatusRequest is the request body for API Transfer To OTC - Transfer Status (Service Code 45). It follows the same shape as [`TransactionStatusInquiryBankRequest`](/reference/transfer-credit/transaction-status), plus CustomerNumber and a Mandatory (not Optional) Amount. ServiceCode and CustomerNumber are Mandatory.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -119,7 +119,7 @@ TransferToOTCTransferStatusRequest is the request body for API Transfer To OTC -
 
 **Response &mdash; `TransferToOTCTransferStatusResponse`**
 
-TransferToOTCTransferStatusResponse is the response body for API Transfer To OTC - Transfer Status — field-identical to TransactionStatusInquiryBankResponse under its own name, per the package's "distinct types per service code even for identical shapes" convention: research scopes this endpoint's additions to "on request" only, so the response mirrors the base pattern exactly. transfer_to_otc_status_test.go guards the two against drift with a full-equality reflection test.
+TransferToOTCTransferStatusResponse is the response body for API Transfer To OTC - Transfer Status — field-identical to [`TransactionStatusInquiryBankResponse`](/reference/transfer-credit/transaction-status), modeled as its own type since each SNAP service code gets a distinct type even when shapes match.
 
 | Field | Type | Presence |
 |---|---|---|

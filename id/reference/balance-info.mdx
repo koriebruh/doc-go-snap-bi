@@ -1,9 +1,9 @@
 ---
-title: "Info Saldo"
+title: "Informasi Saldo"
 description: "Informasi Saldo — Service Code 11 — 1 endpoint"
 ---
 
-## Info Saldo
+## Informasi Saldo
 
 Kategori terkecil di portal: satu endpoint, satu file, satu package, di `balanceinfo`.
 
@@ -22,7 +22,7 @@ if err != nil {
 
 ### `BalanceInquiry`
 
-BalanceInquiry memanggil endpoint SNAP Balance Inquiry (Service Code 11, path .../\{version\}/balance-inquiry). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh BalanceInquiry agar byte hasil marshal yang sama dipakai untuk signing maupun wire body.
+Mengecek saldo sebuah account (Service Code 11). Isi semua field `HeaderBuilder` kecuali `Body` — `BalanceInquiry` melakukan marshal terhadap request dan mengatur `Body`-nya sendiri, jadi byte yang sama persis ditandatangani dan dikirim.
 
 ```go
 func BalanceInquiry(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req BalanceInquiryRequest) (BalanceInquiryResponse, error)
@@ -30,7 +30,7 @@ func BalanceInquiry(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilde
 
 **Request &mdash; `BalanceInquiryRequest`**
 
-BalanceInquiryRequest adalah request body untuk API Balance Inquiry (Service Code 11). Menurut standar, tepat salah satu dari BankCardToken atau AccountNo harus diisi (kecuali customer token B2B2C sudah menyediakan konteks akun) — tipe ini tidak menegakkan aturan itu sendiri, server yang memvalidasi dan menolak inquiry yang mengosongkan keduanya.
+Isi tepat salah satu dari `BankCardToken` atau `AccountNo` (kecuali token customer B2B2C sudah menyediakan accountnya). Server menolak request yang tidak mengisi keduanya — package ini tidak memeriksanya untuk Anda.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -42,7 +42,7 @@ BalanceInquiryRequest adalah request body untuk API Balance Inquiry (Service Cod
 
 **Response &mdash; `BalanceInquiryResponse`**
 
-BalanceInquiryResponse adalah response body untuk API Balance Inquiry.
+Body response-nya.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -55,8 +55,8 @@ BalanceInquiryResponse adalah response body untuk API Balance Inquiry.
 | `accountInfos` | `[]AccountInfo` | Opsional |
 | `additionalInfo` | `json.RawMessage` | Opsional |
 
-<Accordion title="Field AccountInfo">
-AccountInfo adalah satu entri dalam array accountInfos milik BalanceInquiryResponse.
+<Accordion title="AccountInfo fields">
+Satu entri di `accountInfos`.
 
 | Field | Type | Presence |
 |---|---|---|

@@ -20,7 +20,7 @@ if err != nil {
 
 ### `TransactionStatusInquiryBank`
 
-TransactionStatusInquiryBank calls the SNAP Transaction Status Inquiry Bank endpoint (Service Code 36, path .../\{version\}/transfer/status — the path was previously misstated here as transaction-status-inquiry-bank with no recorded justification, corrected against research §1's own path table, HTTP POST — no method override). hb must already carry every field snap.HeaderBuilder needs except Body, which TransactionStatusInquiryBank sets itself so the exact marshaled bytes are used for both signing and the wire body.
+TransactionStatusInquiryBank calls the SNAP Transaction Status Inquiry Bank endpoint (Service Code 36, path .../\{version\}/transfer/status). hb must already carry every field snap.HeaderBuilder needs except Body, which TransactionStatusInquiryBank sets itself so the exact marshaled bytes are used for both signing and the wire body.
 
 ```go
 func TransactionStatusInquiryBank(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req TransactionStatusInquiryBankRequest) (TransactionStatusInquiryBankResponse, error)
@@ -42,7 +42,7 @@ TransactionStatusInquiryBankRequest is the request body for API Transaction Stat
 
 **Response &mdash; `TransactionStatusInquiryBankResponse`**
 
-TransactionStatusInquiryBankResponse is the response body for API Transaction Status Inquiry Bank. Unlike the Virtual Account sub-group, this response has no nested data object — fields sit directly on the response, matching the flat-response precedent already used by AccountInquiryInternalResponse. The original request fields are echoed back (Optional here, regardless of their request cardinality), matching AccountInquiryInternalResponse's PartnerReferenceNo echo. LatestTransactionStatus is the shared transactionStatus 2-digit enum (research §3: 00 Success, 01 Initiated, 02 Paying, 03 Pending, 04 Refunded, 05 Canceled, 06 Failed, 07 Not found).
+TransactionStatusInquiryBankResponse is the response body for API Transaction Status Inquiry Bank — a flat structure, no nested data object. The original request fields are echoed back (Optional here regardless of their request cardinality). `latestTransactionStatus` is a 2-digit code: `00` Success, `01` Initiated, `02` Paying, `03` Pending, `04` Refunded, `05` Canceled, `06` Failed, `07` Not found.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -69,7 +69,7 @@ TransactionStatusInquiryBankResponse is the response body for API Transaction St
 
 ### `TransactionStatusInquiryNonBank`
 
-TransactionStatusInquiryNonBank calls the SNAP Transaction Status Inquiry (non-bank) endpoint (Service Code 53, path .../\{version\}/qr/qr-mpm-status, HTTP POST — no method override). The shared qr/ path prefix does not mean this belongs to the MPM/QR sub-group: research §5.10 is its own sub-group, distinct from §5.9 MPM/QR, and the path naming is the portal's own inconsistency, not a signal to prefix this type QRMPM*. hb must already carry every field snap.HeaderBuilder needs except Body, which TransactionStatusInquiryNonBank sets itself so the exact marshaled bytes are used for both signing and the wire body.
+TransactionStatusInquiryNonBank calls the SNAP Transaction Status Inquiry (non-bank) endpoint (Service Code 53, path .../\{version\}/qr/qr-mpm-status). Despite the shared `qr/` path prefix, this is its own category, separate from QR/MPM. hb must already carry every field snap.HeaderBuilder needs except Body, which TransactionStatusInquiryNonBank sets itself so the exact marshaled bytes are used for both signing and the wire body.
 
 This is a read-only status query and carries no non-idempotency note, matching TransactionStatusInquiryBank's precedent.
 
@@ -79,9 +79,7 @@ func TransactionStatusInquiryNonBank(ctx context.Context, t *snap.Transport, hb 
 
 **Request &mdash; `TransactionStatusInquiryNonBankRequest`**
 
-TransactionStatusInquiryNonBankRequest is the request body for API Transaction Status Inquiry (non-bank, Service Code 53). It is a superset of TransactionStatusInquiryBankRequest (Phase 16) — same 7 base fields verbatim — plus OriginalResponseCode, OriginalResponseMessage, SessionID, and RequestID.
-
-Research §5.10 line 210 says only "same shape... plus [these four fields]" with no Resp: segment naming a response addition, unlike every §5.9 row that adds response fields explicitly. Placement on the request is inferred from that absence, not stated outright — see the Phase 25 design doc.
+TransactionStatusInquiryNonBankRequest is the request body for API Transaction Status Inquiry (non-bank, Service Code 53) — the same 7 base fields as `TransactionStatusInquiryBankRequest` above, plus OriginalResponseCode, OriginalResponseMessage, SessionID, and RequestID.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -99,7 +97,7 @@ Research §5.10 line 210 says only "same shape... plus [these four fields]" with
 
 **Response &mdash; `TransactionStatusInquiryNonBankResponse`**
 
-TransactionStatusInquiryNonBankResponse is the response body for API Transaction Status Inquiry (non-bank) — field-identical to TransactionStatusInquiryBankResponse under its own name, per the package's "distinct types per service code even for identical shapes" convention. Research names no response-side additions for this endpoint (see the request doc comment). Guarded against drift by a full-equality reflection test in this package's test file.
+TransactionStatusInquiryNonBankResponse is the response body for API Transaction Status Inquiry (non-bank) — field-identical to `TransactionStatusInquiryBankResponse`, modeled as its own type since each SNAP service code gets a distinct type even when shapes match.
 
 | Field | Type | Presence |
 |---|---|---|

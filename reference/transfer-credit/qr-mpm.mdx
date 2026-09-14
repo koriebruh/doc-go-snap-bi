@@ -127,7 +127,7 @@ DecodeQRMPMRequest is the request body for API Decode QR MPM (Service Code 48). 
 
 DecodeQRMPMResponse is the response body for API Decode QR MPM.
 
-ReferenceNo and RedirectURL carry contradictory conditional labels in the source documentation — "Mandatory if redirect" and "Mandatory if H2H mode" respectively, which read as opposite branches of the same condition (research §6 item 8, unresolved). Both are modeled Optional; neither reading is asserted here.
+ReferenceNo and RedirectURL are both modeled Optional — the standard's own conditions for when each is required are contradictory, so neither is asserted here.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -145,7 +145,7 @@ ReferenceNo and RedirectURL carry contradictory conditional labels in the source
 <Accordion title="MPMMerchantInfo fields">
 MPMMerchantInfo is one entry in a DecodeQRMPMResponse's merchantInfos array.
 
-MerchantPAN is documented Numeric(19) but quoted as a string on the wire (research §5.9 line 194) — the same ambiguous-type shape as CustomerMonthlyInLimit (Phase 17: documented Numeric, quoted on wire). customerNo (Phase 14/15) is the inverse direction of the same rule (documented String, bare number on wire). Either direction gets json.RawMessage rather than string or a numeric Go type.
+MerchantPAN is documented as numeric but sent quoted as a string on the wire — an ambiguous shape, so it's typed `json.RawMessage` rather than `string` or a numeric type.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -171,7 +171,7 @@ func QRMPMPaymentH2H(ctx context.Context, t *snap.Transport, hb snap.HeaderBuild
 
 QRMPMPaymentH2HRequest is the request body for API Payment - Host to Host (Service Code 50). PartnerReferenceNo is Mandatory; every other field is Optional per the Guides tab.
 
-VerificationID also appears on QRMPMPaymentH2HResponse under the same name but a different documented length (String(32) here, String(64) on the response) — both are plain string in Go (no length enforcement, matching package practice); this is a length note, not a type-shape difference, recorded so it isn't mistaken for a typo.
+VerificationID also appears on the response under the same name with a different documented max length — both are plain `string` in Go, this package doesn't enforce length limits.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -186,8 +186,6 @@ VerificationID also appears on QRMPMPaymentH2HResponse under the same name but a
 **Response &mdash; `QRMPMPaymentH2HResponse`**
 
 QRMPMPaymentH2HResponse is the response body for API Payment - Host to Host.
-
-The base ReferenceNo/TransactionDate shape is an interpretive modeling choice, not a literal transcription: research documents this response only as "adds verificationId String(64) O" without naming what it adds to. See the Phase 22 design doc for the full reasoning.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -206,9 +204,7 @@ The base ReferenceNo/TransactionDate shape is an interpretive modeling choice, n
 
 **Received &mdash; `QRMPMPaymentNotificationRequest`**
 
-QRMPMPaymentNotificationRequest is the request body for API Payment Notification (Service Code 52, path .../\{version\}/qr/qr-mpm-notify). This is a settlement callback the PJP receives, not a call this package makes — no calling function is provided, matching the package's established convention for inbound notification endpoints (NotifyBulkCashInRequest, Phase 18): a caller wires their own HTTP handler for this path, authenticates the inbound call with ServerVerifier.VerifyTransactionRequest, and json.Unmarshals the body into this type.
-
-OriginalReferenceNo and LatestTransactionStatus are mandatory per the Guides tab; every other field is Optional. Nothing in research §5.9 line 202 states the PJP sends this call outward (contrast VA Notify Payment Intrabank's explicit "Callback the PJP sends outward" language, §5.3 line 154 — the one confirmed exception to this default), so the inbound reading is the default, not a guess.
+QRMPMPaymentNotificationRequest is the request body for API Payment Notification (Service Code 52, path .../\{version\}/qr/qr-mpm-notify). This is a settlement callback the PJP receives, not a call this package makes — wire your own HTTP handler for this path, authenticate the request with `ServerVerifier.VerifyTransactionRequest`, then `json.Unmarshal` the body into this type. OriginalReferenceNo and LatestTransactionStatus are Mandatory; every other field is Optional.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -226,7 +222,7 @@ OriginalReferenceNo and LatestTransactionStatus are mandatory per the Guides tab
 
 **Your handler replies with &mdash; `QRMPMPaymentNotificationResponse`**
 
-QRMPMPaymentNotificationResponse is the response body a caller sends back for API Payment Notification. Research documents this response as "envelope-only" (§5.9 line 202) — no fields beyond the standard responseCode/responseMessage envelope.
+QRMPMPaymentNotificationResponse is the response body your handler sends back — no fields beyond the standard `responseCode`/`responseMessage` envelope.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -248,7 +244,7 @@ func QRMPMQueryPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBui
 
 **Request &mdash; `QRMPMQueryPaymentRequest`**
 
-QRMPMQueryPaymentRequest is the request body for API Query Payment (Service Code 51). It is a superset of TransactionStatusInquiryBankRequest (Phase 16) — same "originalX/serviceCode" base fields, since research names that same base pattern here, plus MerchantID, SubMerchantID, and ExternalStoreID. This is a genuine superset, not an identical shape, so per Phase 20's established practice it is a distinct type documented in prose rather than reflection-drift-guarded against the base. ServiceCode is the only mandatory field.
+QRMPMQueryPaymentRequest is the request body for API Query Payment (Service Code 51) — the same base fields as [`TransactionStatusInquiryBankRequest`](/reference/transfer-credit/transaction-status), plus MerchantID, SubMerchantID, and ExternalStoreID. ServiceCode is the only Mandatory field.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -265,7 +261,7 @@ QRMPMQueryPaymentRequest is the request body for API Query Payment (Service Code
 
 **Response &mdash; `QRMPMQueryPaymentResponse`**
 
-QRMPMQueryPaymentResponse is the response body for API Query Payment. It reuses TransactionStatusInquiryBankResponse's full field set verbatim (same superset relationship as the request; see that type's doc comment for why fields like BeneficiaryAccountNo apply here despite not being QR-specific — the research documents this as a generic reusable status-response schema) plus PaidTime and TerminalID.
+QRMPMQueryPaymentResponse is the response body for API Query Payment — the same fields as [`TransactionStatusInquiryBankResponse`](/reference/transfer-credit/transaction-status), plus PaidTime and TerminalID.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -319,7 +315,7 @@ QRMPMCancelPaymentRequest is the request body for API Cancel Payment (Service Co
 
 **Response &mdash; `QRMPMCancelPaymentResponse`**
 
-QRMPMCancelPaymentResponse is the response body for API Cancel Payment. CancelTime is Conditional per research §5.9 line 204 (no further condition given in that row, unlike Transfer To OTC Cancel Payment's documented "must be filled if cancelled transaction success", Phase 20) — modeled Optional, matching the package's standard handling of Conditional fields. TransactionDate is Optional.
+QRMPMCancelPaymentResponse is the response body for API Cancel Payment. CancelTime is Conditional (modeled Optional, per this package's usual handling — see [Core Conventions](/concepts/conventions)); TransactionDate is Optional.
 
 | Field | Type | Presence |
 |---|---|---|

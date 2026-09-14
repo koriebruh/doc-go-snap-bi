@@ -1,11 +1,11 @@
 ---
 title: "Virtual Account"
-description: "Siklus penuh VA: manajemen (create/update/inquire/delete) dan panggilan sisi transaksi (inquiry, payment, status, varian intrabank, report)."
+description: "Siklus hidup VA lengkap: manajemen (create/update/inquire/delete) dan pemanggilan sisi transaksi (inquiry, payment, status, varian intrabank, report)."
 ---
 
 ## Virtual Account
 
-Siklus penuh VA: manajemen (create/update/inquire/delete) dan panggilan sisi transaksi (inquiry, payment, status, varian intrabank, report).
+Siklus hidup VA lengkap: manajemen (create/update/inquire/delete) dan pemanggilan sisi transaksi (inquiry, payment, status, varian intrabank, report).
 
 <CodeGroup>
 ```go example.go
@@ -21,9 +21,9 @@ if err != nil {
 
 ### `CreateVA`
 
-CreateVA memanggil endpoint SNAP VA - Create VA endpoint (Service Code 27, path .../\{version\}/transfer-va/create-va). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh CreateVA agar byte hasil marshal yang persis sama dipakai untuk signing maupun wire body.
+Memanggil endpoint SNAP VA - Create VA (Service Code 27, path .../\{version\}/transfer-va/create-va). `hb` harus sudah diisi semua field yang dibutuhkan `snap.HeaderBuilder` kecuali `Body` — CreateVA yang mengisinya sendiri agar byte yang sama persis dipakai untuk signing maupun request di wire.
 
-Operasi ini tidak idempotent dan package ini tidak melakukan retry. Pemanggil yang mengulang panggilan yang gagal atau timeout harus memakai X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server berpatokan pada header itu — X-EXTERNAL-ID baru saat retry berisiko membuat VA duplikat.
+Tidak idempoten dan tidak di-retry otomatis oleh package ini. Kalau me-retry request yang gagal/timeout, pakai `X-EXTERNAL-ID` yang sama — server mendeteksi duplikat lewat header ini, jadi ID baru berisiko membuat VA duplikat.
 
 ```go
 func CreateVA(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req CreateVARequest) (CreateVAResponse, error)
@@ -31,7 +31,7 @@ func CreateVA(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req
 
 **Request &mdash; `CreateVARequest`**
 
-CreateVARequest adalah request body untuk API VA - Create VA (Service Code 27). VirtualAccountName and TrxID wajib menurut tab Guides; unlike every other Virtual Account endpoint, the identity triple (PartnerServiceID, CustomerNo, VirtualAccountNo) bersifat Opsional here.
+`VirtualAccountName` dan `TrxID` wajib diisi; tidak seperti endpoint Virtual Account lainnya, identity triple (`PartnerServiceID`, `CustomerNo`, `VirtualAccountNo`) di sini Opsional.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -48,8 +48,8 @@ CreateVARequest adalah request body untuk API VA - Create VA (Service Code 27). 
 | `expiredDate` | `string` | Opsional |
 | `additionalInfo` | `json.RawMessage` | Opsional |
 
-<Accordion title="Field BillDetail">
-BillDetail adalah satu entri dalam array "billDetails[]" pada sub-grup Virtual Account (maksimal 24 entri). Semua field tidak ditandai M/O di sumbernya sehingga semua memakai omitempty; BillDescription, BillAmount, dan Reason berupa pointer karena omitempty tidak berpengaruh pada nilai struct non-pointer. BillReferenceNo didokumentasikan Numeric pada tab Guides; sesuai aturan tipe-ambigu package ini, field Numeric yang terdokumentasi diberi tipe json.RawMessage, bukan string, karena field string biasa akan menggagalkan seluruh decode jika penerbit mengirimnya sebagai angka JSON polos, mengikuti presedan AccountTransactionLimit/APIKey yang sudah ada. BillDetail juga dipakai pada request body (CreateVARequest.BillDetails, UpdateVARequest.BillDetails), sehingga pemanggil yang mengisi BillReferenceNo harus menyertakan nilai JSON yang lengkap (mis. json.RawMessage(`"BILLREF1"`) atau json.RawMessage(`123`)), bukan string Go polos — nilai yang tidak lengkap akan menggagalkan json.Marshal untuk seluruh request.
+<Accordion title="BillDetail fields">
+Satu entri dalam array `billDetails[]` (maksimal 24 entri) yang dipakai di seluruh kelompok Virtual Account. `billReferenceNo` bertipe `json.RawMessage` karena standarnya mendokumentasikan field ini sebagai Numeric tapi sebagian issuer mengirimnya sebagai angka JSON polos — kalau Anda mengisinya sendiri (mis. di `CreateVARequest`), berikan nilai JSON yang lengkap seperti `json.RawMessage(\`"BILLREF1"\`)` atau `json.RawMessage(\`123\`)`, bukan string Go biasa.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -69,8 +69,8 @@ BillDetail adalah satu entri dalam array "billDetails[]" pada sub-grup Virtual A
 
 </Accordion>
 
-<Accordion title="Field LocalizedText">
-LocalizedText adalah bentuk teks dwibahasa \{english, indonesia\} bersama yang dipakai di seluruh sub-grup Virtual Account (mis. inquiryReason, paymentFlagReason, billDescription, reason per-bill, entri freeTexts[]). Kedua field bertipe String, tidak ditandai M/O di sumbernya, sehingga keduanya memakai omitempty.
+<Accordion title="LocalizedText fields">
+Bentuk teks dwibahasa \{english, indonesia\} yang dipakai bersama di seluruh sub-kelompok Virtual Account (mis. inquiryReason, paymentFlagReason, billDescription, reason per-bill, entri freeTexts[]). Kedua field bertipe String, tidak ditandai M/O di sumbernya, jadi keduanya carry omitempty.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -81,16 +81,14 @@ LocalizedText adalah bentuk teks dwibahasa \{english, indonesia\} bersama yang d
 
 **Response &mdash; `CreateVAResponse`**
 
-CreateVAResponse adalah response body untuk API VA - Create VA.
-
 | Field | Type | Presence |
 |---|---|---|
 | `responseCode` | `string` | Wajib |
 | `responseMessage` | `string` | Wajib |
 | `virtualAccountData` | `*CreateVAData` | Opsional |
 
-<Accordion title="Field CreateVAData">
-CreateVAData is the "virtualAccountData" object in CreateVAResponse.
+<Accordion title="CreateVAData fields">
+Objek `virtualAccountData` pada `CreateVAResponse`.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -109,8 +107,8 @@ CreateVAData is the "virtualAccountData" object in CreateVAResponse.
 
 </Accordion>
 
-<Accordion title="Field BillDetail">
-BillDetail adalah satu entri dalam array "billDetails[]" pada sub-grup Virtual Account (maksimal 24 entri). Semua field tidak ditandai M/O di sumbernya sehingga semua memakai omitempty; BillDescription, BillAmount, dan Reason berupa pointer karena omitempty tidak berpengaruh pada nilai struct non-pointer. BillReferenceNo didokumentasikan Numeric pada tab Guides; sesuai aturan tipe-ambigu package ini, field Numeric yang terdokumentasi diberi tipe json.RawMessage, bukan string, karena field string biasa akan menggagalkan seluruh decode jika penerbit mengirimnya sebagai angka JSON polos, mengikuti presedan AccountTransactionLimit/APIKey yang sudah ada. BillDetail juga dipakai pada request body (CreateVARequest.BillDetails, UpdateVARequest.BillDetails), sehingga pemanggil yang mengisi BillReferenceNo harus menyertakan nilai JSON yang lengkap (mis. json.RawMessage(`"BILLREF1"`) atau json.RawMessage(`123`)), bukan string Go polos — nilai yang tidak lengkap akan menggagalkan json.Marshal untuk seluruh request.
+<Accordion title="BillDetail fields">
+Satu entri dalam array `billDetails[]` (maksimal 24 entri) yang dipakai di seluruh kelompok Virtual Account. `billReferenceNo` bertipe `json.RawMessage` karena standarnya mendokumentasikan field ini sebagai Numeric tapi sebagian issuer mengirimnya sebagai angka JSON polos — kalau Anda mengisinya sendiri (mis. di `CreateVARequest`), berikan nilai JSON yang lengkap seperti `json.RawMessage(\`"BILLREF1"\`)` atau `json.RawMessage(\`123\`)`, bukan string Go biasa.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -130,8 +128,8 @@ BillDetail adalah satu entri dalam array "billDetails[]" pada sub-grup Virtual A
 
 </Accordion>
 
-<Accordion title="Field LocalizedText">
-LocalizedText adalah bentuk teks dwibahasa \{english, indonesia\} bersama yang dipakai di seluruh sub-grup Virtual Account (mis. inquiryReason, paymentFlagReason, billDescription, reason per-bill, entri freeTexts[]). Kedua field bertipe String, tidak ditandai M/O di sumbernya, sehingga keduanya memakai omitempty.
+<Accordion title="LocalizedText fields">
+Bentuk teks dwibahasa \{english, indonesia\} yang dipakai bersama di seluruh sub-kelompok Virtual Account (mis. inquiryReason, paymentFlagReason, billDescription, reason per-bill, entri freeTexts[]). Kedua field bertipe String, tidak ditandai M/O di sumbernya, jadi keduanya carry omitempty.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -140,14 +138,13 @@ LocalizedText adalah bentuk teks dwibahasa \{english, indonesia\} bersama yang d
 
 </Accordion>
 
-
 ---
 
 ### `UpdateVA`
 
-UpdateVA memanggil endpoint SNAP VA - Update VA (Service Code 28, path .../\{version\}/transfer-va/update-va, HTTP PUT). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Method dan Body, yang diisi sendiri oleh UpdateVA: Method menjadi PUT (method sudah ditetapkan oleh endpoint ini, tidak bisa dikonfigurasi pemanggil) dan Body, agar byte hasil marshal yang persis sama dipakai untuk signing maupun wire body.
+Memanggil endpoint SNAP VA - Update VA (Service Code 28, path .../\{version\}/transfer-va/update-va, HTTP PUT). `hb` harus sudah diisi semua field yang dibutuhkan `snap.HeaderBuilder` kecuali `Method` dan `Body` — `UpdateVA` yang mengisinya sendiri: `Method` diisi PUT (method-nya tetap, tidak bisa diubah pemanggil) dan `Body` diisi agar byte yang sama persis dipakai untuk signing maupun request di wire.
 
-Operasi ini tidak idempotent dan package ini tidak melakukan retry. Pemanggil yang mengulang panggilan yang gagal atau timeout harus memakai X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server berpatokan pada header itu.
+Tidak idempoten dan tidak di-retry otomatis oleh package ini. Kalau me-retry request yang gagal/timeout, pakai `X-EXTERNAL-ID` yang sama — server mendeteksi duplikat lewat header ini.
 
 ```go
 func UpdateVA(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req UpdateVARequest) (UpdateVAResponse, error)
@@ -155,7 +152,7 @@ func UpdateVA(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req
 
 **Request &mdash; `UpdateVARequest`**
 
-UpdateVARequest adalah request body untuk API VA - Update VA (Service Code 28). PartnerServiceID, CustomerNo, VirtualAccountNo, VirtualAccountName, and TrxID wajib menurut tab Guides — berbeda dari Create VA, trio identitas ini Wajib.
+`PartnerServiceID`, `CustomerNo`, `VirtualAccountNo`, `VirtualAccountName`, dan `TrxID` wajib diisi — tidak seperti Create VA, identity triple di sini Wajib.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -172,8 +169,8 @@ UpdateVARequest adalah request body untuk API VA - Update VA (Service Code 28). 
 | `expiredDate` | `string` | Opsional |
 | `additionalInfo` | `json.RawMessage` | Opsional |
 
-<Accordion title="Field BillDetail">
-BillDetail adalah satu entri dalam array "billDetails[]" pada sub-grup Virtual Account (maksimal 24 entri). Semua field tidak ditandai M/O di sumbernya sehingga semua memakai omitempty; BillDescription, BillAmount, dan Reason berupa pointer karena omitempty tidak berpengaruh pada nilai struct non-pointer. BillReferenceNo didokumentasikan Numeric pada tab Guides; sesuai aturan tipe-ambigu package ini, field Numeric yang terdokumentasi diberi tipe json.RawMessage, bukan string, karena field string biasa akan menggagalkan seluruh decode jika penerbit mengirimnya sebagai angka JSON polos, mengikuti presedan AccountTransactionLimit/APIKey yang sudah ada. BillDetail juga dipakai pada request body (CreateVARequest.BillDetails, UpdateVARequest.BillDetails), sehingga pemanggil yang mengisi BillReferenceNo harus menyertakan nilai JSON yang lengkap (mis. json.RawMessage(`"BILLREF1"`) atau json.RawMessage(`123`)), bukan string Go polos — nilai yang tidak lengkap akan menggagalkan json.Marshal untuk seluruh request.
+<Accordion title="BillDetail fields">
+Satu entri dalam array `billDetails[]` (maksimal 24 entri) yang dipakai di seluruh kelompok Virtual Account. `billReferenceNo` bertipe `json.RawMessage` karena standarnya mendokumentasikan field ini sebagai Numeric tapi sebagian issuer mengirimnya sebagai angka JSON polos — kalau Anda mengisinya sendiri (mis. di `CreateVARequest`), berikan nilai JSON yang lengkap seperti `json.RawMessage(\`"BILLREF1"\`)` atau `json.RawMessage(\`123\`)`, bukan string Go biasa.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -193,8 +190,8 @@ BillDetail adalah satu entri dalam array "billDetails[]" pada sub-grup Virtual A
 
 </Accordion>
 
-<Accordion title="Field LocalizedText">
-LocalizedText adalah bentuk teks dwibahasa \{english, indonesia\} bersama yang dipakai di seluruh sub-grup Virtual Account (mis. inquiryReason, paymentFlagReason, billDescription, reason per-bill, entri freeTexts[]). Kedua field bertipe String, tidak ditandai M/O di sumbernya, sehingga keduanya memakai omitempty.
+<Accordion title="LocalizedText fields">
+Bentuk teks dwibahasa \{english, indonesia\} yang dipakai bersama di seluruh sub-kelompok Virtual Account (mis. inquiryReason, paymentFlagReason, billDescription, reason per-bill, entri freeTexts[]). Kedua field bertipe String, tidak ditandai M/O di sumbernya, jadi keduanya carry omitempty.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -205,16 +202,14 @@ LocalizedText adalah bentuk teks dwibahasa \{english, indonesia\} bersama yang d
 
 **Response &mdash; `UpdateVAResponse`**
 
-UpdateVAResponse adalah response body untuk API VA - Update VA.
-
 | Field | Type | Presence |
 |---|---|---|
 | `responseCode` | `string` | Wajib |
 | `responseMessage` | `string` | Wajib |
 | `virtualAccountData` | `*UpdateVAData` | Opsional |
 
-<Accordion title="Field UpdateVAData">
-UpdateVAData is the "virtualAccountData" object in UpdateVAResponse — Create VA's data fields plus LastUpdateDate and PaymentDate.
+<Accordion title="UpdateVAData fields">
+Objek `virtualAccountData` pada `UpdateVAResponse` — field data Create VA ditambah `LastUpdateDate` dan `PaymentDate`.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -235,8 +230,8 @@ UpdateVAData is the "virtualAccountData" object in UpdateVAResponse — Create V
 
 </Accordion>
 
-<Accordion title="Field BillDetail">
-BillDetail adalah satu entri dalam array "billDetails[]" pada sub-grup Virtual Account (maksimal 24 entri). Semua field tidak ditandai M/O di sumbernya sehingga semua memakai omitempty; BillDescription, BillAmount, dan Reason berupa pointer karena omitempty tidak berpengaruh pada nilai struct non-pointer. BillReferenceNo didokumentasikan Numeric pada tab Guides; sesuai aturan tipe-ambigu package ini, field Numeric yang terdokumentasi diberi tipe json.RawMessage, bukan string, karena field string biasa akan menggagalkan seluruh decode jika penerbit mengirimnya sebagai angka JSON polos, mengikuti presedan AccountTransactionLimit/APIKey yang sudah ada. BillDetail juga dipakai pada request body (CreateVARequest.BillDetails, UpdateVARequest.BillDetails), sehingga pemanggil yang mengisi BillReferenceNo harus menyertakan nilai JSON yang lengkap (mis. json.RawMessage(`"BILLREF1"`) atau json.RawMessage(`123`)), bukan string Go polos — nilai yang tidak lengkap akan menggagalkan json.Marshal untuk seluruh request.
+<Accordion title="BillDetail fields">
+Satu entri dalam array `billDetails[]` (maksimal 24 entri) yang dipakai di seluruh kelompok Virtual Account. `billReferenceNo` bertipe `json.RawMessage` karena standarnya mendokumentasikan field ini sebagai Numeric tapi sebagian issuer mengirimnya sebagai angka JSON polos — kalau Anda mengisinya sendiri (mis. di `CreateVARequest`), berikan nilai JSON yang lengkap seperti `json.RawMessage(\`"BILLREF1"\`)` atau `json.RawMessage(\`123\`)`, bukan string Go biasa.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -256,8 +251,8 @@ BillDetail adalah satu entri dalam array "billDetails[]" pada sub-grup Virtual A
 
 </Accordion>
 
-<Accordion title="Field LocalizedText">
-LocalizedText adalah bentuk teks dwibahasa \{english, indonesia\} bersama yang dipakai di seluruh sub-grup Virtual Account (mis. inquiryReason, paymentFlagReason, billDescription, reason per-bill, entri freeTexts[]). Kedua field bertipe String, tidak ditandai M/O di sumbernya, sehingga keduanya memakai omitempty.
+<Accordion title="LocalizedText fields">
+Bentuk teks dwibahasa \{english, indonesia\} yang dipakai bersama di seluruh sub-kelompok Virtual Account (mis. inquiryReason, paymentFlagReason, billDescription, reason per-bill, entri freeTexts[]). Kedua field bertipe String, tidak ditandai M/O di sumbernya, jadi keduanya carry omitempty.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -266,14 +261,13 @@ LocalizedText adalah bentuk teks dwibahasa \{english, indonesia\} bersama yang d
 
 </Accordion>
 
-
 ---
 
 ### `UpdateStatusVA`
 
-UpdateStatusVA memanggil endpoint SNAP VA - Update Status VA (Service Code 29, path .../\{version\}/transfer-va/update-status, HTTP PUT). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Method dan Body, yang diisi sendiri oleh UpdateStatusVA: Method menjadi PUT (method sudah ditetapkan oleh endpoint ini, tidak bisa dikonfigurasi pemanggil) dan Body, agar byte hasil marshal yang persis sama dipakai untuk signing maupun wire body.
+Memanggil endpoint SNAP VA - Update Status VA (Service Code 29, path .../\{version\}/transfer-va/update-status, HTTP PUT). `hb` harus sudah diisi semua field yang dibutuhkan `snap.HeaderBuilder` kecuali `Method` dan `Body` — `UpdateStatusVA` yang mengisinya sendiri: `Method` diisi PUT (method-nya tetap, tidak bisa diubah pemanggil) dan `Body` diisi agar byte yang sama persis dipakai untuk signing maupun request di wire.
 
-Operasi ini tidak idempotent dan package ini tidak melakukan retry. Pemanggil yang mengulang panggilan yang gagal atau timeout harus memakai X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server berpatokan pada header itu.
+Tidak idempoten dan tidak di-retry otomatis oleh package ini. Kalau me-retry request yang gagal/timeout, pakai `X-EXTERNAL-ID` yang sama — server mendeteksi duplikat lewat header ini.
 
 ```go
 func UpdateStatusVA(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req UpdateStatusVARequest) (UpdateStatusVAResponse, error)
@@ -281,7 +275,7 @@ func UpdateStatusVA(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilde
 
 **Request &mdash; `UpdateStatusVARequest`**
 
-UpdateStatusVARequest adalah request body untuk API VA - Update Status VA (Service Code 29). PartnerServiceID, CustomerNo, VirtualAccountNo, TrxID, and PaidStatus wajib menurut tab Guides. Nilai PaidStatus adalah "Y"/"N".
+`PartnerServiceID`, `CustomerNo`, `VirtualAccountNo`, `TrxID`, dan `PaidStatus` wajib diisi. Nilai `PaidStatus` adalah `"Y"`/`"N"`.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -294,16 +288,14 @@ UpdateStatusVARequest adalah request body untuk API VA - Update Status VA (Servi
 
 **Response &mdash; `UpdateStatusVAResponse`**
 
-UpdateStatusVAResponse adalah response body untuk API VA - Update Status VA.
-
 | Field | Type | Presence |
 |---|---|---|
 | `responseCode` | `string` | Wajib |
 | `responseMessage` | `string` | Wajib |
 | `virtualAccountData` | `*UpdateStatusVAData` | Opsional |
 
-<Accordion title="Field UpdateStatusVAData">
-UpdateStatusVAData adalah objek "virtualAccountData" pada UpdateStatusVAResponse — "objek data VA lengkap", set field yang sama dengan UpdateVAData, dengan nama tipenya sendiri.
+<Accordion title="UpdateStatusVAData fields">
+Objek `virtualAccountData` pada `UpdateStatusVAResponse` — himpunan field yang sama dengan `UpdateVAData`, hanya beda nama tipe.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -324,8 +316,8 @@ UpdateStatusVAData adalah objek "virtualAccountData" pada UpdateStatusVAResponse
 
 </Accordion>
 
-<Accordion title="Field BillDetail">
-BillDetail adalah satu entri dalam array "billDetails[]" pada sub-grup Virtual Account (maksimal 24 entri). Semua field tidak ditandai M/O di sumbernya sehingga semua memakai omitempty; BillDescription, BillAmount, dan Reason berupa pointer karena omitempty tidak berpengaruh pada nilai struct non-pointer. BillReferenceNo didokumentasikan Numeric pada tab Guides; sesuai aturan tipe-ambigu package ini, field Numeric yang terdokumentasi diberi tipe json.RawMessage, bukan string, karena field string biasa akan menggagalkan seluruh decode jika penerbit mengirimnya sebagai angka JSON polos, mengikuti presedan AccountTransactionLimit/APIKey yang sudah ada. BillDetail juga dipakai pada request body (CreateVARequest.BillDetails, UpdateVARequest.BillDetails), sehingga pemanggil yang mengisi BillReferenceNo harus menyertakan nilai JSON yang lengkap (mis. json.RawMessage(`"BILLREF1"`) atau json.RawMessage(`123`)), bukan string Go polos — nilai yang tidak lengkap akan menggagalkan json.Marshal untuk seluruh request.
+<Accordion title="BillDetail fields">
+Satu entri dalam array `billDetails[]` (maksimal 24 entri) yang dipakai di seluruh kelompok Virtual Account. `billReferenceNo` bertipe `json.RawMessage` karena standarnya mendokumentasikan field ini sebagai Numeric tapi sebagian issuer mengirimnya sebagai angka JSON polos — kalau Anda mengisinya sendiri (mis. di `CreateVARequest`), berikan nilai JSON yang lengkap seperti `json.RawMessage(\`"BILLREF1"\`)` atau `json.RawMessage(\`123\`)`, bukan string Go biasa.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -345,8 +337,8 @@ BillDetail adalah satu entri dalam array "billDetails[]" pada sub-grup Virtual A
 
 </Accordion>
 
-<Accordion title="Field LocalizedText">
-LocalizedText adalah bentuk teks dwibahasa \{english, indonesia\} bersama yang dipakai di seluruh sub-grup Virtual Account (mis. inquiryReason, paymentFlagReason, billDescription, reason per-bill, entri freeTexts[]). Kedua field bertipe String, tidak ditandai M/O di sumbernya, sehingga keduanya memakai omitempty.
+<Accordion title="LocalizedText fields">
+Bentuk teks dwibahasa \{english, indonesia\} yang dipakai bersama di seluruh sub-kelompok Virtual Account (mis. inquiryReason, paymentFlagReason, billDescription, reason per-bill, entri freeTexts[]). Kedua field bertipe String, tidak ditandai M/O di sumbernya, jadi keduanya carry omitempty.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -355,12 +347,11 @@ LocalizedText adalah bentuk teks dwibahasa \{english, indonesia\} bersama yang d
 
 </Accordion>
 
-
 ---
 
 ### `InquiryVA`
 
-InquiryVA memanggil endpoint SNAP VA - Inquiry VA endpoint (Service Code 30, path .../\{version\}/transfer-va/inquiry-va). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh InquiryVA agar byte hasil marshal yang persis sama dipakai untuk signing maupun wire body.
+Memanggil endpoint SNAP VA - Inquiry VA (Service Code 30, path .../\{version\}/transfer-va/inquiry-va). `hb` harus sudah diisi semua field yang dibutuhkan `snap.HeaderBuilder` kecuali `Body` — InquiryVA yang mengisinya sendiri agar byte yang sama persis dipakai untuk signing maupun request di wire.
 
 ```go
 func InquiryVA(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req InquiryVARequest) (InquiryVAResponse, error)
@@ -368,7 +359,7 @@ func InquiryVA(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, re
 
 **Request &mdash; `InquiryVARequest`**
 
-InquiryVARequest adalah request body untuk API VA - Inquiry VA (Service Code 30). PartnerServiceID, CustomerNo, VirtualAccountNo, and TrxID wajib menurut tab Guides.
+`PartnerServiceID`, `CustomerNo`, `VirtualAccountNo`, dan `TrxID` wajib diisi.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -380,16 +371,14 @@ InquiryVARequest adalah request body untuk API VA - Inquiry VA (Service Code 30)
 
 **Response &mdash; `InquiryVAResponse`**
 
-InquiryVAResponse adalah response body untuk API VA - Inquiry VA.
-
 | Field | Type | Presence |
 |---|---|---|
 | `responseCode` | `string` | Wajib |
 | `responseMessage` | `string` | Wajib |
 | `virtualAccountData` | `*InquiryVAData` | Opsional |
 
-<Accordion title="Field InquiryVAData">
-InquiryVAData adalah objek "virtualAccountData" pada InquiryVAResponse — "objek data VA lengkap (bentuk sama dengan response Update VA)", set field yang sama dengan UpdateVAData, dengan nama tipenya sendiri.
+<Accordion title="InquiryVAData fields">
+Objek `virtualAccountData` pada `InquiryVAResponse` — himpunan field yang sama dengan `UpdateVAData` (bentuknya sama seperti response Update VA), hanya beda nama tipe.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -410,8 +399,8 @@ InquiryVAData adalah objek "virtualAccountData" pada InquiryVAResponse — "obje
 
 </Accordion>
 
-<Accordion title="Field BillDetail">
-BillDetail adalah satu entri dalam array "billDetails[]" pada sub-grup Virtual Account (maksimal 24 entri). Semua field tidak ditandai M/O di sumbernya sehingga semua memakai omitempty; BillDescription, BillAmount, dan Reason berupa pointer karena omitempty tidak berpengaruh pada nilai struct non-pointer. BillReferenceNo didokumentasikan Numeric pada tab Guides; sesuai aturan tipe-ambigu package ini, field Numeric yang terdokumentasi diberi tipe json.RawMessage, bukan string, karena field string biasa akan menggagalkan seluruh decode jika penerbit mengirimnya sebagai angka JSON polos, mengikuti presedan AccountTransactionLimit/APIKey yang sudah ada. BillDetail juga dipakai pada request body (CreateVARequest.BillDetails, UpdateVARequest.BillDetails), sehingga pemanggil yang mengisi BillReferenceNo harus menyertakan nilai JSON yang lengkap (mis. json.RawMessage(`"BILLREF1"`) atau json.RawMessage(`123`)), bukan string Go polos — nilai yang tidak lengkap akan menggagalkan json.Marshal untuk seluruh request.
+<Accordion title="BillDetail fields">
+Satu entri dalam array `billDetails[]` (maksimal 24 entri) yang dipakai di seluruh kelompok Virtual Account. `billReferenceNo` bertipe `json.RawMessage` karena standarnya mendokumentasikan field ini sebagai Numeric tapi sebagian issuer mengirimnya sebagai angka JSON polos — kalau Anda mengisinya sendiri (mis. di `CreateVARequest`), berikan nilai JSON yang lengkap seperti `json.RawMessage(\`"BILLREF1"\`)` atau `json.RawMessage(\`123\`)`, bukan string Go biasa.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -431,8 +420,8 @@ BillDetail adalah satu entri dalam array "billDetails[]" pada sub-grup Virtual A
 
 </Accordion>
 
-<Accordion title="Field LocalizedText">
-LocalizedText adalah bentuk teks dwibahasa \{english, indonesia\} bersama yang dipakai di seluruh sub-grup Virtual Account (mis. inquiryReason, paymentFlagReason, billDescription, reason per-bill, entri freeTexts[]). Kedua field bertipe String, tidak ditandai M/O di sumbernya, sehingga keduanya memakai omitempty.
+<Accordion title="LocalizedText fields">
+Bentuk teks dwibahasa \{english, indonesia\} yang dipakai bersama di seluruh sub-kelompok Virtual Account (mis. inquiryReason, paymentFlagReason, billDescription, reason per-bill, entri freeTexts[]). Kedua field bertipe String, tidak ditandai M/O di sumbernya, jadi keduanya carry omitempty.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -441,14 +430,13 @@ LocalizedText adalah bentuk teks dwibahasa \{english, indonesia\} bersama yang d
 
 </Accordion>
 
-
 ---
 
 ### `DeleteVA`
 
-DeleteVA memanggil endpoint SNAP VA - Delete VA endpoint (Service Code 31, path .../\{version\}/transfer-va/delete-va, HTTP DELETE). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Method dan Body, yang diisi sendiri oleh DeleteVA: Method menjadi DELETE (method sudah ditetapkan oleh endpoint ini, tidak bisa dikonfigurasi pemanggil) dan Body agar byte hasil marshal yang persis sama dipakai untuk signing maupun wire body.
+Memanggil endpoint SNAP VA - Delete VA (Service Code 31, path .../\{version\}/transfer-va/delete-va, HTTP DELETE). `hb` harus sudah diisi semua field yang dibutuhkan `snap.HeaderBuilder` kecuali `Method` dan `Body` — `DeleteVA` yang mengisinya sendiri: `Method` diisi DELETE (method-nya tetap, tidak bisa diubah pemanggil) dan `Body` diisi karena endpoint DELETE ini tetap mengirim body JSON, bukan lewat path parameter — byte yang sama persis dipakai untuk signing maupun request di wire.
 
-Operasi ini tidak idempotent dan package ini tidak melakukan retry. Pemanggil yang mengulang panggilan yang gagal atau timeout harus memakai X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server berpatokan pada header itu.
+Tidak idempoten dan tidak di-retry otomatis oleh package ini. Kalau me-retry request yang gagal/timeout, pakai `X-EXTERNAL-ID` yang sama — server mendeteksi duplikat lewat header ini.
 
 ```go
 func DeleteVA(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req DeleteVARequest) (DeleteVAResponse, error)
@@ -456,7 +444,7 @@ func DeleteVA(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req
 
 **Request &mdash; `DeleteVARequest`**
 
-DeleteVARequest adalah request body untuk API VA - Delete VA (Service Code 31). PartnerServiceID, CustomerNo, and VirtualAccountNo wajib menurut tab Guides; TrxID bersifat Opsional.
+`PartnerServiceID`, `CustomerNo`, dan `VirtualAccountNo` wajib diisi; `TrxID` Opsional.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -468,16 +456,14 @@ DeleteVARequest adalah request body untuk API VA - Delete VA (Service Code 31). 
 
 **Response &mdash; `DeleteVAResponse`**
 
-DeleteVAResponse adalah response body untuk API VA - Delete VA.
-
 | Field | Type | Presence |
 |---|---|---|
 | `responseCode` | `string` | Wajib |
 | `responseMessage` | `string` | Wajib |
 | `virtualAccountData` | `*DeleteVAData` | Opsional |
 
-<Accordion title="Field DeleteVAData">
-DeleteVAData adalah objek "virtualAccountData" pada DeleteVAResponse — bentuknya lebih kecil dibanding objek data endpoint manajemen VA lainnya.
+<Accordion title="DeleteVAData fields">
+Objek `virtualAccountData` pada `DeleteVAResponse` — bentuknya lebih kecil dibanding data object endpoint manajemen VA lainnya.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -489,12 +475,11 @@ DeleteVAData adalah objek "virtualAccountData" pada DeleteVAResponse — bentukn
 
 </Accordion>
 
-
 ---
 
 ### `VAInquiry`
 
-VAInquiry memanggil endpoint SNAP VA - VA Inquiry (Service Code 24, path .../\{version\}/transfer-va/inquiry, HTTP POST — bukan PUT/DELETE seperti endpoint manajemen VA lainnya). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh VAInquiry agar byte hasil marshal yang persis sama dipakai untuk signing maupun wire body.
+Memanggil endpoint SNAP VA - VA Inquiry (Service Code 24, path .../\{version\}/transfer-va/inquiry). `hb` harus sudah diisi semua field yang dibutuhkan `snap.HeaderBuilder` kecuali `Body` — VAInquiry yang mengisinya sendiri agar byte yang sama persis dipakai untuk signing maupun request di wire.
 
 ```go
 func VAInquiry(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req VAInquiryRequest) (VAInquiryResponse, error)
@@ -502,7 +487,7 @@ func VAInquiry(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, re
 
 **Request &mdash; `VAInquiryRequest`**
 
-VAInquiryRequest adalah request body untuk API VA - VA Inquiry (Service Code 24). PartnerServiceID, CustomerNo, VirtualAccountNo, dan InquiryRequestID wajib menurut tab Guides. CustomerNo bertipe json.RawMessage, bukan string: field ini terdokumentasi String(20) tetapi muncul sebagai angka JSON polos pada contoh endpoint sejenisnya, VA Inquiry Status (26). Pemanggil yang mengisi CustomerNo atau ChannelCode harus menyertakan nilai JSON yang lengkap (mis. json.RawMessage(`"98765"`) atau json.RawMessage(`98765`)), bukan string Go polos.
+`partnerServiceId`, `customerNo`, `virtualAccountNo`, dan `inquiryRequestId` Wajib. `customerNo` bertipe `json.RawMessage` karena contoh resmi endpoint sejenis menampilkannya sebagai angka JSON polos, bukan string berkutip — berikan nilai JSON lengkap (mis. `json.RawMessage(\`"98765"\`)` atau `json.RawMessage(\`98765\`)`), bukan string Go biasa.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -520,16 +505,14 @@ VAInquiryRequest adalah request body untuk API VA - VA Inquiry (Service Code 24)
 
 **Response &mdash; `VAInquiryResponse`**
 
-VAInquiryResponse adalah response body untuk API VA - VA Inquiry.
-
 | Field | Type | Presence |
 |---|---|---|
 | `responseCode` | `string` | Wajib |
 | `responseMessage` | `string` | Wajib |
 | `virtualAccountData` | `*VAInquiryData` | Opsional |
 
-<Accordion title="Field VAInquiryData">
-VAInquiryData adalah objek "virtualAccountData" pada VAInquiryResponse. Field di luar trio identitas tidak diberi tanda M/O pada tab Guides, sehingga semuanya Opsional (omitempty); InquiryReason, TotalAmount, dan FeeAmount berupa pointer karena omitempty tidak berpengaruh pada nilai struct non-pointer.
+<Accordion title="VAInquiryData fields">
+Objek `virtualAccountData` pada `VAInquiryResponse`. Field selain identity triple tidak berlabel M/O di sumbernya, jadi semuanya Opsional (omitempty); `InquiryReason`, `TotalAmount`, dan `FeeAmount` berupa pointer karena omitempty tidak berlaku pada nilai struct non-pointer.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -552,8 +535,8 @@ VAInquiryData adalah objek "virtualAccountData" pada VAInquiryResponse. Field di
 
 </Accordion>
 
-<Accordion title="Field LocalizedText">
-LocalizedText adalah bentuk teks dwibahasa \{english, indonesia\} bersama yang dipakai di seluruh sub-grup Virtual Account (mis. inquiryReason, paymentFlagReason, billDescription, reason per-bill, entri freeTexts[]). Kedua field bertipe String, tidak ditandai M/O di sumbernya, sehingga keduanya memakai omitempty.
+<Accordion title="LocalizedText fields">
+Bentuk teks dwibahasa \{english, indonesia\} yang dipakai bersama di seluruh sub-kelompok Virtual Account (mis. inquiryReason, paymentFlagReason, billDescription, reason per-bill, entri freeTexts[]). Kedua field bertipe String, tidak ditandai M/O di sumbernya, jadi keduanya carry omitempty.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -562,8 +545,8 @@ LocalizedText adalah bentuk teks dwibahasa \{english, indonesia\} bersama yang d
 
 </Accordion>
 
-<Accordion title="Field BillDetail">
-BillDetail adalah satu entri dalam array "billDetails[]" pada sub-grup Virtual Account (maksimal 24 entri). Semua field tidak ditandai M/O di sumbernya sehingga semua memakai omitempty; BillDescription, BillAmount, dan Reason berupa pointer karena omitempty tidak berpengaruh pada nilai struct non-pointer. BillReferenceNo didokumentasikan Numeric pada tab Guides; sesuai aturan tipe-ambigu package ini, field Numeric yang terdokumentasi diberi tipe json.RawMessage, bukan string, karena field string biasa akan menggagalkan seluruh decode jika penerbit mengirimnya sebagai angka JSON polos, mengikuti presedan AccountTransactionLimit/APIKey yang sudah ada. BillDetail juga dipakai pada request body (CreateVARequest.BillDetails, UpdateVARequest.BillDetails), sehingga pemanggil yang mengisi BillReferenceNo harus menyertakan nilai JSON yang lengkap (mis. json.RawMessage(`"BILLREF1"`) atau json.RawMessage(`123`)), bukan string Go polos — nilai yang tidak lengkap akan menggagalkan json.Marshal untuk seluruh request.
+<Accordion title="BillDetail fields">
+Satu entri dalam array `billDetails[]` (maksimal 24 entri) yang dipakai di seluruh kelompok Virtual Account. `billReferenceNo` bertipe `json.RawMessage` karena standarnya mendokumentasikan field ini sebagai Numeric tapi sebagian issuer mengirimnya sebagai angka JSON polos — kalau Anda mengisinya sendiri (mis. di `CreateVARequest`), berikan nilai JSON yang lengkap seperti `json.RawMessage(\`"BILLREF1"\`)` atau `json.RawMessage(\`123\`)`, bukan string Go biasa.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -583,14 +566,13 @@ BillDetail adalah satu entri dalam array "billDetails[]" pada sub-grup Virtual A
 
 </Accordion>
 
-
 ---
 
 ### `VAPayment`
 
-VAPayment memanggil endpoint SNAP VA - VA Payment endpoint (Service Code 25, path .../\{version\}/transfer-va/payment, HTTP POST — no method override). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh VAPayment agar byte hasil marshal yang persis sama dipakai untuk signing maupun wire body.
+Memanggil endpoint SNAP VA - VA Payment (Service Code 25, path .../\{version\}/transfer-va/payment, HTTP POST — tanpa override method). `hb` harus sudah diisi semua field yang dibutuhkan `snap.HeaderBuilder` kecuali `Body` — VAPayment yang mengisinya sendiri agar byte yang sama persis dipakai untuk signing maupun request di wire.
 
-Operasi ini tidak idempotent dan package ini tidak melakukan retry. Pemanggil yang mengulang panggilan yang gagal atau timeout harus memakai X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server berpatokan pada header itu.
+Tidak idempoten dan tidak di-retry otomatis oleh package ini. Kalau me-retry request yang gagal/timeout, pakai `X-EXTERNAL-ID` yang sama — server mendeteksi duplikat lewat header ini.
 
 ```go
 func VAPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req VAPaymentRequest) (VAPaymentResponse, error)
@@ -598,7 +580,7 @@ func VAPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, re
 
 **Request &mdash; `VAPaymentRequest`**
 
-VAPaymentRequest adalah request body untuk API VA - VA Payment (Service Code 25). PartnerServiceID, CustomerNo, VirtualAccountNo, PaymentRequestID, dan PaidAmount wajib menurut tab Guides. TrxID bersifat Kondisional — "wajib jika berasal dari Create VA", sebuah kondisi bergantung-data yang tidak bisa dinyatakan oleh sistem tipe, sehingga di sini dibuat Opsional (omitempty). CustomerNo, ChannelCode, dan PaymentType bertipe json.RawMessage (PaymentType terdokumentasi String(1) tetapi setiap contoh selalu menampilkan angka polos).
+`partnerServiceId`, `customerNo`, `virtualAccountNo`, `paymentRequestId`, dan `paidAmount` Wajib. `trxId` Kondisional — wajib diisi kalau VA-nya dibuat lewat `CreateVA`. `customerNo`, `channelCode`, dan `paymentType` bertipe `json.RawMessage` karena contoh resmi standarnya menampilkan ketiganya sebagai angka polos, bukan string berkutip.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -624,8 +606,8 @@ VAPaymentRequest adalah request body untuk API VA - VA Payment (Service Code 25)
 | `freeTexts` | `[]LocalizedText` | Opsional |
 | `additionalInfo` | `json.RawMessage` | Opsional |
 
-<Accordion title="Field BillDetail">
-BillDetail adalah satu entri dalam array "billDetails[]" pada sub-grup Virtual Account (maksimal 24 entri). Semua field tidak ditandai M/O di sumbernya sehingga semua memakai omitempty; BillDescription, BillAmount, dan Reason berupa pointer karena omitempty tidak berpengaruh pada nilai struct non-pointer. BillReferenceNo didokumentasikan Numeric pada tab Guides; sesuai aturan tipe-ambigu package ini, field Numeric yang terdokumentasi diberi tipe json.RawMessage, bukan string, karena field string biasa akan menggagalkan seluruh decode jika penerbit mengirimnya sebagai angka JSON polos, mengikuti presedan AccountTransactionLimit/APIKey yang sudah ada. BillDetail juga dipakai pada request body (CreateVARequest.BillDetails, UpdateVARequest.BillDetails), sehingga pemanggil yang mengisi BillReferenceNo harus menyertakan nilai JSON yang lengkap (mis. json.RawMessage(`"BILLREF1"`) atau json.RawMessage(`123`)), bukan string Go polos — nilai yang tidak lengkap akan menggagalkan json.Marshal untuk seluruh request.
+<Accordion title="BillDetail fields">
+Satu entri dalam array `billDetails[]` (maksimal 24 entri) yang dipakai di seluruh kelompok Virtual Account. `billReferenceNo` bertipe `json.RawMessage` karena standarnya mendokumentasikan field ini sebagai Numeric tapi sebagian issuer mengirimnya sebagai angka JSON polos — kalau Anda mengisinya sendiri (mis. di `CreateVARequest`), berikan nilai JSON yang lengkap seperti `json.RawMessage(\`"BILLREF1"\`)` atau `json.RawMessage(\`123\`)`, bukan string Go biasa.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -645,8 +627,8 @@ BillDetail adalah satu entri dalam array "billDetails[]" pada sub-grup Virtual A
 
 </Accordion>
 
-<Accordion title="Field LocalizedText">
-LocalizedText adalah bentuk teks dwibahasa \{english, indonesia\} bersama yang dipakai di seluruh sub-grup Virtual Account (mis. inquiryReason, paymentFlagReason, billDescription, reason per-bill, entri freeTexts[]). Kedua field bertipe String, tidak ditandai M/O di sumbernya, sehingga keduanya memakai omitempty.
+<Accordion title="LocalizedText fields">
+Bentuk teks dwibahasa \{english, indonesia\} yang dipakai bersama di seluruh sub-kelompok Virtual Account (mis. inquiryReason, paymentFlagReason, billDescription, reason per-bill, entri freeTexts[]). Kedua field bertipe String, tidak ditandai M/O di sumbernya, jadi keduanya carry omitempty.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -657,16 +639,14 @@ LocalizedText adalah bentuk teks dwibahasa \{english, indonesia\} bersama yang d
 
 **Response &mdash; `VAPaymentResponse`**
 
-VAPaymentResponse adalah response body untuk API VA - VA Payment.
-
 | Field | Type | Presence |
 |---|---|---|
 | `responseCode` | `string` | Wajib |
 | `responseMessage` | `string` | Wajib |
 | `virtualAccountData` | `*VAPaymentData` | Opsional |
 
-<Accordion title="Field VAPaymentData">
-VAPaymentData adalah objek "virtualAccountData" pada VAPaymentResponse — response ini mencerminkan seluruh field request ditambah PaymentFlagReason dan PaymentFlagStatus. Status/reason per-bill tidak butuh field baru: BillDetail sudah membawa Status dan Reason.
+<Accordion title="VAPaymentData fields">
+Objek `virtualAccountData` pada `VAPaymentResponse` — mencerminkan field request-nya ditambah `paymentFlagReason` dan `paymentFlagStatus`.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -696,8 +676,8 @@ VAPaymentData adalah objek "virtualAccountData" pada VAPaymentResponse — respo
 
 </Accordion>
 
-<Accordion title="Field BillDetail">
-BillDetail adalah satu entri dalam array "billDetails[]" pada sub-grup Virtual Account (maksimal 24 entri). Semua field tidak ditandai M/O di sumbernya sehingga semua memakai omitempty; BillDescription, BillAmount, dan Reason berupa pointer karena omitempty tidak berpengaruh pada nilai struct non-pointer. BillReferenceNo didokumentasikan Numeric pada tab Guides; sesuai aturan tipe-ambigu package ini, field Numeric yang terdokumentasi diberi tipe json.RawMessage, bukan string, karena field string biasa akan menggagalkan seluruh decode jika penerbit mengirimnya sebagai angka JSON polos, mengikuti presedan AccountTransactionLimit/APIKey yang sudah ada. BillDetail juga dipakai pada request body (CreateVARequest.BillDetails, UpdateVARequest.BillDetails), sehingga pemanggil yang mengisi BillReferenceNo harus menyertakan nilai JSON yang lengkap (mis. json.RawMessage(`"BILLREF1"`) atau json.RawMessage(`123`)), bukan string Go polos — nilai yang tidak lengkap akan menggagalkan json.Marshal untuk seluruh request.
+<Accordion title="BillDetail fields">
+Satu entri dalam array `billDetails[]` (maksimal 24 entri) yang dipakai di seluruh kelompok Virtual Account. `billReferenceNo` bertipe `json.RawMessage` karena standarnya mendokumentasikan field ini sebagai Numeric tapi sebagian issuer mengirimnya sebagai angka JSON polos — kalau Anda mengisinya sendiri (mis. di `CreateVARequest`), berikan nilai JSON yang lengkap seperti `json.RawMessage(\`"BILLREF1"\`)` atau `json.RawMessage(\`123\`)`, bukan string Go biasa.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -717,8 +697,8 @@ BillDetail adalah satu entri dalam array "billDetails[]" pada sub-grup Virtual A
 
 </Accordion>
 
-<Accordion title="Field LocalizedText">
-LocalizedText adalah bentuk teks dwibahasa \{english, indonesia\} bersama yang dipakai di seluruh sub-grup Virtual Account (mis. inquiryReason, paymentFlagReason, billDescription, reason per-bill, entri freeTexts[]). Kedua field bertipe String, tidak ditandai M/O di sumbernya, sehingga keduanya memakai omitempty.
+<Accordion title="LocalizedText fields">
+Bentuk teks dwibahasa \{english, indonesia\} yang dipakai bersama di seluruh sub-kelompok Virtual Account (mis. inquiryReason, paymentFlagReason, billDescription, reason per-bill, entri freeTexts[]). Kedua field bertipe String, tidak ditandai M/O di sumbernya, jadi keduanya carry omitempty.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -727,12 +707,11 @@ LocalizedText adalah bentuk teks dwibahasa \{english, indonesia\} bersama yang d
 
 </Accordion>
 
-
 ---
 
 ### `VAInquiryStatus`
 
-VAInquiryStatus memanggil endpoint SNAP VA - VA Inquiry Status (Service Code 26, path .../\{version\}/transfer-va/status, HTTP POST). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh VAInquiryStatus agar byte hasil marshal yang persis sama dipakai untuk signing maupun wire body.
+Memanggil endpoint SNAP VA - VA Inquiry Status (Service Code 26, path .../\{version\}/transfer-va/status). `hb` harus sudah diisi semua field yang dibutuhkan `snap.HeaderBuilder` kecuali `Body` — VAInquiryStatus yang mengisinya sendiri agar byte yang sama persis dipakai untuk signing maupun request di wire.
 
 ```go
 func VAInquiryStatus(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req VAInquiryStatusRequest) (VAInquiryStatusResponse, error)
@@ -740,7 +719,7 @@ func VAInquiryStatus(ctx context.Context, t *snap.Transport, hb snap.HeaderBuild
 
 **Request &mdash; `VAInquiryStatusRequest`**
 
-VAInquiryStatusRequest adalah request body untuk API VA - VA Inquiry Status (Service Code 26). PartnerServiceID, CustomerNo, dan VirtualAccountNo (trio identitas) wajib menurut tab Guides; InquiryRequestID dan PaymentRequestID sama-sama Opsional/Kondisional (omitempty). Dokumentasi portal menyebut "jika InquiryRequestID tidak dikirim, mengembalikan array berdasarkan virtualAccountNo," namun di bagian lain response didokumentasikan sebagai satu Object tunggal — package ini mengikuti bacaan Object tunggal dan tidak menebak-nebak bentuk array tersebut.
+`partnerServiceId`, `customerNo`, dan `virtualAccountNo` (identity triple) Wajib; `inquiryRequestId` dan `paymentRequestId` Opsional/Kondisional. Package ini selalu men-decode response sebagai satu objek tunggal, sesuai deklarasi tipe standarnya.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -753,16 +732,14 @@ VAInquiryStatusRequest adalah request body untuk API VA - VA Inquiry Status (Ser
 
 **Response &mdash; `VAInquiryStatusResponse`**
 
-VAInquiryStatusResponse adalah response body untuk API VA - VA Inquiry Status.
-
 | Field | Type | Presence |
 |---|---|---|
 | `responseCode` | `string` | Wajib |
 | `responseMessage` | `string` | Wajib |
 | `virtualAccountData` | `*VAInquiryStatusData` | Opsional |
 
-<Accordion title="Field VAInquiryStatusData">
-VAInquiryStatusData adalah objek "virtualAccountData" pada VAInquiryStatusResponse — mencerminkan bentuk response VA Payment ditambah transactionDate. Ini adalah tipe yang berbeda dari VAPaymentData (bukan pemakaian ulang), mengikuti konvensi package ini "tipe berbeda untuk setiap service code walau bentuknya identik/nyaris identik"; transfer_shared_types_test.go menjaga keduanya agar tidak melenceng pada field/tag.
+<Accordion title="VAInquiryStatusData fields">
+Objek `virtualAccountData` pada `VAInquiryStatusResponse` — bentuknya sama dengan `VAPaymentData` ditambah `transactionDate`, disimpan sebagai tipe sendiri karena Service Code-nya berbeda.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -793,8 +770,8 @@ VAInquiryStatusData adalah objek "virtualAccountData" pada VAInquiryStatusRespon
 
 </Accordion>
 
-<Accordion title="Field BillDetail">
-BillDetail adalah satu entri dalam array "billDetails[]" pada sub-grup Virtual Account (maksimal 24 entri). Semua field tidak ditandai M/O di sumbernya sehingga semua memakai omitempty; BillDescription, BillAmount, dan Reason berupa pointer karena omitempty tidak berpengaruh pada nilai struct non-pointer. BillReferenceNo didokumentasikan Numeric pada tab Guides; sesuai aturan tipe-ambigu package ini, field Numeric yang terdokumentasi diberi tipe json.RawMessage, bukan string, karena field string biasa akan menggagalkan seluruh decode jika penerbit mengirimnya sebagai angka JSON polos, mengikuti presedan AccountTransactionLimit/APIKey yang sudah ada. BillDetail juga dipakai pada request body (CreateVARequest.BillDetails, UpdateVARequest.BillDetails), sehingga pemanggil yang mengisi BillReferenceNo harus menyertakan nilai JSON yang lengkap (mis. json.RawMessage(`"BILLREF1"`) atau json.RawMessage(`123`)), bukan string Go polos — nilai yang tidak lengkap akan menggagalkan json.Marshal untuk seluruh request.
+<Accordion title="BillDetail fields">
+Satu entri dalam array `billDetails[]` (maksimal 24 entri) yang dipakai di seluruh kelompok Virtual Account. `billReferenceNo` bertipe `json.RawMessage` karena standarnya mendokumentasikan field ini sebagai Numeric tapi sebagian issuer mengirimnya sebagai angka JSON polos — kalau Anda mengisinya sendiri (mis. di `CreateVARequest`), berikan nilai JSON yang lengkap seperti `json.RawMessage(\`"BILLREF1"\`)` atau `json.RawMessage(\`123\`)`, bukan string Go biasa.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -814,8 +791,8 @@ BillDetail adalah satu entri dalam array "billDetails[]" pada sub-grup Virtual A
 
 </Accordion>
 
-<Accordion title="Field LocalizedText">
-LocalizedText adalah bentuk teks dwibahasa \{english, indonesia\} bersama yang dipakai di seluruh sub-grup Virtual Account (mis. inquiryReason, paymentFlagReason, billDescription, reason per-bill, entri freeTexts[]). Kedua field bertipe String, tidak ditandai M/O di sumbernya, sehingga keduanya memakai omitempty.
+<Accordion title="LocalizedText fields">
+Bentuk teks dwibahasa \{english, indonesia\} yang dipakai bersama di seluruh sub-kelompok Virtual Account (mis. inquiryReason, paymentFlagReason, billDescription, reason per-bill, entri freeTexts[]). Kedua field bertipe String, tidak ditandai M/O di sumbernya, jadi keduanya carry omitempty.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -824,12 +801,11 @@ LocalizedText adalah bentuk teks dwibahasa \{english, indonesia\} bersama yang d
 
 </Accordion>
 
-
 ---
 
 ### `VAInquiryPaymentIntrabank`
 
-VAInquiryPaymentIntrabank memanggil endpoint SNAP VA - Inquiry Payment Intrabank (Service Code 32, path .../\{version\}/transfer-va/inquiry-intrabank, HTTP POST). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh VAInquiryPaymentIntrabank agar byte hasil marshal yang persis sama dipakai untuk signing maupun wire body.
+Memanggil endpoint SNAP VA - Inquiry Payment Intrabank (Service Code 32, path .../\{version\}/transfer-va/inquiry-intrabank). `hb` harus sudah diisi semua field yang dibutuhkan `snap.HeaderBuilder` kecuali `Body` — VAInquiryPaymentIntrabank yang mengisinya sendiri agar byte yang sama persis dipakai untuk signing maupun request di wire.
 
 ```go
 func VAInquiryPaymentIntrabank(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req VAInquiryPaymentIntrabankRequest) (VAInquiryPaymentIntrabankResponse, error)
@@ -837,7 +813,7 @@ func VAInquiryPaymentIntrabank(ctx context.Context, t *snap.Transport, hb snap.H
 
 **Request &mdash; `VAInquiryPaymentIntrabankRequest`**
 
-VAInquiryPaymentIntrabankRequest adalah request body untuk API VA - Inquiry Payment Intrabank (Service Code 32). PartnerServiceID, CustomerNo, dan VirtualAccountNo (trio identitas) wajib menurut tab Guides. CustomerNo bertipe json.RawMessage: contoh endpoint ini sendiri menampilkannya sebagai angka JSON polos. Hanya field yang secara eksplisit disebutkan untuk endpoint ini yang dimodelkan; billDetails/freeTexts/totalAmount/feeAmount tidak disebutkan ulang untuk endpoint 32 sebagaimana untuk endpoint 24, sehingga tidak ditambahkan di sini.
+`partnerServiceId`, `customerNo`, dan `virtualAccountNo` (identity triple) Wajib. `customerNo` bertipe `json.RawMessage` karena contoh resmi endpoint ini menampilkannya sebagai angka JSON polos.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -851,16 +827,14 @@ VAInquiryPaymentIntrabankRequest adalah request body untuk API VA - Inquiry Paym
 
 **Response &mdash; `VAInquiryPaymentIntrabankResponse`**
 
-VAInquiryPaymentIntrabankResponse adalah response body untuk API VA - Inquiry Payment Intrabank.
-
 | Field | Type | Presence |
 |---|---|---|
 | `responseCode` | `string` | Wajib |
 | `responseMessage` | `string` | Wajib |
 | `virtualAccountdata` | `*VAInquiryPaymentIntrabankData` | Opsional |
 
-<Accordion title="Field VAInquiryPaymentIntrabankData">
-VAInquiryPaymentIntrabankData adalah objek "virtualAccountdata" (huruf d kecil — bukan typo tabel, berbeda dari tipe-tipe VA lain yang memakai virtualAccountData berhuruf D besar) pada VAInquiryPaymentIntrabankResponse.
+<Accordion title="VAInquiryPaymentIntrabankData fields">
+Objek `virtualAccountdata` (huruf "d" kecil — sengaja mengikuti wire key standarnya, tidak seperti kebanyakan endpoint VA lain yang pakai `virtualAccountData`) pada `VAInquiryPaymentIntrabankResponse`.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -877,14 +851,13 @@ VAInquiryPaymentIntrabankData adalah objek "virtualAccountdata" (huruf d kecil �
 
 </Accordion>
 
-
 ---
 
 ### `VAPaymentIntrabank`
 
-VAPaymentIntrabank memanggil endpoint SNAP VA - Payment Intrabank endpoint (Service Code 33, path .../\{version\}/transfer-va/payment-intrabank, HTTP POST — no method override). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh VAPaymentIntrabank agar byte hasil marshal yang persis sama dipakai untuk signing maupun wire body.
+Memanggil endpoint SNAP VA - Payment Intrabank (Service Code 33, path .../\{version\}/transfer-va/payment-intrabank, HTTP POST — tanpa override method). `hb` harus sudah diisi semua field yang dibutuhkan `snap.HeaderBuilder` kecuali `Body` — VAPaymentIntrabank yang mengisinya sendiri agar byte yang sama persis dipakai untuk signing maupun request di wire.
 
-Operasi ini tidak idempotent dan package ini tidak melakukan retry. Pemanggil yang mengulang panggilan yang gagal atau timeout harus memakai X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server berpatokan pada header itu.
+Tidak idempoten dan tidak di-retry otomatis oleh package ini. Kalau me-retry request yang gagal/timeout, pakai `X-EXTERNAL-ID` yang sama — server mendeteksi duplikat lewat header ini.
 
 ```go
 func VAPaymentIntrabank(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req VAPaymentIntrabankRequest) (VAPaymentIntrabankResponse, error)
@@ -892,7 +865,7 @@ func VAPaymentIntrabank(ctx context.Context, t *snap.Transport, hb snap.HeaderBu
 
 **Request &mdash; `VAPaymentIntrabankRequest`**
 
-VAPaymentIntrabankRequest adalah request body untuk API VA - Payment Intrabank (Service Code 33). PartnerServiceID, CustomerNo, VirtualAccountNo, PartnerReferenceNo, dan PaidAmount wajib menurut tab Guides. CustomerNo bertipe json.RawMessage (contoh menampilkan angka polos). ReferenceNo juga json.RawMessage: contoh request endpoint ini menampilkannya sebagai angka polos, meski pada response-nya ditampilkan berupa string berkutip. PaymentStatus adalah string status bebas, secara eksplisit berbeda dari enum 2-digit transactionStatus milik package ini.
+`partnerServiceId`, `customerNo`, `virtualAccountNo`, `partnerReferenceNo`, dan `paidAmount` Wajib. `customerNo` dan `referenceNo` bertipe `json.RawMessage` karena contoh resmi standarnya menampilkan keduanya sebagai angka polos, meski `referenceNo` muncul berkutip di response. `paymentStatus` berupa string status bebas, bukan kode 2 digit `transactionStatus` seperti biasanya di package ini.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -912,16 +885,14 @@ VAPaymentIntrabankRequest adalah request body untuk API VA - Payment Intrabank (
 
 **Response &mdash; `VAPaymentIntrabankResponse`**
 
-VAPaymentIntrabankResponse adalah response body untuk API VA - Payment Intrabank.
-
 | Field | Type | Presence |
 |---|---|---|
 | `responseCode` | `string` | Wajib |
 | `responseMessage` | `string` | Wajib |
 | `virtualAccountdata` | `*VAPaymentIntrabankData` | Opsional |
 
-<Accordion title="Field VAPaymentIntrabankData">
-VAPaymentIntrabankData adalah objek "virtualAccountdata" (huruf d kecil) pada VAPaymentIntrabankResponse — mencerminkan field-field VAPaymentIntrabankRequest, mengikuti konvensi request-tercermin-ke-response yang sama seperti pada VAPaymentData.
+<Accordion title="VAPaymentIntrabankData fields">
+Objek `virtualAccountdata` (huruf "d" kecil) pada `VAPaymentIntrabankResponse` — mencerminkan field request-nya sendiri.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -941,14 +912,13 @@ VAPaymentIntrabankData adalah objek "virtualAccountdata" (huruf d kecil) pada VA
 
 </Accordion>
 
-
 ---
 
 ### `VANotifyPaymentIntrabank`
 
-VANotifyPaymentIntrabank memanggil endpoint SNAP VA - Notify Payment Intrabank endpoint (Service Code 34, path .../\{version\}/transfer-va/notify-payment-intrabank, HTTP POST — no method override). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh VANotifyPaymentIntrabank agar byte hasil marshal yang persis sama dipakai untuk signing maupun wire body.
+Memanggil endpoint SNAP VA - Notify Payment Intrabank (Service Code 34, path .../\{version\}/transfer-va/notify-payment-intrabank, HTTP POST — tanpa override method). `hb` harus sudah diisi semua field yang dibutuhkan `snap.HeaderBuilder` kecuali `Body` — VANotifyPaymentIntrabank yang mengisinya sendiri agar byte yang sama persis dipakai untuk signing maupun request di wire.
 
-Operasi ini tidak idempotent dan package ini tidak melakukan retry. Pemanggil yang mengulang panggilan yang gagal atau timeout harus memakai X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server berpatokan pada header itu.
+Tidak idempoten dan tidak di-retry otomatis oleh package ini. Kalau me-retry request yang gagal/timeout, pakai `X-EXTERNAL-ID` yang sama — server mendeteksi duplikat lewat header ini.
 
 ```go
 func VANotifyPaymentIntrabank(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req VANotifyPaymentIntrabankRequest) (VANotifyPaymentIntrabankResponse, error)
@@ -956,7 +926,7 @@ func VANotifyPaymentIntrabank(ctx context.Context, t *snap.Transport, hb snap.He
 
 **Request &mdash; `VANotifyPaymentIntrabankRequest`**
 
-VANotifyPaymentIntrabankRequest adalah request body untuk API VA - Notify Payment Intrabank (Service Code 34). Ini adalah "callback yang dikirim keluar oleh PJP" — PJP yang memulai panggilan ini, berbeda dari endpoint notifikasi RTGS/SKNBI/Interbank-Bulk yang hanya diterima PJP. Karena itu fungsi ini adalah fungsi pemanggil biasa, bukan tipe inbound berupa struct saja. PartnerServiceID terdokumentasi "StringNumber" (typo pada tabel sumber) tetapi ditampilkan berkutip pada contoh endpoint ini, sehingga tetap bertipe string. CustomerNo bertipe json.RawMessage (contoh menampilkan angka polos).
+Berbeda dari notifikasi RTGS/SKNBI/Interbank-Bulk, yang ini outbound — kode Anda yang memanggilnya, PJP yang menerimanya — jadi ini fungsi pemanggil biasa, bukan struct inbound-only. `customerNo` bertipe `json.RawMessage` karena contoh resmi standarnya menampilkannya sebagai angka polos.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -971,8 +941,8 @@ VANotifyPaymentIntrabankRequest adalah request body untuk API VA - Notify Paymen
 | `paymentFlagReason` | `*LocalizedText` | Opsional |
 | `additionalInfo` | `json.RawMessage` | Opsional |
 
-<Accordion title="Field LocalizedText">
-LocalizedText adalah bentuk teks dwibahasa \{english, indonesia\} bersama yang dipakai di seluruh sub-grup Virtual Account (mis. inquiryReason, paymentFlagReason, billDescription, reason per-bill, entri freeTexts[]). Kedua field bertipe String, tidak ditandai M/O di sumbernya, sehingga keduanya memakai omitempty.
+<Accordion title="LocalizedText fields">
+Bentuk teks dwibahasa \{english, indonesia\} yang dipakai bersama di seluruh sub-kelompok Virtual Account (mis. inquiryReason, paymentFlagReason, billDescription, reason per-bill, entri freeTexts[]). Kedua field bertipe String, tidak ditandai M/O di sumbernya, jadi keduanya carry omitempty.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -983,16 +953,14 @@ LocalizedText adalah bentuk teks dwibahasa \{english, indonesia\} bersama yang d
 
 **Response &mdash; `VANotifyPaymentIntrabankResponse`**
 
-VANotifyPaymentIntrabankResponse adalah response body untuk API VA - Notify Payment Intrabank.
-
 | Field | Type | Presence |
 |---|---|---|
 | `responseCode` | `string` | Wajib |
 | `responseMessage` | `string` | Wajib |
 | `virtualAccountdata` | `*VANotifyPaymentIntrabankData` | Opsional |
 
-<Accordion title="Field VANotifyPaymentIntrabankData">
-VANotifyPaymentIntrabankData adalah objek "virtualAccountdata" (huruf d kecil) pada VANotifyPaymentIntrabankResponse — mencerminkan sebagian besar field VANotifyPaymentIntrabankRequest ditambah envelope.
+<Accordion title="VANotifyPaymentIntrabankData fields">
+Objek `virtualAccountdata` (huruf "d" kecil) pada `VANotifyPaymentIntrabankResponse` — mencerminkan sebagian besar field request-nya, ditambah envelope.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -1009,8 +977,8 @@ VANotifyPaymentIntrabankData adalah objek "virtualAccountdata" (huruf d kecil) p
 
 </Accordion>
 
-<Accordion title="Field LocalizedText">
-LocalizedText adalah bentuk teks dwibahasa \{english, indonesia\} bersama yang dipakai di seluruh sub-grup Virtual Account (mis. inquiryReason, paymentFlagReason, billDescription, reason per-bill, entri freeTexts[]). Kedua field bertipe String, tidak ditandai M/O di sumbernya, sehingga keduanya memakai omitempty.
+<Accordion title="LocalizedText fields">
+Bentuk teks dwibahasa \{english, indonesia\} yang dipakai bersama di seluruh sub-kelompok Virtual Account (mis. inquiryReason, paymentFlagReason, billDescription, reason per-bill, entri freeTexts[]). Kedua field bertipe String, tidak ditandai M/O di sumbernya, jadi keduanya carry omitempty.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -1019,14 +987,13 @@ LocalizedText adalah bentuk teks dwibahasa \{english, indonesia\} bersama yang d
 
 </Accordion>
 
-
 ---
 
 ### `VAGetReport`
 
-VAGetReport memanggil endpoint SNAP VA - Get Report (Service Code 35, path .../\{version\}/transfer-va/report). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Method dan Body: VAGetReport mengatur Method menjadi POST sendiri — ini satu-satunya endpoint VA di mana spesifikasi sumbernya kontradiktif dengan dirinya sendiri (GET menurut tab Guides, POST-dengan-body menurut contoh kode), dan package ini memilih POST, sehingga method tidak bisa dikonfigurasi pemanggil, sama seperti endpoint PUT/DELETE lain yang method-nya sudah tetap — dan Body, agar byte hasil marshal yang persis sama dipakai untuk signing maupun wire body.
+Memanggil endpoint SNAP VA - Get Report (Service Code 35, path .../\{version\}/transfer-va/report). `hb` harus sudah diisi semua field yang dibutuhkan `snap.HeaderBuilder` kecuali `Method` dan `Body`: `VAGetReport` mengisi `Method` dengan POST sendiri (standarnya mendokumentasikan endpoint ini secara tidak konsisten sebagai GET maupun POST-dengan-body; package ini selalu pakai POST) dan `Body`, agar byte yang sama persis dipakai untuk signing maupun request di wire.
 
-Report yang mencakup rentang tanggal lebar bisa mengembalikan jumlah entri array yang tidak terbatas; lapisan transport bersama membatasi setiap response body hingga 10 MiB (lihat transport.go), sehingga pemanggil yang mengambil report besar sebaiknya melakukan paging dengan rentang tanggal/waktu yang lebih sempit, bukan satu panggilan tak terbatas.
+Laporan dengan rentang tanggal lebar bisa mengembalikan jumlah entri array yang tidak terbatas; transport layer bersama membatasi setiap response body sampai 10 MiB (lihat transport.go), jadi kalau menarik laporan besar sebaiknya di-page pakai rentang tanggal/waktu yang lebih sempit, bukan satu panggilan tak terbatas.
 
 ```go
 func VAGetReport(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req VAGetReportRequest) (VAGetReportResponse, error)
@@ -1034,7 +1001,7 @@ func VAGetReport(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, 
 
 **Request &mdash; `VAGetReportRequest`**
 
-VAGetReportRequest adalah request body untuk API VA - Get Report (Service Code 35). PartnerServiceID adalah satu-satunya field wajib menurut tab Guides; tipenya berubah menjadi Number khusus untuk endpoint ini (String di tempat lain pada package), sehingga diberi tipe json.RawMessage. Endpoint ini terdokumentasi baik sebagai GET (tab Guides) maupun POST-dengan-body (contoh kode); package ini memodelkannya sebagai POST dengan JSON body, sama seperti endpoint lain dalam grup ini.
+`partnerServiceId` satu-satunya field Wajib; bertipe `json.RawMessage` di sini karena standarnya mendokumentasikan field ini sebagai Number khusus untuk endpoint ini, tidak seperti endpoint VA lain yang bertipe String.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -1047,7 +1014,7 @@ VAGetReportRequest adalah request body untuk API VA - Get Report (Service Code 3
 
 **Response &mdash; `VAGetReportResponse`**
 
-VAGetReportResponse adalah response body untuk API VA - Get Report. Ini satu-satunya response VA pada package ini yang field data-nya berupa array, bukan objek tunggal.
+Satu-satunya response VA di package ini yang field data-nya berupa array, bukan objek tunggal.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -1055,8 +1022,8 @@ VAGetReportResponse adalah response body untuk API VA - Get Report. Ini satu-sat
 | `responseMessage` | `string` | Wajib |
 | `virtualAccountdata` | `[]GetReportData` | Opsional |
 
-<Accordion title="Field GetReportData">
-GetReportData adalah satu entri dalam array "virtualAccountdata" (huruf d kecil) pada VAGetReportResponse — field-nya identik dengan VAInquiryStatusData, karena "setiap item berbentuk seperti objek response Payment/Inquiry-Status." Ini adalah tipe yang berbeda (bukan pemakaian ulang), mengikuti konvensi package ini "tipe berbeda untuk setiap service code walau bentuknya identik"; transfer_shared_types_test.go menjaga keduanya lewat pengecekan kesetaraan penuh agar tidak melenceng pada field/tag.
+<Accordion title="GetReportData fields">
+Satu entri dalam array `virtualAccountdata` (huruf "d" kecil) pada `VAGetReportResponse` — bentuknya sama dengan `VAInquiryStatusData`, disimpan sebagai tipe sendiri karena Service Code-nya berbeda.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -1087,8 +1054,8 @@ GetReportData adalah satu entri dalam array "virtualAccountdata" (huruf d kecil)
 
 </Accordion>
 
-<Accordion title="Field BillDetail">
-BillDetail adalah satu entri dalam array "billDetails[]" pada sub-grup Virtual Account (maksimal 24 entri). Semua field tidak ditandai M/O di sumbernya sehingga semua memakai omitempty; BillDescription, BillAmount, dan Reason berupa pointer karena omitempty tidak berpengaruh pada nilai struct non-pointer. BillReferenceNo didokumentasikan Numeric pada tab Guides; sesuai aturan tipe-ambigu package ini, field Numeric yang terdokumentasi diberi tipe json.RawMessage, bukan string, karena field string biasa akan menggagalkan seluruh decode jika penerbit mengirimnya sebagai angka JSON polos, mengikuti presedan AccountTransactionLimit/APIKey yang sudah ada. BillDetail juga dipakai pada request body (CreateVARequest.BillDetails, UpdateVARequest.BillDetails), sehingga pemanggil yang mengisi BillReferenceNo harus menyertakan nilai JSON yang lengkap (mis. json.RawMessage(`"BILLREF1"`) atau json.RawMessage(`123`)), bukan string Go polos — nilai yang tidak lengkap akan menggagalkan json.Marshal untuk seluruh request.
+<Accordion title="BillDetail fields">
+Satu entri dalam array `billDetails[]` (maksimal 24 entri) yang dipakai di seluruh kelompok Virtual Account. `billReferenceNo` bertipe `json.RawMessage` karena standarnya mendokumentasikan field ini sebagai Numeric tapi sebagian issuer mengirimnya sebagai angka JSON polos — kalau Anda mengisinya sendiri (mis. di `CreateVARequest`), berikan nilai JSON yang lengkap seperti `json.RawMessage(\`"BILLREF1"\`)` atau `json.RawMessage(\`123\`)`, bukan string Go biasa.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -1108,8 +1075,8 @@ BillDetail adalah satu entri dalam array "billDetails[]" pada sub-grup Virtual A
 
 </Accordion>
 
-<Accordion title="Field LocalizedText">
-LocalizedText adalah bentuk teks dwibahasa \{english, indonesia\} bersama yang dipakai di seluruh sub-grup Virtual Account (mis. inquiryReason, paymentFlagReason, billDescription, reason per-bill, entri freeTexts[]). Kedua field bertipe String, tidak ditandai M/O di sumbernya, sehingga keduanya memakai omitempty.
+<Accordion title="LocalizedText fields">
+Bentuk teks dwibahasa \{english, indonesia\} yang dipakai bersama di seluruh sub-kelompok Virtual Account (mis. inquiryReason, paymentFlagReason, billDescription, reason per-bill, entri freeTexts[]). Kedua field bertipe String, tidak ditandai M/O di sumbernya, jadi keduanya carry omitempty.
 
 | Field | Type | Presence |
 |---|---|---|

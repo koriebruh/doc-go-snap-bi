@@ -31,7 +31,7 @@ func TransferToBankAccountInquiry(ctx context.Context, t *snap.Transport, hb sna
 
 **Request &mdash; `TransferToBankAccountInquiryRequest`**
 
-TransferToBankAccountInquiryRequest is the request body for API Transfer To Bank - Account Inquiry (Service Code 42). CustomerNumber and Amount are mandatory per the Guides tab. CustomerNumber's JSON tag is "CustomerNumber" (capital C) — this endpoint's own field table documents it that way, unlike every other endpoint in the package, which uses lowercase-first "customerNumber." No worked example exists to resolve whether this is a typo, so this package models the literal, only-available documented casing rather than guessing (research §6 item 7).
+TransferToBankAccountInquiryRequest is the request body for API Transfer To Bank - Account Inquiry (Service Code 42). CustomerNumber and Amount are Mandatory. Note the wire field is `CustomerNumber` (capital C) here — every other endpoint uses lowercase `customerNumber`. Likely a documentation typo, but this package matches the documented casing exactly since no example confirms a fix.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -72,7 +72,7 @@ func TransferToBankPayment(ctx context.Context, t *snap.Transport, hb snap.Heade
 
 **Request &mdash; `TransferToBankPaymentRequest`**
 
-TransferToBankPaymentRequest is the request body for API Transfer To Bank - Payment Transaction (Service Code 43). PartnerReferenceNo, CustomerNumber, BeneficiaryAccountNumber, and Amount are mandatory per the Guides tab. CustomerNumber's JSON tag is the standard lowercase "customerNumber" here — this endpoint's own field listing uses the normal casing, unlike endpoint 42's "CustomerNumber" (see TransferToBankAccountInquiryRequest's doc comment).
+TransferToBankPaymentRequest is the request body for API Transfer To Bank - Payment Transaction (Service Code 43). PartnerReferenceNo, CustomerNumber, BeneficiaryAccountNumber, and Amount are Mandatory. Unlike Account Inquiry above, `customerNumber` here uses the normal lowercase casing.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -87,7 +87,7 @@ TransferToBankPaymentRequest is the request body for API Transfer To Bank - Paym
 
 **Response &mdash; `TransferToBankPaymentResponse`**
 
-TransferToBankPaymentResponse is the response body for API Transfer To Bank - Payment Transaction. ReferenceNo and ReferenceNumber are both present and distinct — research §5.7 explicitly notes ReferenceNumber "is a distinct field from referenceNo, both present," the same coexistence pattern already established for CustomerTopUpResponse (Phase 17).
+TransferToBankPaymentResponse is the response body for API Transfer To Bank - Payment Transaction. Note `referenceNo` and `referenceNumber` are two separate fields, both present — not a duplicate.
 
 | Field | Type | Presence |
 |---|---|---|

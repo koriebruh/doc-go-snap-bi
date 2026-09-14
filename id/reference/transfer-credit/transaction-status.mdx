@@ -1,11 +1,11 @@
 ---
 title: "Transaction Status Inquiry"
-description: "Mengecek status transfer yang sudah pernah dikirim, terhadap pihak bank maupun non-bank."
+description: "Mengecek status transfer yang sudah dikirim sebelumnya, terhadap counterparty bank atau non-bank."
 ---
 
 ## Transaction Status Inquiry
 
-Mengecek status transfer yang sudah pernah dikirim, terhadap pihak bank maupun non-bank.
+Mengecek status transfer yang sudah dikirim sebelumnya, terhadap counterparty bank atau non-bank.
 
 <CodeGroup>
 ```go example.go
@@ -20,7 +20,7 @@ if err != nil {
 
 ### `TransactionStatusInquiryBank`
 
-TransactionStatusInquiryBank memanggil endpoint SNAP Transaction Status Inquiry Bank (Service Code 36, path .../\{version\}/transfer/status — path ini sebelumnya salah tertulis sebagai transaction-status-inquiry-bank tanpa justifikasi yang tercatat, sudah dikoreksi berdasarkan tabel path pada research §1, HTTP POST — tanpa override method). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh TransactionStatusInquiryBank sehingga byte hasil marshal yang persis sama dipakai baik untuk signing maupun wire body.
+Memanggil endpoint SNAP Transaction Status Inquiry Bank (Service Code 36, path .../\{version\}/transfer/status). `hb` harus sudah membawa setiap field yang dibutuhkan `snap.HeaderBuilder` kecuali `Body`, yang diatur sendiri oleh `TransactionStatusInquiryBank` agar byte hasil marshal yang sama persis dipakai untuk signing dan wire body.
 
 ```go
 func TransactionStatusInquiryBank(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req TransactionStatusInquiryBankRequest) (TransactionStatusInquiryBankResponse, error)
@@ -28,7 +28,7 @@ func TransactionStatusInquiryBank(ctx context.Context, t *snap.Transport, hb sna
 
 **Request &mdash; `TransactionStatusInquiryBankRequest`**
 
-TransactionStatusInquiryBankRequest adalah request body untuk API Transaction Status Inquiry Bank (Service Code 36). ServiceCode adalah satu-satunya field wajib menurut tab Guides — field ini menunjuk ke service code transaksi asal (misalnya "17" untuk Intrabank).
+`ServiceCode` satu-satunya field wajib — mengacu ke service code transaksi asal (mis. "17" untuk Intrabank).
 
 | Field | Type | Presence |
 |---|---|---|
@@ -42,7 +42,7 @@ TransactionStatusInquiryBankRequest adalah request body untuk API Transaction St
 
 **Response &mdash; `TransactionStatusInquiryBankResponse`**
 
-TransactionStatusInquiryBankResponse adalah response body untuk API Transaction Status Inquiry Bank. Berbeda dari sub-group Virtual Account, response ini tidak punya nested data object — field-nya langsung berada pada response, mengikuti preseden flat-response yang sudah dipakai AccountInquiryInternalResponse. Field request asli dikirim balik sebagai gema (Opsional di sini, terlepas dari sifat wajib/tidaknya di request), mengikuti pola gema PartnerReferenceNo milik AccountInquiryInternalResponse. LatestTransactionStatus adalah enum 2-digit transactionStatus bersama yang dipakai di banyak endpoint (research §3: 00 Success, 01 Initiated, 02 Paying, 03 Pending, 04 Refunded, 05 Canceled, 06 Failed, 07 Not found).
+Struktur flat, tidak ada objek nested. Field request aslinya dikembalikan lagi (Opsional di sini terlepas dari kewajibannya di request). `latestTransactionStatus` kode 2 digit: `00` Sukses, `01` Diinisiasi, `02` Diproses, `03` Pending, `04` Direfund, `05` Dibatalkan, `06` Gagal, `07` Tidak ditemukan.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -69,9 +69,9 @@ TransactionStatusInquiryBankResponse adalah response body untuk API Transaction 
 
 ### `TransactionStatusInquiryNonBank`
 
-TransactionStatusInquiryNonBank memanggil endpoint SNAP Transaction Status Inquiry (non-bank) (Service Code 53, path .../\{version\}/qr/qr-mpm-status, HTTP POST — tanpa override method). Prefix path qr/ yang sama bukan berarti endpoint ini termasuk sub-group MPM/QR: research §5.10 adalah sub-group tersendiri, berbeda dari §5.9 MPM/QR, dan penamaan path ini adalah inkonsistensi milik portal sendiri, bukan sinyal untuk memberi prefix QRMPM* pada tipe ini. hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh TransactionStatusInquiryNonBank sehingga byte hasil marshal yang persis sama dipakai baik untuk signing maupun wire body.
+Memanggil endpoint SNAP Transaction Status Inquiry (non-bank) (Service Code 53, path .../\{version\}/qr/qr-mpm-status). Meski berbagi prefix path `qr/`, ini kategori sendiri, terpisah dari QR/MPM. `hb` harus sudah membawa setiap field yang dibutuhkan `snap.HeaderBuilder` kecuali `Body`, yang diatur sendiri oleh `TransactionStatusInquiryNonBank` agar byte hasil marshal yang sama persis dipakai untuk signing dan wire body.
 
-Ini adalah query status read-only dan tidak membawa catatan non-idempotency, mengikuti preseden TransactionStatusInquiryBank.
+Query status read-only, tidak ada catatan non-idempotency, sama seperti `TransactionStatusInquiryBank`.
 
 ```go
 func TransactionStatusInquiryNonBank(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req TransactionStatusInquiryNonBankRequest) (TransactionStatusInquiryNonBankResponse, error)
@@ -79,9 +79,7 @@ func TransactionStatusInquiryNonBank(ctx context.Context, t *snap.Transport, hb 
 
 **Request &mdash; `TransactionStatusInquiryNonBankRequest`**
 
-TransactionStatusInquiryNonBankRequest adalah request body untuk API Transaction Status Inquiry (non-bank, Service Code 53). Ini adalah superset dari TransactionStatusInquiryBankRequest (Phase 16) — 7 field dasar yang sama persis — ditambah OriginalResponseCode, OriginalResponseMessage, SessionID, dan RequestID.
-
-Research §5.10 baris 210 hanya menyebut "bentuk sama... ditambah [empat field ini]" tanpa segmen Resp: yang menyebut tambahan pada response, berbeda dari setiap baris §5.9 yang secara eksplisit menambah field response. Penempatan pada request disimpulkan dari ketiadaan itu, bukan dinyatakan langsung — lihat dokumen desain Phase 25.
+7 field dasar yang sama dengan `TransactionStatusInquiryBankRequest` di atas, ditambah `OriginalResponseCode`, `OriginalResponseMessage`, `SessionID`, dan `RequestID`.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -99,7 +97,7 @@ Research §5.10 baris 210 hanya menyebut "bentuk sama... ditambah [empat field i
 
 **Response &mdash; `TransactionStatusInquiryNonBankResponse`**
 
-TransactionStatusInquiryNonBankResponse adalah response body untuk API Transaction Status Inquiry (non-bank) — bentuknya identik dengan TransactionStatusInquiryBankResponse tetapi memakai nama tipe sendiri, sesuai konvensi package ini "tipe berbeda per service code meski bentuknya identik". Research tidak menyebut tambahan sisi-response untuk endpoint ini (lihat komentar dokumentasi request). Dijaga dari drift lewat uji kesetaraan penuh berbasis reflection di file test package ini.
+Identik field dengan `TransactionStatusInquiryBankResponse`, dimodelkan sebagai tipe sendiri karena setiap service code SNAP mendapat tipe berbeda meski bentuknya sama.
 
 | Field | Type | Presence |
 |---|---|---|

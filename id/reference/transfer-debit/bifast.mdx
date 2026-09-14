@@ -28,9 +28,9 @@ if err != nil {
 
 ### `DirectDebitBIFASTEMandateRegistration`
 
-DirectDebitBIFASTEMandateRegistration memanggil endpoint SNAP Registrasi e-Mandate (Service Code 70, path .../\{version\}/debit/fast-emandate, HTTP POST — tanpa override method). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh DirectDebitBIFASTEMandateRegistration agar byte hasil marshal yang persis sama dipakai baik untuk signing maupun body di jalur kirim.
+DirectDebitBIFASTEMandateRegistration memanggil endpoint SNAP Registrasi e-Mandate (Service Code 70, HTTP POST). Isi `hb` dengan semua field kecuali `Body` — `DirectDebitBIFASTEMandateRegistration` melakukan marshal request itu sendiri dan memakai byte yang sama persis untuk signing maupun body di wire.
 
-Operasi ini tidak idempotent dan package ini tidak melakukan retry. Caller yang me-retry panggilan yang gagal atau timeout sebaiknya memakai ulang X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server berpatokan pada header tersebut.
+Operasi ini tidak idempotent dan package ini tidak melakukan retry. Bila memanggil ulang setelah gagal atau timeout, gunakan `X-EXTERNAL-ID` yang sama, karena deteksi duplikat di server mengacu pada header itu.
 
 ```go
 func DirectDebitBIFASTEMandateRegistration(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req DirectDebitBIFASTEMandateRegistrationRequest) (DirectDebitBIFASTEMandateRegistrationResponse, error)
@@ -38,7 +38,7 @@ func DirectDebitBIFASTEMandateRegistration(ctx context.Context, t *snap.Transpor
 
 **Request &mdash; `DirectDebitBIFASTEMandateRegistrationRequest`**
 
-DirectDebitBIFASTEMandateRegistrationRequest adalah body request untuk API Registrasi e-Mandate (Service Code 70). BankCode, SourceAccountNo, SourceAccountName, BillerID, BillerName, CustomerID, dan ExpiredDatetime bersifat Wajib menurut riset §5.4.
+DirectDebitBIFASTEMandateRegistrationRequest adalah request body untuk Registrasi e-Mandate. `bankCode`, `sourceAccountNo`, `sourceAccountName`, `billerId`, `billerName`, `customerId`, dan `expiredDatetime` bersifat Wajib.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -55,7 +55,7 @@ DirectDebitBIFASTEMandateRegistrationRequest adalah body request untuk API Regis
 
 **Response &mdash; `DirectDebitBIFASTEMandateRegistrationResponse`**
 
-DirectDebitBIFASTEMandateRegistrationResponse adalah body response untuk API Registrasi e-Mandate. ReferenceNo bersifat Kondisional (hanya saat sukses). EMandateReffID bersifat Wajib menurut riset §5.4.
+DirectDebitBIFASTEMandateRegistrationResponse adalah response body untuk Registrasi e-Mandate. `referenceNo` bersifat Kondisional — hanya muncul saat berhasil. `eMandateReffId` bersifat Wajib; gunakan nilai ini pada panggilan pembayaran di bawah.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -71,9 +71,9 @@ DirectDebitBIFASTEMandateRegistrationResponse adalah body response untuk API Reg
 
 ### `DirectDebitBIFASTPayment`
 
-DirectDebitBIFASTPayment memanggil endpoint SNAP Trigger Direct Debit Transfer / Payment (Service Code 71, path .../\{version\}/debit/fast-payment, HTTP POST — tanpa override method). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh DirectDebitBIFASTPayment agar byte hasil marshal yang persis sama dipakai baik untuk signing maupun body di jalur kirim.
+DirectDebitBIFASTPayment memanggil endpoint SNAP Trigger Direct Debit Transfer / Payment (Service Code 71, HTTP POST). Isi `hb` dengan semua field kecuali `Body` — `DirectDebitBIFASTPayment` melakukan marshal request itu sendiri.
 
-Operasi ini tidak idempotent dan package ini tidak melakukan retry. Caller yang me-retry panggilan yang gagal atau timeout sebaiknya memakai ulang X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server berpatokan pada header tersebut.
+Operasi ini tidak idempotent dan package ini tidak melakukan retry. Bila memanggil ulang setelah gagal atau timeout, gunakan `X-EXTERNAL-ID` yang sama, karena deteksi duplikat di server mengacu pada header itu.
 
 ```go
 func DirectDebitBIFASTPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req DirectDebitBIFASTPaymentRequest) (DirectDebitBIFASTPaymentResponse, error)
@@ -81,7 +81,7 @@ func DirectDebitBIFASTPayment(ctx context.Context, t *snap.Transport, hb snap.He
 
 **Request &mdash; `DirectDebitBIFASTPaymentRequest`**
 
-DirectDebitBIFASTPaymentRequest adalah body request untuk API Trigger Direct Debit Transfer / Payment (Service Code 71). SourceAccountNo didokumentasikan String(34) pada tabel field endpoint ini sendiri, berbeda dari String(19) milik Registrasi e-Mandate untuk yang tampaknya merupakan field logis yang sama (riset §6 butir 4) — package ini tidak menerapkan validasi panjang field di mana pun, sehingga perbedaan ini tidak berkonsekuensi pada kode.
+DirectDebitBIFASTPaymentRequest adalah request body untuk Trigger Direct Debit Transfer / Payment. `eMandateReffId` berasal dari panggilan e-Mandate Registration sebelumnya.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -102,7 +102,7 @@ DirectDebitBIFASTPaymentRequest adalah body request untuk API Trigger Direct Deb
 
 **Response &mdash; `DirectDebitBIFASTPaymentResponse`**
 
-DirectDebitBIFASTPaymentResponse adalah body response untuk API Trigger Direct Debit Transfer / Payment. ReferenceNo bersifat Kondisional (hanya saat sukses). Tidak ada field yang Wajib di luar envelope.
+DirectDebitBIFASTPaymentResponse adalah response body untuk Trigger Direct Debit Transfer / Payment. `referenceNo` bersifat Kondisional — hanya muncul saat berhasil.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -117,15 +117,19 @@ DirectDebitBIFASTPaymentResponse adalah body response untuk API Trigger Direct D
 
 ### `Direct Debit BI-FAST Notification`
 
-<Info>Hanya masuk (inbound) &mdash; package ini tidak memanggil endpoint untuk hal ini. Partner/switcher yang mengirim POST ke callback URL **Anda**; unmarshal body ke `DirectDebitBIFASTNotificationRequest` setelah memverifikasinya dengan `snap.ServerVerifier` (lihat [Memverifikasi request masuk](/id/concepts/webhooks)), lalu balas dengan bentuk di bawah.</Info>
+<Info>Hanya masuk (inbound) &mdash; package ini tidak memanggil endpoint untuk hal ini. Partner/switcher yang mengirim POST ke URL callback **Anda**; unmarshal body ke `DirectDebitBIFASTNotificationRequest` setelah memverifikasinya dengan `snap.ServerVerifier` (lihat [Verifying inbound requests](/id/concepts/webhooks)), lalu balas dengan bentuk di bawah.</Info>
 
 **Diterima &mdash; `DirectDebitBIFASTNotificationRequest`**
 
-DirectDebitBIFASTNotificationRequest adalah body request untuk API Notify (Service Code 72, path .../\{version\}/debit/fast-notify). Ini adalah callback settlement yang diterima PJP, bukan panggilan yang dibuat package ini — tidak ada fungsi pemanggil yang disediakan, mengikuti konvensi baku package ini untuk endpoint notifikasi masuk (QRMPMPaymentNotificationRequest, Fase 23; DirectDebitPaymentNotificationRequest, Fase 27; CPMPaymentNotificationRequest, Fase 29): caller memasang HTTP handler-nya sendiri untuk path ini, mengautentikasi panggilan masuk dengan ServerVerifier.VerifyTransactionRequest, dan melakukan json.Unmarshal pada body ke tipe ini.
+DirectDebitBIFASTNotificationRequest adalah request body untuk Notify (Service Code 72) — callback settlement yang diterima PJP, bukan panggilan yang dilakukan package ini. Buat HTTP handler Anda sendiri untuk path ini, autentikasi panggilan masuknya dengan `ServerVerifier.VerifyTransactionRequest`, lalu `json.Unmarshal` body ke tipe ini.
 
-OriginalReferenceNo, TransactionStatus, EMandateReffID, SourceAccountNo, dan SourceAccountName bersifat Wajib menurut riset §5.4; setiap field lain Opsional.
+`originalReferenceNo`, `transactionStatus`, `eMandateReffId`, `sourceAccountNo`, dan `sourceAccountName` bersifat Wajib; field lainnya Opsional.
 
-Field status ini bernama TransactionStatus, bukan LatestTransactionStatus seperti dipakai di tempat lain baik pada Transfer Kredit maupun sisa Transfer Debit — riset §6 butir 5 mencatat ini sebagai inkonsistensi penamaan yang tidak dijelaskan pada portal itu sendiri dan secara eksplisit menginstruksikan untuk mencatatnya "apa adanya, tidak dinormalisasi diam-diam." Tipe ini mengikuti instruksi tersebut secara harfiah alih-alih mengganti nama field agar cocok dengan sisa package.
+<Note>
+  Field status di sini bernama `transactionStatus`, bukan
+  `latestTransactionStatus` seperti di tempat lain pada package ini — itu
+  penamaan asli dari standar, dipertahankan apa adanya tanpa dinormalisasi.
+</Note>
 
 | Field | Type | Presence |
 |---|---|---|
@@ -143,7 +147,7 @@ Field status ini bernama TransactionStatus, bukan LatestTransactionStatus sepert
 
 **Handler Anda membalas dengan &mdash; `DirectDebitBIFASTNotificationResponse`**
 
-DirectDebitBIFASTNotificationResponse adalah body response yang dikirim balik caller untuk API Notify. Riset mendokumentasikan response ini hanya-envelope — tidak ada field selain envelope standar responseCode/responseMessage.
+DirectDebitBIFASTNotificationResponse hanya berisi envelope — cuma `responseCode` dan `responseMessage`, tidak ada field lain.
 
 | Field | Type | Presence |
 |---|---|---|

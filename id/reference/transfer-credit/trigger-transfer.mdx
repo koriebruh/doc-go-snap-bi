@@ -1,11 +1,11 @@
 ---
 title: "Trigger Transfer"
-description: "Panggilan inti pemindahan dana: intrabank, interbank, bulk, request-for-payment, RTGS, dan SKNBI — setiap jalur real-time-gross atau bulk punya tipe notifikasi masuk sendiri yang wajib diterima layanan Anda."
+description: "Kumpulan pemanggilan inti pemindahan dana: intrabank, interbank, bulk, request-for-payment, RTGS, dan SKNBI — tiap jalur real-time-gross atau bulk punya tipe notifikasi masuknya sendiri yang harus diterima layanan Anda."
 ---
 
 ## Trigger Transfer
 
-Panggilan inti pemindahan dana: intrabank, interbank, bulk, request-for-payment, RTGS, dan SKNBI — setiap jalur real-time-gross atau bulk punya tipe notifikasi masuk sendiri yang wajib diterima layanan Anda.
+Kumpulan pemanggilan inti pemindahan dana: intrabank, interbank, bulk, request-for-payment, RTGS, dan SKNBI — tiap jalur real-time-gross atau bulk punya tipe notifikasi masuknya sendiri yang harus diterima layanan Anda.
 
 <CodeGroup>
 ```go example.go
@@ -26,9 +26,9 @@ if err != nil {
 
 ### `IntrabankTransfer`
 
-IntrabankTransfer memanggil endpoint SNAP Intrabank Transfer (Service Code 17, path .../\{version\}/transfer-intrabank). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh IntrabankTransfer agar byte hasil marshal yang persis sama dipakai untuk signing maupun wire body.
+Memanggil endpoint SNAP Intrabank Transfer (Service Code 17, path .../\{version\}/transfer-intrabank). `hb` harus sudah diisi semua field yang dibutuhkan `snap.HeaderBuilder` kecuali `Body` — fungsi ini yang mengisinya sendiri agar byte yang sama persis dipakai untuk signing maupun request di wire.
 
-Operasi ini tidak idempotent dan package ini tidak melakukan retry. Pemanggil yang mengulang panggilan yang gagal atau timeout harus memakai X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server berpatokan pada header itu — X-EXTERNAL-ID baru saat retry berisiko menghasilkan transfer ganda.
+Tidak idempoten — tidak di-retry otomatis. Kalau me-retry request yang gagal/timeout, pakai `X-EXTERNAL-ID` yang sama; ID baru berisiko bikin transfer ganda.
 
 ```go
 func IntrabankTransfer(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req IntrabankTransferRequest) (IntrabankTransferResponse, error)
@@ -36,7 +36,7 @@ func IntrabankTransfer(ctx context.Context, t *snap.Transport, hb snap.HeaderBui
 
 **Request &mdash; `IntrabankTransferRequest`**
 
-IntrabankTransferRequest adalah request body untuk API Intrabank Transfer (Service Code 17). PartnerReferenceNo, Amount, BeneficiaryAccountNo, SourceAccountNo, dan TransactionDate wajib menurut tab Guides. OriginatorInfos bersifat Kondisional.
+`PartnerReferenceNo`, `Amount`, `BeneficiaryAccountNo`, `SourceAccountNo`, dan `TransactionDate` wajib diisi. `OriginatorInfos` Kondisional.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -53,8 +53,8 @@ IntrabankTransferRequest adalah request body untuk API Intrabank Transfer (Servi
 | `originatorInfos` | `[]TransferOriginatorInfo` | Opsional |
 | `additionalInfo` | `json.RawMessage` | Opsional |
 
-<Accordion title="Field TransferOriginatorInfo">
-TransferOriginatorInfo adalah entri "originatorInfos[]" bersama yang dipakai seluruh sub-grup Trigger Transfer. Ketiga field bertipe String menurut tab Guides.
+<Accordion title="TransferOriginatorInfo fields">
+Bentuk entri "originatorInfos[]" yang dipakai bersama di seluruh kelompok Trigger Transfer. Ketiga field bertipe String.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -65,8 +65,6 @@ TransferOriginatorInfo adalah entri "originatorInfos[]" bersama yang dipakai sel
 </Accordion>
 
 **Response &mdash; `IntrabankTransferResponse`**
-
-IntrabankTransferResponse adalah response body untuk API Intrabank Transfer.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -83,8 +81,8 @@ IntrabankTransferResponse adalah response body untuk API Intrabank Transfer.
 | `originatorInfos` | `[]TransferOriginatorInfo` | Opsional |
 | `additionalInfo` | `json.RawMessage` | Opsional |
 
-<Accordion title="Field TransferOriginatorInfo">
-TransferOriginatorInfo adalah entri "originatorInfos[]" bersama yang dipakai seluruh sub-grup Trigger Transfer. Ketiga field bertipe String menurut tab Guides.
+<Accordion title="TransferOriginatorInfo fields">
+Bentuk entri "originatorInfos[]" yang dipakai bersama di seluruh kelompok Trigger Transfer. Ketiga field bertipe String.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -99,9 +97,9 @@ TransferOriginatorInfo adalah entri "originatorInfos[]" bersama yang dipakai sel
 
 ### `InterbankTransfer`
 
-InterbankTransfer memanggil endpoint SNAP Interbank Transfer (Service Code 18, path .../\{version\}/transfer-interbank). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh InterbankTransfer agar byte hasil marshal yang persis sama dipakai untuk signing maupun wire body.
+Memanggil endpoint SNAP Interbank Transfer (Service Code 18, path .../\{version\}/transfer-interbank). `hb` harus sudah diisi semua field yang dibutuhkan `snap.HeaderBuilder` kecuali `Body` — fungsi ini yang mengisinya sendiri agar byte yang sama persis dipakai untuk signing maupun request di wire.
 
-Operasi ini tidak idempotent dan package ini tidak melakukan retry. Pemanggil yang mengulang panggilan yang gagal atau timeout harus memakai X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server berpatokan pada header itu — X-EXTERNAL-ID baru saat retry berisiko menghasilkan transfer ganda.
+Tidak idempoten — tidak di-retry otomatis. Kalau me-retry request yang gagal/timeout, pakai `X-EXTERNAL-ID` yang sama; ID baru berisiko bikin transfer ganda.
 
 ```go
 func InterbankTransfer(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req InterbankTransferRequest) (InterbankTransferResponse, error)
@@ -109,7 +107,7 @@ func InterbankTransfer(ctx context.Context, t *snap.Transport, hb snap.HeaderBui
 
 **Request &mdash; `InterbankTransferRequest`**
 
-InterbankTransferRequest adalah request body untuk API Interbank Transfer (Service Code 18). PartnerReferenceNo, Amount, BeneficiaryAccountNo, BeneficiaryAccountName, BeneficiaryBankCode, SourceAccountNo, dan TransactionDate wajib menurut tab Guides. OriginatorInfos bersifat Kondisional.
+`PartnerReferenceNo`, `Amount`, `BeneficiaryAccountNo`, `BeneficiaryAccountName`, `BeneficiaryBankCode`, `SourceAccountNo`, dan `TransactionDate` wajib diisi. `OriginatorInfos` Kondisional.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -130,8 +128,8 @@ InterbankTransferRequest adalah request body untuk API Interbank Transfer (Servi
 | `originatorInfos` | `[]TransferOriginatorInfo` | Opsional |
 | `additionalInfo` | `json.RawMessage` | Opsional |
 
-<Accordion title="Field TransferOriginatorInfo">
-TransferOriginatorInfo adalah entri "originatorInfos[]" bersama yang dipakai seluruh sub-grup Trigger Transfer. Ketiga field bertipe String menurut tab Guides.
+<Accordion title="TransferOriginatorInfo fields">
+Bentuk entri "originatorInfos[]" yang dipakai bersama di seluruh kelompok Trigger Transfer. Ketiga field bertipe String.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -142,8 +140,6 @@ TransferOriginatorInfo adalah entri "originatorInfos[]" bersama yang dipakai sel
 </Accordion>
 
 **Response &mdash; `InterbankTransferResponse`**
-
-InterbankTransferResponse adalah response body untuk API Interbank Transfer.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -161,8 +157,8 @@ InterbankTransferResponse adalah response body untuk API Interbank Transfer.
 | `originatorInfos` | `[]TransferOriginatorInfo` | Opsional |
 | `additionalInfo` | `json.RawMessage` | Opsional |
 
-<Accordion title="Field TransferOriginatorInfo">
-TransferOriginatorInfo adalah entri "originatorInfos[]" bersama yang dipakai seluruh sub-grup Trigger Transfer. Ketiga field bertipe String menurut tab Guides.
+<Accordion title="TransferOriginatorInfo fields">
+Bentuk entri "originatorInfos[]" yang dipakai bersama di seluruh kelompok Trigger Transfer. Ketiga field bertipe String.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -177,9 +173,9 @@ TransferOriginatorInfo adalah entri "originatorInfos[]" bersama yang dipakai sel
 
 ### `InterbankBulkTransfer`
 
-InterbankBulkTransfer memanggil endpoint SNAP Interbank Bulk Transfer (Service Code 20, path .../\{version\}/transfer-interbank-bulk). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh InterbankBulkTransfer agar byte hasil marshal yang persis sama dipakai untuk signing maupun wire body.
+Memanggil endpoint SNAP Interbank Bulk Transfer (Service Code 20, path .../\{version\}/transfer-interbank-bulk). `hb` harus sudah diisi semua field yang dibutuhkan `snap.HeaderBuilder` kecuali `Body` — fungsi ini yang mengisinya sendiri agar byte yang sama persis dipakai untuk signing maupun request di wire.
 
-Operasi ini tidak idempotent dan package ini tidak melakukan retry. Pemanggil yang mengulang panggilan yang gagal atau timeout harus memakai X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server berpatokan pada header itu — X-EXTERNAL-ID baru saat retry berisiko menghasilkan bulk transfer ganda.
+Tidak idempoten — tidak di-retry otomatis. Kalau me-retry request yang gagal/timeout, pakai `X-EXTERNAL-ID` yang sama; ID baru berisiko bikin bulk transfer ganda.
 
 ```go
 func InterbankBulkTransfer(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req InterbankBulkTransferRequest) (InterbankBulkTransferResponse, error)
@@ -187,7 +183,7 @@ func InterbankBulkTransfer(ctx context.Context, t *snap.Transport, hb snap.Heade
 
 **Request &mdash; `InterbankBulkTransferRequest`**
 
-InterbankBulkTransferRequest adalah request body untuk API Interbank Bulk Transfer (Service Code 20). CustomerReference, SourceAccountNo, TransactionDate, dan BulkObject wajib menurut tab Guides.
+`CustomerReference`, `SourceAccountNo`, `TransactionDate`, dan `BulkObject` wajib diisi.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -201,8 +197,8 @@ InterbankBulkTransferRequest adalah request body untuk API Interbank Bulk Transf
 | `bulkObject` | `[]InterbankBulkTransferItem` | Wajib |
 | `additionalInfo` | `json.RawMessage` | Opsional |
 
-<Accordion title="Field InterbankBulkTransferItem">
-InterbankBulkTransferItem adalah satu entri dalam array "bulkObject[]" pada request Interbank Bulk Transfer.
+<Accordion title="InterbankBulkTransferItem fields">
+Satu entri dalam array "bulkObject[]" pada request Interbank Bulk Transfer.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -216,8 +212,8 @@ InterbankBulkTransferItem adalah satu entri dalam array "bulkObject[]" pada requ
 
 </Accordion>
 
-<Accordion title="Field TransferOriginatorInfo">
-TransferOriginatorInfo adalah entri "originatorInfos[]" bersama yang dipakai seluruh sub-grup Trigger Transfer. Ketiga field bertipe String menurut tab Guides.
+<Accordion title="TransferOriginatorInfo fields">
+Bentuk entri "originatorInfos[]" yang dipakai bersama di seluruh kelompok Trigger Transfer. Ketiga field bertipe String.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -228,8 +224,6 @@ TransferOriginatorInfo adalah entri "originatorInfos[]" bersama yang dipakai sel
 </Accordion>
 
 **Response &mdash; `InterbankBulkTransferResponse`**
-
-InterbankBulkTransferResponse adalah response body untuk API Interbank Bulk Transfer.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -242,13 +236,13 @@ InterbankBulkTransferResponse adalah response body untuk API Interbank Bulk Tran
 
 ---
 
-### `Notifikasi Interbank Bulk Transfer`
+### `Interbank Bulk Transfer Notification`
 
-<Info>Hanya masuk (inbound) &mdash; package ini tidak memanggil endpoint untuk ini. Partner/switcher mengirim POST ke URL callback **Anda**; unmarshal body ke `InterbankBulkTransferNotificationRequest` setelah memverifikasinya dengan `snap.ServerVerifier` (lihat [Memverifikasi permintaan masuk](/id/concepts/webhooks)), lalu balas dengan bentuk di bawah.</Info>
+<Info>Hanya masuk (inbound) &mdash; package ini tidak memanggil endpoint untuk ini. Partner/switcher yang mengirim POST ke callback URL **Anda**; unmarshal body-nya ke `InterbankBulkTransferNotificationRequest` setelah diverifikasi dengan `snap.ServerVerifier` (lihat [Verifying inbound requests](/id/concepts/webhooks)), lalu balas dengan bentuk di bawah.</Info>
 
 **Diterima &mdash; `InterbankBulkTransferNotificationRequest`**
 
-InterbankBulkTransferNotificationRequest adalah request body untuk API Interbank Bulk Transfer - Notification (Service Code 21, path .../\{version\}/transfer-interbank-bulk/notify). Ini adalah callback settlement yang diterima PJP, bukan panggilan yang dibuat package ini — tidak disediakan fungsi pemanggil. Pemanggil membuat HTTP handler sendiri untuk path ini, mengautentikasi panggilan masuk dengan ServerVerifier.VerifyTransactionRequest, lalu melakukan json.Unmarshal body ke tipe ini. BulkID, PartnerBulkID, dan BulkObject wajib menurut tab Guides.
+Body callback settlement untuk API Interbank Bulk Transfer - Notification (Service Code 21, path .../\{version\}/transfer-interbank-bulk/notify). `bulkId`, `partnerBulkId`, dan `bulkObject` wajib diisi.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -256,8 +250,8 @@ InterbankBulkTransferNotificationRequest adalah request body untuk API Interbank
 | `partnerBulkId` | `string` | Wajib |
 | `bulkObject` | `[]InterbankBulkTransferNotificationItem` | Wajib |
 
-<Accordion title="Field InterbankBulkTransferNotificationItem">
-InterbankBulkTransferNotificationItem adalah satu entri dalam array "bulkObject[]" pada request Interbank Bulk Transfer - Notification — bentuk hasil settlement, berbeda dari bentuk instruksi transfer pada InterbankBulkTransferItem.
+<Accordion title="InterbankBulkTransferNotificationItem fields">
+Satu entri dalam array "bulkObject[]" pada request Interbank Bulk Transfer - Notification — bentuk hasil settlement, berbeda dari bentuk instruksi transfer `InterbankBulkTransferItem`.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -268,8 +262,6 @@ InterbankBulkTransferNotificationItem adalah satu entri dalam array "bulkObject[
 </Accordion>
 
 **Handler Anda membalas dengan &mdash; `InterbankBulkTransferNotificationResponse`**
-
-InterbankBulkTransferNotificationResponse adalah response body yang dikirim balik pemanggil untuk API Interbank Bulk Transfer - Notification.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -284,9 +276,9 @@ InterbankBulkTransferNotificationResponse adalah response body yang dikirim bali
 
 ### `RequestForPayment`
 
-RequestForPayment memanggil endpoint SNAP Request for Payment (Service Code 19, path .../\{version\}/transfer-request-for-payment). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh RequestForPayment agar byte hasil marshal yang persis sama dipakai untuk signing maupun wire body.
+Memanggil endpoint SNAP Request for Payment (Service Code 19, path .../\{version\}/transfer-request-for-payment). `hb` harus sudah diisi semua field yang dibutuhkan `snap.HeaderBuilder` kecuali `Body` — fungsi ini yang mengisinya sendiri agar byte yang sama persis dipakai untuk signing maupun request di wire.
 
-Operasi ini tidak idempotent dan package ini tidak melakukan retry. Pemanggil yang mengulang panggilan yang gagal atau timeout harus memakai X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server berpatokan pada header itu — X-EXTERNAL-ID baru saat retry berisiko menghasilkan permintaan pembayaran ganda.
+Tidak idempoten — tidak di-retry otomatis. Kalau me-retry request yang gagal/timeout, pakai `X-EXTERNAL-ID` yang sama; ID baru berisiko bikin permintaan pembayaran ganda.
 
 ```go
 func RequestForPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req RequestForPaymentRequest) (RequestForPaymentResponse, error)
@@ -294,7 +286,7 @@ func RequestForPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBui
 
 **Request &mdash; `RequestForPaymentRequest`**
 
-RequestForPaymentRequest adalah request body untuk API Request for Payment (Service Code 19). PartnerReferenceNo, BankCode, BeneficiaryAccountNo, BeneficiaryAccountName, ExpiredDatetime, SourceAccountNo, dan SourceAccountName wajib menurut tab Guides.
+`PartnerReferenceNo`, `BankCode`, `BeneficiaryAccountNo`, `BeneficiaryAccountName`, `ExpiredDatetime`, `SourceAccountNo`, dan `SourceAccountName` wajib diisi.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -313,8 +305,6 @@ RequestForPaymentRequest adalah request body untuk API Request for Payment (Serv
 
 **Response &mdash; `RequestForPaymentResponse`**
 
-RequestForPaymentResponse adalah response body untuk API Request for Payment.
-
 | Field | Type | Presence |
 |---|---|---|
 | `responseCode` | `string` | Wajib |
@@ -328,9 +318,9 @@ RequestForPaymentResponse adalah response body untuk API Request for Payment.
 
 ### `RTGSTransfer`
 
-RTGSTransfer memanggil endpoint SNAP Transfer RTGS (Service Code 22, path .../\{version\}/transfer-rtgs). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh RTGSTransfer agar byte hasil marshal yang persis sama dipakai untuk signing maupun wire body.
+Memanggil endpoint SNAP Transfer RTGS (Service Code 22, path .../\{version\}/transfer-rtgs). `hb` harus sudah diisi semua field yang dibutuhkan `snap.HeaderBuilder` kecuali `Body` — fungsi ini yang mengisinya sendiri agar byte yang sama persis dipakai untuk signing maupun request di wire.
 
-Operasi ini tidak idempotent dan package ini tidak melakukan retry. Pemanggil yang mengulang panggilan yang gagal atau timeout harus memakai X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server berpatokan pada header itu — X-EXTERNAL-ID baru saat retry berisiko menghasilkan transfer ganda.
+Tidak idempoten — tidak di-retry otomatis. Kalau me-retry request yang gagal/timeout, pakai `X-EXTERNAL-ID` yang sama; ID baru berisiko bikin transfer ganda.
 
 ```go
 func RTGSTransfer(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req RTGSTransferRequest) (RTGSTransferResponse, error)
@@ -338,7 +328,7 @@ func RTGSTransfer(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder,
 
 **Request &mdash; `RTGSTransferRequest`**
 
-RTGSTransferRequest adalah request body untuk API Transfer RTGS (Service Code 22). PartnerReferenceNo, Amount, BeneficiaryAccountNo, BeneficiaryAccountName, BeneficiaryBankCode, SourceAccountNo, TransactionDate, BeneficiaryCustomerResidence, dan BeneficiaryCustomerType wajib menurut tab Guides. OriginatorInfos bersifat Kondisional.
+`PartnerReferenceNo`, `Amount`, `BeneficiaryAccountNo`, `BeneficiaryAccountName`, `BeneficiaryBankCode`, `SourceAccountNo`, `TransactionDate`, `BeneficiaryCustomerResidence`, dan `BeneficiaryCustomerType` wajib diisi. `OriginatorInfos` Kondisional.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -366,8 +356,8 @@ RTGSTransferRequest adalah request body untuk API Transfer RTGS (Service Code 22
 | `originatorInfos` | `[]TransferOriginatorInfo` | Opsional |
 | `additionalInfo` | `json.RawMessage` | Opsional |
 
-<Accordion title="Field TransferOriginatorInfo">
-TransferOriginatorInfo adalah entri "originatorInfos[]" bersama yang dipakai seluruh sub-grup Trigger Transfer. Ketiga field bertipe String menurut tab Guides.
+<Accordion title="TransferOriginatorInfo fields">
+Bentuk entri "originatorInfos[]" yang dipakai bersama di seluruh kelompok Trigger Transfer. Ketiga field bertipe String.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -378,8 +368,6 @@ TransferOriginatorInfo adalah entri "originatorInfos[]" bersama yang dipakai sel
 </Accordion>
 
 **Response &mdash; `RTGSTransferResponse`**
-
-RTGSTransferResponse adalah response body untuk API Transfer RTGS.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -400,8 +388,8 @@ RTGSTransferResponse adalah response body untuk API Transfer RTGS.
 | `originatorInfos` | `[]TransferOriginatorInfo` | Opsional |
 | `additionalInfo` | `json.RawMessage` | Opsional |
 
-<Accordion title="Field TransferOriginatorInfo">
-TransferOriginatorInfo adalah entri "originatorInfos[]" bersama yang dipakai seluruh sub-grup Trigger Transfer. Ketiga field bertipe String menurut tab Guides.
+<Accordion title="TransferOriginatorInfo fields">
+Bentuk entri "originatorInfos[]" yang dipakai bersama di seluruh kelompok Trigger Transfer. Ketiga field bertipe String.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -414,13 +402,13 @@ TransferOriginatorInfo adalah entri "originatorInfos[]" bersama yang dipakai sel
 
 ---
 
-### `Notifikasi RTGS`
+### `RTGS Notification`
 
-<Info>Hanya masuk (inbound) &mdash; package ini tidak memanggil endpoint untuk ini. Partner/switcher mengirim POST ke URL callback **Anda**; unmarshal body ke `RTGSNotificationRequest` setelah memverifikasinya dengan `snap.ServerVerifier` (lihat [Memverifikasi permintaan masuk](/id/concepts/webhooks)), lalu balas dengan bentuk di bawah.</Info>
+<Info>Hanya masuk (inbound) &mdash; package ini tidak memanggil endpoint untuk ini. Partner/switcher yang mengirim POST ke callback URL **Anda**; unmarshal body-nya ke `RTGSNotificationRequest` setelah diverifikasi dengan `snap.ServerVerifier` (lihat [Verifying inbound requests](/id/concepts/webhooks)), lalu balas dengan bentuk di bawah.</Info>
 
 **Diterima &mdash; `RTGSNotificationRequest`**
 
-RTGSNotificationRequest adalah request body untuk API RTGS - Notification (Service Code 76, path .../\{version\}/transfer-rtgs/notify). Ini adalah callback settlement yang diterima PJP, bukan panggilan yang dibuat package ini — tidak disediakan fungsi pemanggil. Pemanggil membuat HTTP handler sendiri untuk path ini, mengautentikasi panggilan masuk dengan ServerVerifier.VerifyTransactionRequest, lalu melakukan json.Unmarshal body ke tipe ini. LatestTransactionStatus, BeneficiaryAccountName, BeneficiaryAccountNo, BeneficiaryBankCode, SourceAccountNo, dan TransactionDate wajib menurut tab Guides.
+Body callback settlement untuk API RTGS - Notification (Service Code 76, path .../\{version\}/transfer-rtgs/notify). `latestTransactionStatus`, `beneficiaryAccountName`, `beneficiaryAccountNo`, `beneficiaryBankCode`, `sourceAccountNo`, dan `transactionDate` wajib diisi.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -438,7 +426,7 @@ RTGSNotificationRequest adalah request body untuk API RTGS - Notification (Servi
 
 **Handler Anda membalas dengan &mdash; `RTGSNotificationResponse`**
 
-RTGSNotificationResponse adalah response body yang dikirim balik pemanggil untuk API RTGS - Notification. Hanya berisi envelope menurut tab Guides — tidak ada field lain.
+Hanya berisi envelope, tidak ada field lain.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -450,9 +438,9 @@ RTGSNotificationResponse adalah response body yang dikirim balik pemanggil untuk
 
 ### `SKNBITransfer`
 
-SKNBITransfer memanggil endpoint SNAP Transfer SKNBI (Service Code 23, path .../\{version\}/transfer-skn). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh SKNBITransfer agar byte hasil marshal yang persis sama dipakai untuk signing maupun wire body.
+Memanggil endpoint SNAP Transfer SKNBI (Service Code 23, path .../\{version\}/transfer-skn). `hb` harus sudah diisi semua field yang dibutuhkan `snap.HeaderBuilder` kecuali `Body` — fungsi ini yang mengisinya sendiri agar byte yang sama persis dipakai untuk signing maupun request di wire.
 
-Operasi ini tidak idempotent dan package ini tidak melakukan retry. Pemanggil yang mengulang panggilan yang gagal atau timeout harus memakai X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server berpatokan pada header itu — X-EXTERNAL-ID baru saat retry berisiko menghasilkan transfer ganda.
+Tidak idempoten — tidak di-retry otomatis. Kalau me-retry request yang gagal/timeout, pakai `X-EXTERNAL-ID` yang sama; ID baru berisiko bikin transfer ganda.
 
 ```go
 func SKNBITransfer(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req SKNBITransferRequest) (SKNBITransferResponse, error)
@@ -460,7 +448,7 @@ func SKNBITransfer(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder
 
 **Request &mdash; `SKNBITransferRequest`**
 
-SKNBITransferRequest adalah request body untuk API Transfer SKNBI (Service Code 23) — bentuknya identik field demi field dengan RTGSTransferRequest, hanya berbeda service code dan path-nya. PartnerReferenceNo, Amount, BeneficiaryAccountNo, BeneficiaryAccountName, BeneficiaryBankCode, SourceAccountNo, TransactionDate, BeneficiaryCustomerResidence, dan BeneficiaryCustomerType wajib menurut tab Guides. OriginatorInfos bersifat Kondisional.
+Bentuknya sama dengan `RTGSTransferRequest`, hanya beda service code dan path. `partnerReferenceNo`, `amount`, `beneficiaryAccountNo`, `beneficiaryAccountName`, `beneficiaryBankCode`, `sourceAccountNo`, `transactionDate`, `beneficiaryCustomerResidence`, dan `beneficiaryCustomerType` wajib diisi. `originatorInfos` Kondisional.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -488,8 +476,8 @@ SKNBITransferRequest adalah request body untuk API Transfer SKNBI (Service Code 
 | `originatorInfos` | `[]TransferOriginatorInfo` | Opsional |
 | `additionalInfo` | `json.RawMessage` | Opsional |
 
-<Accordion title="Field TransferOriginatorInfo">
-TransferOriginatorInfo adalah entri "originatorInfos[]" bersama yang dipakai seluruh sub-grup Trigger Transfer. Ketiga field bertipe String menurut tab Guides.
+<Accordion title="TransferOriginatorInfo fields">
+Bentuk entri "originatorInfos[]" yang dipakai bersama di seluruh kelompok Trigger Transfer. Ketiga field bertipe String.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -501,7 +489,7 @@ TransferOriginatorInfo adalah entri "originatorInfos[]" bersama yang dipakai sel
 
 **Response &mdash; `SKNBITransferResponse`**
 
-SKNBITransferResponse adalah response body untuk API Transfer SKNBI — bentuknya identik field demi field dengan RTGSTransferResponse.
+Bentuknya sama dengan `RTGSTransferResponse`.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -522,8 +510,8 @@ SKNBITransferResponse adalah response body untuk API Transfer SKNBI — bentukny
 | `originatorInfos` | `[]TransferOriginatorInfo` | Opsional |
 | `additionalInfo` | `json.RawMessage` | Opsional |
 
-<Accordion title="Field TransferOriginatorInfo">
-TransferOriginatorInfo adalah entri "originatorInfos[]" bersama yang dipakai seluruh sub-grup Trigger Transfer. Ketiga field bertipe String menurut tab Guides.
+<Accordion title="TransferOriginatorInfo fields">
+Bentuk entri "originatorInfos[]" yang dipakai bersama di seluruh kelompok Trigger Transfer. Ketiga field bertipe String.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -536,13 +524,13 @@ TransferOriginatorInfo adalah entri "originatorInfos[]" bersama yang dipakai sel
 
 ---
 
-### `Notifikasi SKNBI`
+### `SKNBI Notification`
 
-<Info>Hanya masuk (inbound) &mdash; package ini tidak memanggil endpoint untuk ini. Partner/switcher mengirim POST ke URL callback **Anda**; unmarshal body ke `SKNBINotificationRequest` setelah memverifikasinya dengan `snap.ServerVerifier` (lihat [Memverifikasi permintaan masuk](/id/concepts/webhooks)), lalu balas dengan bentuk di bawah.</Info>
+<Info>Hanya masuk (inbound) &mdash; package ini tidak memanggil endpoint untuk ini. Partner/switcher yang mengirim POST ke callback URL **Anda**; unmarshal body-nya ke `SKNBINotificationRequest` setelah diverifikasi dengan `snap.ServerVerifier` (lihat [Verifying inbound requests](/id/concepts/webhooks)), lalu balas dengan bentuk di bawah.</Info>
 
 **Diterima &mdash; `SKNBINotificationRequest`**
 
-SKNBINotificationRequest adalah request body untuk API SKNBI - Notification (Service Code 75, path .../\{version\}/transfer-skn/notify) — bentuknya identik field demi field dengan RTGSNotificationRequest. Ini adalah callback settlement yang diterima PJP, bukan panggilan yang dibuat package ini — tidak disediakan fungsi pemanggil. Pemanggil membuat HTTP handler sendiri untuk path ini, mengautentikasi panggilan masuk dengan ServerVerifier.VerifyTransactionRequest, lalu melakukan json.Unmarshal body ke tipe ini. LatestTransactionStatus, BeneficiaryAccountName, BeneficiaryAccountNo, BeneficiaryBankCode, SourceAccountNo, dan TransactionDate wajib menurut tab Guides.
+Body callback settlement untuk API SKNBI - Notification (Service Code 75, path .../\{version\}/transfer-skn/notify) — bentuknya sama dengan `RTGSNotificationRequest`. `latestTransactionStatus`, `beneficiaryAccountName`, `beneficiaryAccountNo`, `beneficiaryBankCode`, `sourceAccountNo`, dan `transactionDate` wajib diisi.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -560,7 +548,7 @@ SKNBINotificationRequest adalah request body untuk API SKNBI - Notification (Ser
 
 **Handler Anda membalas dengan &mdash; `SKNBINotificationResponse`**
 
-SKNBINotificationResponse adalah response body yang dikirim balik pemanggil untuk API SKNBI - Notification — bentuknya identik field demi field dengan RTGSNotificationResponse. Hanya berisi envelope menurut tab Guides — tidak ada field lain.
+Bentuknya sama dengan `RTGSNotificationResponse`: hanya berisi envelope, tidak ada field lain.
 
 | Field | Type | Presence |
 |---|---|---|

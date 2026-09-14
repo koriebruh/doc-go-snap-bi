@@ -1,11 +1,11 @@
 ---
 title: "Riwayat Transaksi"
-description: "Riwayat Transaksi — Service Codes 12-14 — 3 endpoints"
+description: "Riwayat Transaksi — Service Code 12-14 — 3 endpoint"
 ---
 
 ## Riwayat Transaksi
 
-Pencarian list, detail, dan statement atas transaksi yang sudah settle — package `transactionhistory` (Service Codes 12-14).
+Pencarian list, detail, dan statement atas transaksi yang sudah settle — package `transactionhistory` (Service Code 12-14).
 
 <CodeGroup>
 ```go example.go
@@ -22,7 +22,7 @@ if err != nil {
 
 ### `TransactionHistoryList`
 
-TransactionHistoryList memanggil endpoint SNAP Transaction History List (Service Code 12, path .../\{version\}/transaction-history-list). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh TransactionHistoryList agar byte hasil marshal yang sama dipakai untuk signing maupun wire body.
+Menampilkan daftar transaksi lampau dalam rentang tanggal (Service Code 12).
 
 ```go
 func TransactionHistoryList(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req TransactionHistoryListRequest) (TransactionHistoryListResponse, error)
@@ -30,9 +30,7 @@ func TransactionHistoryList(ctx context.Context, t *snap.Transport, hb snap.Head
 
 **Request &mdash; `TransactionHistoryListRequest`**
 
-TransactionHistoryListRequest adalah request body untuk API Transaction History List (Service Code 12).
-
-PageSize dan PageNumber bertipe string, bukan int: Guides tab menandainya sebagai "Integer", tapi contoh kerja dari standar sendiri mengirimnya sebagai string JSON dalam tanda kutip (mis. "10") — ini memodelkan contoh wire yang sebenarnya.
+`pageSize` dan `pageNumber` bertipe `string`, bukan `int` — standarnya mengirim keduanya sebagai angka berkutip di wire (contoh: `"10"`).
 
 | Field | Type | Presence |
 |---|---|---|
@@ -45,7 +43,7 @@ PageSize dan PageNumber bertipe string, bukan int: Guides tab menandainya sebaga
 
 **Response &mdash; `TransactionHistoryListResponse`**
 
-TransactionHistoryListResponse adalah response body untuk API Transaction History List.
+Body response-nya.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -56,8 +54,8 @@ TransactionHistoryListResponse adalah response body untuk API Transaction Histor
 | `detailData` | `[]TransactionDetail` | Opsional |
 | `additionalInfo` | `json.RawMessage` | Opsional |
 
-<Accordion title="Field TransactionDetail">
-TransactionDetail adalah satu entri dalam array detailData milik TransactionHistoryListResponse. Ini berbeda dari endpoint Transaction History Detail (Service Code 13) yang terlihat mirip, di mana riset menandai container amount yang setara sebagai Wajib — dicatat per kejadian, tidak diharmonisasi.
+<Accordion title="TransactionDetail fields">
+Satu entri di `detailData`.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -71,8 +69,8 @@ TransactionDetail adalah satu entri dalam array detailData milik TransactionHist
 
 </Accordion>
 
-<Accordion title="Field SourceOfFund">
-SourceOfFund mendeskripsikan satu sumber dana yang dipakai untuk sebuah transaksi, sesuai referensi "Definisi Tipe" milik standar. Source bersifat Wajib; container Amount bersifat Opsional (hanya member value/currency-nya sendiri yang Wajib), sehingga dimodelkan sebagai *snap.Money — dikoreksi dari versi sebelumnya yang memakainya sebagai snap.Money biasa (bukan pointer), ditemukan dengan mengecek ulang langsung tabel definisi tipe SourceOfFund alih-alih membiarkannya tidak terverifikasi.
+<Accordion title="SourceOfFund fields">
+Mendeskripsikan satu sumber dana yang dipakai untuk sebuah transaksi. `source` bersifat Wajib; `amount` berupa pointer karena hanya `value`/`currency` miliknya sendiri yang Wajib, bukan objek pembungkusnya.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -86,15 +84,13 @@ SourceOfFund mendeskripsikan satu sumber dana yang dipakai untuk sebuah transaks
 
 ### `TransactionHistoryDetail`
 
-TransactionHistoryDetail memanggil endpoint SNAP Transaction History Detail (Service Code 13, path .../\{version\}/transaction-history-detail). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh TransactionHistoryDetail agar byte hasil marshal yang sama dipakai untuk signing maupun wire body.
+Mengambil detail lengkap satu transaksi (Service Code 13).
 
 ```go
 func TransactionHistoryDetail(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req TransactionHistoryDetailRequest) (TransactionHistoryDetailResponse, error)
 ```
 
 **Request &mdash; `TransactionHistoryDetailRequest`**
-
-TransactionHistoryDetailRequest adalah request body untuk API Transaction History Detail (Service Code 13, path .../\{version\}/transaction-history-detail).
 
 | Field | Type | Presence |
 |---|---|---|
@@ -103,7 +99,7 @@ TransactionHistoryDetailRequest adalah request body untuk API Transaction Histor
 
 **Response &mdash; `TransactionHistoryDetailResponse`**
 
-TransactionHistoryDetailResponse adalah response body untuk API Transaction History Detail. Amount dan RefundAmount adalah container Opsional dengan member Wajib (Guides tab menandai keduanya "O"), sehingga keduanya dimodelkan sebagai *snap.Money, sesuai konvensi container Opsional package ini — dikoreksi dari versi tipe ini sebelumnya yang memodelkan keduanya sebagai snap.Money biasa (bukan pointer) berdasarkan salah baca Guides tab sebagai Wajib; ditemukan lewat go-review yang mengecek ulang tabel mentahnya langsung.
+`amount` dan `refundAmount` berupa pointer karena objek pembungkusnya sendiri Opsional, meskipun `value`/`currency` milik `Money` Wajib.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -121,8 +117,8 @@ TransactionHistoryDetailResponse adalah response body untuk API Transaction Hist
 | `type` | `string` | Wajib |
 | `additionalInfo` | `json.RawMessage` | Opsional |
 
-<Accordion title="Field SourceOfFund">
-SourceOfFund mendeskripsikan satu sumber dana yang dipakai untuk sebuah transaksi, sesuai referensi "Definisi Tipe" milik standar. Source bersifat Wajib; container Amount bersifat Opsional (hanya member value/currency-nya sendiri yang Wajib), sehingga dimodelkan sebagai *snap.Money — dikoreksi dari versi sebelumnya yang memakainya sebagai snap.Money biasa (bukan pointer), ditemukan dengan mengecek ulang langsung tabel definisi tipe SourceOfFund alih-alih membiarkannya tidak terverifikasi.
+<Accordion title="SourceOfFund fields">
+Mendeskripsikan satu sumber dana yang dipakai untuk sebuah transaksi. `source` bersifat Wajib; `amount` berupa pointer karena hanya `value`/`currency` miliknya sendiri yang Wajib, bukan objek pembungkusnya.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -136,7 +132,7 @@ SourceOfFund mendeskripsikan satu sumber dana yang dipakai untuk sebuah transaks
 
 ### `BankStatement`
 
-BankStatement memanggil endpoint SNAP API Bank Statement (Service Code 14, path .../\{version\}/bank-statement). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh BankStatement agar byte hasil marshal yang sama dipakai untuk signing maupun wire body.
+Mengambil daftar transaksi bergaya rekening koran (bank statement) lengkap dengan saldo berjalan (Service Code 14).
 
 ```go
 func BankStatement(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req BankStatementRequest) (BankStatementResponse, error)
@@ -144,9 +140,7 @@ func BankStatement(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder
 
 **Request &mdash; `BankStatementRequest`**
 
-BankStatementRequest adalah request body untuk API Bank Statement (Service Code 14, grup Riwayat Transaksi).
-
-BankCardToken dan AccountNo bersifat Kondisional dan saling eksklusif: menurut spesifikasi, BankCardToken wajib diisi jika AccountNo null, dan sebaliknya. Package ini hanya memvalidasi wire shape, tidak pernah aturan bisnis, jadi keduanya cuma ditandai omitempty; penegakan aturan XOR-nya diserahkan ke pemanggil.
+`bankCardToken` dan `accountNo` saling eksklusif — isi tepat salah satu. Package ini tidak memaksakan aturan itu; servernya yang melakukan.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -159,7 +153,7 @@ BankCardToken dan AccountNo bersifat Kondisional dan saling eksklusif: menurut s
 
 **Response &mdash; `BankStatementResponse`**
 
-BankStatementResponse adalah response body untuk API Bank Statement.
+Body response-nya.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -175,8 +169,8 @@ BankStatementResponse adalah response body untuk API Bank Statement.
 | `detailData` | `[]BankStatementDetail` | Opsional |
 | `additionalInfo` | `json.RawMessage` | Opsional |
 
-<Accordion title="Field BankStatementBalance">
-BankStatementBalance adalah satu entri dalam array balance milik BankStatementResponse: saldo awal dan akhir sebelum transaksi pertama/terakhir. Amount, StartingBalance, dan EndingBalance semuanya membawa member dateTime yang tidak dimiliki snap.Money (sesuai contoh kerja), sehingga ketiganya memakai bentuk BankStatementBalanceAmount yang lebih kaya, bukan snap.Money biasa. Ketiga member bersifat Wajib menurut tabel field.
+<Accordion title="BankStatementBalance fields">
+Satu entri di `balance`: saldo berjalan sebelum/sesudah periode statement. Memakai `BankStatementBalanceAmount`, bukan `Money` polos, karena juga membawa `dateTime`.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -186,8 +180,8 @@ BankStatementBalance adalah satu entri dalam array balance milik BankStatementRe
 
 </Accordion>
 
-<Accordion title="Field BankStatementBalanceAmount">
-BankStatementBalanceAmount adalah bentuk \{value, currency, dateTime\} yang dipakai oleh member StartingBalance dan EndingBalance milik BankStatementBalance. Tipe ini berbeda dari snap.Money karena membawa member dateTime yang tidak dimiliki Money; ketiga member bersifat Wajib menurut tabel field.
+<Accordion title="BankStatementBalanceAmount fields">
+Bentuk `{value, currency, dateTime}` yang dipakai `BankStatementBalance` — seperti `Money`, ditambah timestamp.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -197,10 +191,8 @@ BankStatementBalanceAmount adalah bentuk \{value, currency, dateTime\} yang dipa
 
 </Accordion>
 
-<Accordion title="Field BankStatementEntryTotal">
-BankStatementEntryTotal adalah bentuk yang dipakai bersama oleh field totalCreditEntries dan totalDebitEntries milik BankStatementResponse (identik menurut tabel field, sehingga berbagi satu tipe ini).
-
-NumberOfEntries bertipe string, bukan int: tabel field menandainya sebagai "int", tapi contoh kerja dari standar sendiri mengirimnya sebagai string JSON dalam tanda kutip (mis. "10") — ini memodelkan contoh wire yang sebenarnya, sama seperti preseden PageSize/PageNumber di transaction_history.go.
+<Accordion title="BankStatementEntryTotal fields">
+Bentuk yang dipakai bersama oleh `totalCreditEntries` dan `totalDebitEntries`. `numberOfEntries` bertipe `string`, bukan `int` — alasannya sama seperti `pageSize`/`pageNumber` di atas.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -209,8 +201,8 @@ NumberOfEntries bertipe string, bukan int: tabel field menandainya sebagai "int"
 
 </Accordion>
 
-<Accordion title="Field BankStatementDetail">
-BankStatementDetail adalah satu entri dalam array detailData milik BankStatementResponse: satu baris transaksi. Amount dan OriginAmount adalah container Opsional menurut tabel field (keduanya "O"), sehingga keduanya dimodelkan sebagai *snap.Money — dikoreksi dari versi sebelumnya yang memakai keduanya sebagai snap.Money biasa (bukan pointer), ditemukan lewat audit pra-publish dan dikonfirmasi dengan pengambilan ulang langsung tabel field-nya.
+<Accordion title="BankStatementDetail fields">
+Satu entri di `detailData`: satu baris transaksi.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -226,8 +218,8 @@ BankStatementDetail adalah satu entri dalam array detailData milik BankStatement
 
 </Accordion>
 
-<Accordion title="Field BankStatementDetailBalance">
-BankStatementDetailBalance adalah objek detailBalance milik BankStatementDetail: saldo tepat sebelum (StartAmount) dan sesudah (EndAmount) satu transaksi tersebut.
+<Accordion title="BankStatementDetailBalance fields">
+Saldo tepat sebelum (`startAmount`) dan sesudah (`endAmount`) satu transaksi.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -236,8 +228,8 @@ BankStatementDetailBalance adalah objek detailBalance milik BankStatementDetail:
 
 </Accordion>
 
-<Accordion title="Field BankStatementDetailBalanceEntry">
-BankStatementDetailBalanceEntry adalah satu entri dalam array StartAmount/EndAmount milik BankStatementDetailBalance. Amount adalah container Opsional menurut tabel field ("O"), berbeda dari BankStatementEntryTotal.Amount (juga nested satu level, tapi "M" di sana) — keduanya tidak diharmonisasi, masing-masing dimodelkan sesuai baris tabelnya sendiri, dikonfirmasi lewat dua pengambilan ulang independen yang ditargetkan.
+<Accordion title="BankStatementDetailBalanceEntry fields">
+Satu entri di `startAmount`/`endAmount`.
 
 | Field | Type | Presence |
 |---|---|---|

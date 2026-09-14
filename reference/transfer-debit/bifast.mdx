@@ -28,7 +28,7 @@ if err != nil {
 
 ### `DirectDebitBIFASTEMandateRegistration`
 
-DirectDebitBIFASTEMandateRegistration calls the SNAP Registrasi e-Mandate endpoint (Service Code 70, path .../\{version\}/debit/fast-emandate, HTTP POST — no method override). hb must already carry every field snap.HeaderBuilder needs except Body, which DirectDebitBIFASTEMandateRegistration sets itself so the exact marshaled bytes are used for both signing and the wire body.
+DirectDebitBIFASTEMandateRegistration calls the SNAP Registrasi e-Mandate endpoint (Service Code 70, HTTP POST). Pass `hb` with everything except `Body` already set — `DirectDebitBIFASTEMandateRegistration` marshals the request itself and uses those exact bytes for both signing and the wire body.
 
 This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it.
 
@@ -38,7 +38,7 @@ func DirectDebitBIFASTEMandateRegistration(ctx context.Context, t *snap.Transpor
 
 **Request &mdash; `DirectDebitBIFASTEMandateRegistrationRequest`**
 
-DirectDebitBIFASTEMandateRegistrationRequest is the request body for API Registrasi e-Mandate (Service Code 70). BankCode, SourceAccountNo, SourceAccountName, BillerID, BillerName, CustomerID, and ExpiredDatetime are Mandatory per research §5.4.
+DirectDebitBIFASTEMandateRegistrationRequest is the request body for Registrasi e-Mandate. `bankCode`, `sourceAccountNo`, `sourceAccountName`, `billerId`, `billerName`, `customerId`, and `expiredDatetime` are Mandatory.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -55,7 +55,7 @@ DirectDebitBIFASTEMandateRegistrationRequest is the request body for API Registr
 
 **Response &mdash; `DirectDebitBIFASTEMandateRegistrationResponse`**
 
-DirectDebitBIFASTEMandateRegistrationResponse is the response body for API Registrasi e-Mandate. ReferenceNo is Conditional (success only). EMandateReffID is Mandatory per research §5.4.
+DirectDebitBIFASTEMandateRegistrationResponse is the response body for Registrasi e-Mandate. `referenceNo` is Conditional — present only on success. `eMandateReffId` is Mandatory; use it in the payment call below.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -71,7 +71,7 @@ DirectDebitBIFASTEMandateRegistrationResponse is the response body for API Regis
 
 ### `DirectDebitBIFASTPayment`
 
-DirectDebitBIFASTPayment calls the SNAP Trigger Direct Debit Transfer / Payment endpoint (Service Code 71, path .../\{version\}/debit/fast-payment, HTTP POST — no method override). hb must already carry every field snap.HeaderBuilder needs except Body, which DirectDebitBIFASTPayment sets itself so the exact marshaled bytes are used for both signing and the wire body.
+DirectDebitBIFASTPayment calls the SNAP Trigger Direct Debit Transfer / Payment endpoint (Service Code 71, HTTP POST). Pass `hb` with everything except `Body` already set — `DirectDebitBIFASTPayment` marshals the request itself.
 
 This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it.
 
@@ -81,7 +81,7 @@ func DirectDebitBIFASTPayment(ctx context.Context, t *snap.Transport, hb snap.He
 
 **Request &mdash; `DirectDebitBIFASTPaymentRequest`**
 
-DirectDebitBIFASTPaymentRequest is the request body for API Trigger Direct Debit Transfer / Payment (Service Code 71). SourceAccountNo is documented String(34) in this endpoint's own field table, unlike Registrasi e-Mandate's String(19) for what is presumably the same logical field (research §6 item 4) — this package enforces no field-length validation anywhere, so the discrepancy has no code consequence.
+DirectDebitBIFASTPaymentRequest is the request body for Trigger Direct Debit Transfer / Payment. `eMandateReffId` comes from a prior e-Mandate Registration call.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -102,7 +102,7 @@ DirectDebitBIFASTPaymentRequest is the request body for API Trigger Direct Debit
 
 **Response &mdash; `DirectDebitBIFASTPaymentResponse`**
 
-DirectDebitBIFASTPaymentResponse is the response body for API Trigger Direct Debit Transfer / Payment. ReferenceNo is Conditional (success only). No field is Mandatory beyond the envelope.
+DirectDebitBIFASTPaymentResponse is the response body for Trigger Direct Debit Transfer / Payment. `referenceNo` is Conditional — present only on success.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -121,11 +121,15 @@ DirectDebitBIFASTPaymentResponse is the response body for API Trigger Direct Deb
 
 **Received &mdash; `DirectDebitBIFASTNotificationRequest`**
 
-DirectDebitBIFASTNotificationRequest is the request body for API Notify (Service Code 72, path .../\{version\}/debit/fast-notify). This is a settlement callback the PJP receives, not a call this package makes — no calling function is provided, matching the package's established convention for inbound notification endpoints (QRMPMPaymentNotificationRequest, Phase 23; DirectDebitPaymentNotificationRequest, Phase 27; CPMPaymentNotificationRequest, Phase 29): a caller wires their own HTTP handler for this path, authenticates the inbound call with ServerVerifier.VerifyTransactionRequest, and json.Unmarshals the body into this type.
+DirectDebitBIFASTNotificationRequest is the request body for Notify (Service Code 72) — a settlement callback the PJP receives, not a call this package makes. Wire your own HTTP handler for this path, authenticate the inbound call with `ServerVerifier.VerifyTransactionRequest`, then `json.Unmarshal` the body into this type.
 
-OriginalReferenceNo, TransactionStatus, EMandateReffID, SourceAccountNo, and SourceAccountName are Mandatory per research §5.4; every other field is Optional.
+`originalReferenceNo`, `transactionStatus`, `eMandateReffId`, `sourceAccountNo`, and `sourceAccountName` are Mandatory; every other field is Optional.
 
-The status field is named TransactionStatus, not LatestTransactionStatus as used everywhere else in both Transfer Kredit and the rest of Transfer Debit — research §6 item 5 records this as an unexplained naming inconsistency in the portal itself and explicitly instructs recording it "as shown, not silently normalized." This type follows that instruction literally rather than renaming the field to match the rest of the package.
+<Note>
+  The status field here is `transactionStatus`, not `latestTransactionStatus`
+  like everywhere else in the package — that's the standard's own naming,
+  kept as-is rather than normalized.
+</Note>
 
 | Field | Type | Presence |
 |---|---|---|
@@ -143,10 +147,9 @@ The status field is named TransactionStatus, not LatestTransactionStatus as used
 
 **Your handler replies with &mdash; `DirectDebitBIFASTNotificationResponse`**
 
-DirectDebitBIFASTNotificationResponse is the response body a caller sends back for API Notify. Research documents this response as envelope-only — no fields beyond the standard responseCode/responseMessage envelope.
+DirectDebitBIFASTNotificationResponse is envelope-only — just `responseCode` and `responseMessage`, no other fields.
 
 | Field | Type | Presence |
 |---|---|---|
 | `responseCode` | `string` | Mandatory |
 | `responseMessage` | `string` | Mandatory |
-

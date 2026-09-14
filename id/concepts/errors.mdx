@@ -1,27 +1,26 @@
 ---
-title: "Error"
-description: "Response code, sentinel error, dan aturan HTTP-status-menang"
+title: "Errors"
+description: "Kode respons, sentinel error, dan aturan status-HTTP-menang"
 ---
 
-SNAP mengenkode hasil sebuah response dengan dua cara sekaligus: status
-HTTP level transport, dan `responseCode` 7 digit yang disematkan dalam JSON
-body. Package ini memperlakukan keduanya sebagai **tidak sama-sama bisa
+SNAP mengkodekan hasil sebuah respons dengan dua cara sekaligus: status
+HTTP tingkat transport, dan `responseCode` 7 digit yang tertanam di body
+JSON. Package ini memperlakukan keduanya sebagai **tidak sama-sama bisa
 dipercaya**.
 
-## Status HTTP adalah acuan utama
+## Status HTTP bersifat otoritatif
 
 ```go
 func CheckResponseStatus(responseCode string, httpStatus int) error
 ```
 
-`CheckResponseStatus` adalah pemeriksaan sukses/gagal tunggal dan otoritatif
-yang dipakai setiap calling function. Status HTTP non-2xx **tidak pernah**
-dianggap sukses, bahkan jika kelas status yang disematkan dalam
-`responseCode` mengklaim sebaliknya — misalnya body cache basi dari
-intermediary yang bermasalah, atau 500 di luar jalur dengan body
-"success" bertemplat. Sebaliknya, status 2xx dengan `responseCode` yang
-rusak atau hilang tetap dianggap sukses (tidak ada lagi yang bisa
-diperiksa).
+`CheckResponseStatus` adalah satu-satunya pemeriksaan sukses/gagal yang
+otoritatif, dipakai setiap fungsi pemanggil. Status HTTP non-2xx **tidak
+pernah** dianggap sukses, meskipun `responseCode` itu sendiri mengklaim
+sebaliknya — misalnya body cache basi dari proxy yang bermasalah.
+Sebaliknya juga berlaku: status 2xx dengan `responseCode` yang hilang atau
+salah bentuk tetap dihitung sukses, karena tidak ada lagi yang bisa
+dijadikan pembanding.
 
 Mengembalikan `nil` untuk sukses, atau salah satu sentinel error di bawah.
 
@@ -32,22 +31,22 @@ func ParseResponseCode(code string) (httpStatus int, serviceCode, caseCode strin
 ```
 
 Memecah `responseCode` SNAP 7 karakter menjadi `HTTPStatus(3)` +
-`ServiceCode(2)` + `CaseCode(2)`. Mengembalikan error non-nil untuk apapun
-yang bukan tepat 7 digit.
+`ServiceCode(2)` + `CaseCode(2)`. Mengembalikan error non-nil untuk apa
+pun yang bukan tepat 7 digit.
 
 ```go
 func ResponseCodeError(code string) error
 ```
 
 Mem-parsing `code` dan mengembalikan sentinel yang cocok dengan kelas
-status HTTP-nya, di-wrap dengan `%w` di sekitar kode mentah sehingga Anda
-bisa mengambilnya kembali sambil tetap mencocokkan kelasnya lewat
-`errors.Is`. Kelas yang tidak dikenali mengembalikan `ErrUnmappedResponseCode`,
-di-wrap dengan cara yang sama — tidak pernah `nil`.
+status HTTP-nya, dibungkus `%w` di sekitar kode mentahnya supaya Anda bisa
+mengambilnya kembali sambil tetap mencocokkan kelasnya lewat `errors.Is`.
+Kelas yang tidak dikenal mengembalikan `ErrUnmappedResponseCode`,
+dibungkus dengan cara yang sama — tidak pernah `nil`.
 
 ## Sentinel error
 
-Satu sentinel per kelas status HTTP yang didokumentasikan dalam tabel
+Satu sentinel per kelas status HTTP yang didokumentasikan di tabel
 response-code standar. Cocokkan dengan `errors.Is`, terlepas dari case
 code spesifiknya:
 
@@ -60,7 +59,7 @@ code spesifiknya:
 | `ErrInternalServerError` | 500 |
 | `ErrServiceUnavailable` | 503 |
 | `ErrTimeout` | 504 |
-| `ErrUnmappedResponseCode` | kelas lain/rusak |
+| `ErrUnmappedResponseCode` | kelas lain/salah bentuk |
 
 ```go
 resp, err := balanceinfo.BalanceInquiry(ctx, transport, hb, req)
@@ -69,31 +68,31 @@ if err != nil {
 		// refresh access token lalu coba lagi
 	}
 	if errors.Is(err, snap.ErrTimeout) {
-		// aman untuk retry hanya jika panggilan ini idempotent — lihat
-		// catatan idempotency masing-masing endpoint di halaman referensinya
+		// aman di-retry hanya bila panggilan ini idempotent — lihat
+		// catatan idempotency masing-masing endpoint di halaman referensi
 	}
 }
 ```
 
-## Input tidak tepercaya di pesan error
+## Input yang tidak dipercaya di pesan error
 
 ```go
 func TruncateForError(s string) string
 ```
 
-Membatasi string tidak tepercaya sebelum diinterpolasi ke pesan error,
-sehingga input yang sangat besar tidak menghasilkan string error yang
-proporsional besar (dan biasanya di-log). Diekspor agar jalur error
-input-tidak-tepercaya milik domain subpackage sendiri (misalnya
-`custIDMerchant` di `registration.CardRegistrationInquiry`) juga bisa
-memakainya — gunakan ini jika Anda membangun error wrapping sendiri di
+Membatasi string yang tidak dipercaya sebelum disisipkan ke pesan error,
+supaya input yang sangat besar tidak menghasilkan string error yang
+proporsional besarnya (dan biasanya ikut ter-log). Di-export supaya jalur
+error input-tidak-dipercaya milik subpackage domain sendiri (mis.
+`custIDMerchant` di `registration.CardRegistrationInquiry`) bisa
+memakainya juga — pakai ini bila Anda membuat pembungkus error sendiri di
 sekitar nilai yang berasal dari pemanggil.
 
 ## Selanjutnya
 
 <CardGroup cols={2}>
-  <Card title="Konvensi Inti" icon="book" href="/id/concepts/conventions">
-    Bagaimana ini cocok dengan pola satu-bentuk-per-endpoint.
+  <Card title="Core Conventions" icon="book" href="/id/concepts/conventions">
+    Di mana ini cocok dalam pola pemanggilan satu-bentuk-per-endpoint.
   </Card>
   <Card title="API Reference" icon="square-terminal" href="/id/reference/registration">
     Lihat catatan idempotency/retry masing-masing endpoint.

@@ -20,7 +20,7 @@ if err != nil {
 
 ### `SubmitBulkCashIn`
 
-SubmitBulkCashIn calls the SNAP Submit Bulk Cash In endpoint (Service Code 40, path .../\{version\}/emoney/bulk-cashin-payment — the path was previously misstated here as submit-bulk-cash-in with no recorded justification, corrected against research §1's own path table, HTTP POST — no method override). hb must already carry every field snap.HeaderBuilder needs except Body, which SubmitBulkCashIn sets itself so the exact marshaled bytes are used for both signing and the wire body.
+SubmitBulkCashIn calls the SNAP Submit Bulk Cash In endpoint (Service Code 40, path .../\{version\}/emoney/bulk-cashin-payment). hb must already carry every field snap.HeaderBuilder needs except Body, which SubmitBulkCashIn sets itself so the exact marshaled bytes are used for both signing and the wire body.
 
 This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it.
 
@@ -56,7 +56,7 @@ BulkCashInItem is one entry in Submit Bulk Cash In's request "bulkObject[]" arra
 
 **Response &mdash; `SubmitBulkCashInResponse`**
 
-SubmitBulkCashInResponse is the response body for API Submit Bulk Cash In. BulkID's JSON tag is "bulkid" (lowercase d), matching this endpoint's own field table (research §5.6 line 172) — the research doc itself flags this as "likely a typo for bulkId, unresolved," but no worked example exists to break the tie, so this package models the literal, only-available documented casing rather than guessing at the correction. Endpoint 41 (NotifyBulkCashInResponse) uses camelCase "bulkId" per its own, separate field description.
+SubmitBulkCashInResponse is the response body for API Submit Bulk Cash In. Note its field is `bulkid` (lowercase d) — likely a typo in the standard, but this package matches the documented wire casing exactly since no worked example confirms a fix. The Notify Bulk Cash In response below uses the normal camelCase `bulkId` instead.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -74,9 +74,7 @@ SubmitBulkCashInResponse is the response body for API Submit Bulk Cash In. BulkI
 
 **Received &mdash; `NotifyBulkCashInRequest`**
 
-NotifyBulkCashInRequest is the request body for API Notify Bulk Cash In (Service Code 41, path .../\{version\}/emoney/bulk-cashin-notify — the path was previously misstated here as notify-bulk-cash-in with no recorded justification, corrected against research §1's own path table). This is a settlement callback the PJP receives, not a call this package makes — no calling function is provided, matching the package's established convention for inbound notification endpoints (InterbankBulkTransferNotificationRequest, Phase 12): a caller wires their own HTTP handler for this path, authenticates the inbound call with ServerVerifier.VerifyTransactionRequest, and json.Unmarshals the body into this type.
-
-The nearest research evidence points at this direction, not the outbound direction Phase 18 originally shipped (a santa-loop finding caught this): SubmitBulkCashInResponse.BulkID is bank-issued (mandatory in the Submit response), and research §5.6 line 174's shape — bulkId/partnerBulkId plus per-item responseCode/ responseMessage — mirrors line 116's Service 21 (Interbank Bulk Transfer - Notification), which research explicitly annotates "settlement callback shape" and which this package already models as inbound-only. Nothing in §5.6 says the PJP sends this call outward (contrast research §5.6 line 154's explicit "Callback the PJP sends outward" for VA Notify Payment Intrabank, which is why that endpoint alone gets a calling function). BulkID and PartnerBulkID are mandatory per the Guides tab.
+NotifyBulkCashInRequest is the request body for API Notify Bulk Cash In (Service Code 41, path .../\{version\}/emoney/bulk-cashin-notify). This is a settlement callback the PJP receives, not a call this package makes — wire your own HTTP handler for this path, authenticate the request with `ServerVerifier.VerifyTransactionRequest`, then `json.Unmarshal` the body into this type. BulkID and PartnerBulkID are Mandatory.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -85,7 +83,7 @@ The nearest research evidence points at this direction, not the outbound directi
 | `bulkObject` | `[]BulkCashInNotificationItem` | Mandatory |
 
 <Accordion title="BulkCashInNotificationItem fields">
-BulkCashInNotificationItem is one entry in Notify Bulk Cash In's request "bulkObject[]" array — a settlement-result shape, distinct from BulkCashInItem's transfer-instruction shape (per the "distinct types per service code" convention: this type has 8 fields vs. Phase 12's InterbankBulkTransferNotificationItem's 3, so it is not a reuse of that type either). CustomerNumber, ReferenceNo, PartnerReferenceNo, ResponseCode, and ResponseMessage are all mandatory per the Guides tab (research §5.6 line 174's slash notation lists each pair as jointly Mandatory, not either/or — see the Phase 18 design doc).
+BulkCashInNotificationItem is one entry in the notification's `bulkObject[]` array — a settlement-result shape, distinct from `BulkCashInItem`'s transfer-instruction shape. CustomerNumber, ReferenceNo, PartnerReferenceNo, ResponseCode, and ResponseMessage are all Mandatory.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -102,7 +100,7 @@ BulkCashInNotificationItem is one entry in Notify Bulk Cash In's request "bulkOb
 
 **Your handler replies with &mdash; `NotifyBulkCashInResponse`**
 
-NotifyBulkCashInResponse is the response body a caller sends back for API Notify Bulk Cash In. BulkID and PartnerBulkID are mandatory per the Guides tab (research §5.6 line 174's "Resp: envelope + bulkId/partnerBulkId M" — stronger, endpoint-specific evidence than Phase 12's Service 21 precedent, whose response fields carry no letter and are Optional by the package's default). BulkID's JSON tag is camelCase "bulkId" here — distinct from SubmitBulkCashInResponse's lowercase-d "bulkid" (see that type's doc comment for the unresolved research contradiction).
+NotifyBulkCashInResponse is the response body your handler sends back. BulkID and PartnerBulkID are Mandatory. Its `bulkId` field is normal camelCase — unlike `SubmitBulkCashInResponse`'s lowercase `bulkid` above.
 
 | Field | Type | Presence |
 |---|---|---|

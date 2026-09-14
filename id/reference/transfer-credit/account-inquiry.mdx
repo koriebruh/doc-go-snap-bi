@@ -1,11 +1,11 @@
 ---
-title: "Cek Rekening"
-description: "Mengecek nama/status rekening penerima sebelum melakukan transfer."
+title: "Pengecekan Rekening"
+description: "Cek nama/status rekening penerima sebelum melakukan transfer."
 ---
 
-## Cek Rekening
+## Pengecekan Rekening
 
-Mengecek nama/status rekening penerima sebelum melakukan transfer.
+Cek nama/status rekening penerima sebelum melakukan transfer.
 
 <CodeGroup>
 ```go example.go
@@ -20,7 +20,7 @@ if err != nil {
 
 ### `AccountInquiryInternal`
 
-AccountInquiryInternal memanggil endpoint SNAP Internal Account Inquiry (Service Code 15, path .../\{version\}/account-inquiry-internal). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh AccountInquiryInternal agar byte hasil marshal yang persis sama dipakai untuk signing maupun wire body.
+Memanggil endpoint SNAP Internal Account Inquiry (Service Code 15, path .../\{version\}/account-inquiry-internal). `hb` harus sudah diisi semua field yang dibutuhkan `snap.HeaderBuilder` kecuali `Body` — fungsi ini yang mengisinya sendiri agar byte yang sama persis dipakai untuk signing maupun request di wire.
 
 ```go
 func AccountInquiryInternal(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req AccountInquiryInternalRequest) (AccountInquiryInternalResponse, error)
@@ -28,7 +28,7 @@ func AccountInquiryInternal(ctx context.Context, t *snap.Transport, hb snap.Head
 
 **Request &mdash; `AccountInquiryInternalRequest`**
 
-AccountInquiryInternalRequest adalah request body untuk API Internal Account Inquiry (Service Code 15). BeneficiaryAccountNo adalah satu-satunya field wajib menurut tab Guides.
+`BeneficiaryAccountNo` adalah satu-satunya field wajib.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -37,8 +37,6 @@ AccountInquiryInternalRequest adalah request body untuk API Internal Account Inq
 | `additionalInfo` | `json.RawMessage` | Opsional |
 
 **Response &mdash; `AccountInquiryInternalResponse`**
-
-AccountInquiryInternalResponse adalah response body untuk API Internal Account Inquiry.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -58,7 +56,7 @@ AccountInquiryInternalResponse adalah response body untuk API Internal Account I
 
 ### `AccountInquiryExternal`
 
-AccountInquiryExternal memanggil endpoint SNAP External Account Inquiry (Service Code 16, path .../\{version\}/account-inquiry-external). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh AccountInquiryExternal agar byte hasil marshal yang persis sama dipakai untuk signing maupun wire body.
+Memanggil endpoint SNAP External Account Inquiry (Service Code 16, path .../\{version\}/account-inquiry-external). `hb` harus sudah diisi semua field yang dibutuhkan `snap.HeaderBuilder` kecuali `Body` — fungsi ini yang mengisinya sendiri agar byte yang sama persis dipakai untuk signing maupun request di wire.
 
 ```go
 func AccountInquiryExternal(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req AccountInquiryExternalRequest) (AccountInquiryExternalResponse, error)
@@ -66,7 +64,7 @@ func AccountInquiryExternal(ctx context.Context, t *snap.Transport, hb snap.Head
 
 **Request &mdash; `AccountInquiryExternalRequest`**
 
-AccountInquiryExternalRequest adalah request body untuk API External Account Inquiry (Service Code 16). BeneficiaryAccountNo dan BeneficiaryBankCode wajib menurut tab Guides.
+`BeneficiaryAccountNo` dan `BeneficiaryBankCode` wajib diisi.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -76,8 +74,6 @@ AccountInquiryExternalRequest adalah request body untuk API External Account Inq
 | `additionalInfo` | `json.RawMessage` | Opsional |
 
 **Response &mdash; `AccountInquiryExternalResponse`**
-
-AccountInquiryExternalResponse adalah response body untuk API External Account Inquiry.
 
 | Field | Type | Presence |
 |---|---|---|

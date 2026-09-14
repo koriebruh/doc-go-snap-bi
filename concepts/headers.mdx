@@ -60,9 +60,9 @@ Assembles the `http.Header` for the request, signing it via
 
 ## `Profile` — per-PJP customization hooks
 
-The standard leaves two things open to each PJP (Penyedia Jasa Pembayaran):
-timestamp formatting and URL path construction. `Profile` is the interface
-`HeaderBuilder` and `TokenManager` call into for both:
+The standard leaves two details up to each PJP (Payment Service Provider):
+how timestamps are formatted and how URL paths are built. `Profile` is the
+interface `HeaderBuilder` and `TokenManager` use for both:
 
 ```go
 type Profile interface {

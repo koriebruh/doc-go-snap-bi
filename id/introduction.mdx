@@ -48,15 +48,14 @@ signing/token/transport yang dipakai bersama.
 | Keamanan | package `snap` di root ([Authentication](/id/concepts/authentication)) | 73–74 | — |
 | Administrasi | *(tidak ada endpoint API di portal — hanya dokumen onboarding)* | — | — |
 
-Endpoint Access Token B2B/B2B2C milik Keamanan berada di package root
-karena setiap package lain bergantung padanya untuk mendapatkan token
-terlebih dahulu — itu adalah infrastruktur autentikasi, bukan endpoint
-domain yang setara.
+Endpoint Access Token milik Keamanan ditaruh di package root, bukan
+subpackage sendiri: setiap package lain butuh endpoint ini hanya untuk
+mendapatkan token, jadi sifatnya infrastruktur, bukan domain yang setara.
 
 ## Desain
 
 <CardGroup cols={2}>
-  <Card title="Satu core, lima package domain" icon="layer-group">
+  <Card title="Satu core, lima package domain" icon="layers">
     Package `snap` di root hanya menyimpan apa yang dibutuhkan setiap
     package domain: signing request, siklus hidup access-token, verifikasi
     request masuk, penyusunan header, parsing kode respons, dan tipe
@@ -69,13 +68,13 @@ domain yang setara.
     otoritatif dibanding body `responseCode` SNAP, tidak pernah
     sebaliknya), lalu unmarshal ke response bertipe.
   </Card>
-  <Card title="Kesetiaan pada bentuk wire dibanding kenyamanan" icon="file-signature">
+  <Card title="Kesetiaan pada bentuk wire dibanding kenyamanan" icon="file-check">
     Penanda field Mandatory/Optional/Conditional dari standar
     dipertahankan persis sebagai presence `omitempty`; field yang
     bentuknya ambigu atau tidak dispesifikasikan dimodelkan sebagai
     `json.RawMessage`, bukan ditebak.
   </Card>
-  <Card title="Nol dependensi pihak ketiga" icon="cube">
+  <Card title="Nol dependensi pihak ketiga" icon="box">
     Semuanya standard library Go — `net/http`, `crypto/rsa`,
     `crypto/hmac`, `encoding/json`.
   </Card>

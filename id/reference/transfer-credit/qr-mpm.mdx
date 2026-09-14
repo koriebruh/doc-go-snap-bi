@@ -1,11 +1,11 @@
 ---
 title: "QR / MPM"
-description: "Merchant-Presented-Mode QR: generate, decode, bayar host-to-host, query, batal, dan refund — plus alur One-Time-Token yang dipakai ApplyOTT."
+description: "Merchant-Presented-Mode QR: generate, decode, bayar host-to-host, query, batalkan, dan refund — plus alur One-Time-Token yang dipakai ApplyOTT."
 ---
 
 ## QR / MPM
 
-Merchant-Presented-Mode QR: generate, decode, bayar host-to-host, query, batal, dan refund — plus alur One-Time-Token yang dipakai ApplyOTT.
+Merchant-Presented-Mode QR: generate, decode, bayar host-to-host, query, batalkan, dan refund — plus alur One-Time-Token yang dipakai `ApplyOTT`.
 
 <CodeGroup>
 ```go example.go
@@ -22,9 +22,9 @@ if err != nil {
 
 ### `GenerateQRMPM`
 
-GenerateQRMPM memanggil endpoint SNAP Generate QR MPM (Service Code 47, path .../\{version\}/qr/qr-mpm-generate, HTTP POST — tanpa override method). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh GenerateQRMPM sehingga byte hasil marshal yang persis sama dipakai baik untuk signing maupun wire body.
+Memanggil endpoint SNAP Generate QR MPM (Service Code 47, path .../\{version\}/qr/qr-mpm-generate, HTTP POST — tanpa override method). `hb` harus sudah membawa setiap field yang dibutuhkan `snap.HeaderBuilder` kecuali `Body`, yang diatur sendiri oleh `GenerateQRMPM` agar byte hasil marshal yang sama persis dipakai untuk signing dan wire body.
 
-Operasi ini tidak idempotent dan package ini tidak melakukan retry. Caller yang melakukan retry atas call yang gagal atau timeout sebaiknya memakai ulang X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server mengacu pada header tersebut.
+Tidak idempotent dan package ini tidak melakukan retry. Bila memanggil ulang setelah gagal/timeout, gunakan `X-EXTERNAL-ID` yang sama — deteksi duplikat di server mengacu pada header ini.
 
 ```go
 func GenerateQRMPM(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req GenerateQRMPMRequest) (GenerateQRMPMResponse, error)
@@ -32,7 +32,7 @@ func GenerateQRMPM(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder
 
 **Request &mdash; `GenerateQRMPMRequest`**
 
-GenerateQRMPMRequest adalah request body untuk API Generate QR MPM (Service Code 47). Setiap field bersifat Opsional menurut tab Guides — tidak ada field pada request ini yang terdokumentasi Wajib.
+Semua field Opsional — tidak ada field yang didokumentasikan Wajib.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -47,9 +47,7 @@ GenerateQRMPMRequest adalah request body untuk API Generate QR MPM (Service Code
 
 **Response &mdash; `GenerateQRMPMResponse`**
 
-GenerateQRMPMResponse adalah response body untuk API Generate QR MPM.
-
-QRContent, QRURL, dan QRImage membentuk kondisi salah-satu-dari-tiga yang tidak bisa dinyatakan sistem tipe: menurut tab Guides, "jika [qrContent] null, qrUrl atau qrImage harus diisi." Ketiganya di sini bersifat Opsional; caller harus mengecek mana di antara ketiganya yang terisi (tidak kosong).
+`QRContent`, `QRURL`, dan `QRImage` membentuk kondisi one-of-three yang tidak bisa diekspresikan sistem tipe: menurut standar, "jika qrContent kosong, qrUrl atau qrImage harus diisi." Ketiganya dimodelkan Opsional di sini — pemanggil harus mengecek mana yang benar-benar terisi.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -67,19 +65,17 @@ QRContent, QRURL, dan QRImage membentuk kondisi salah-satu-dari-tiga yang tidak 
 
 ### `ApplyOTT`
 
-ApplyOTT memanggil endpoint SNAP Payment Redirect - Apply OTT (Service Code 49, path .../\{version\}/qr/apply-ott, HTTP POST — tanpa override method). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh ApplyOTT sehingga byte hasil marshal yang persis sama dipakai baik untuk signing maupun wire body.
+Memanggil endpoint SNAP Payment Redirect - Apply OTT (Service Code 49, path .../\{version\}/qr/apply-ott, HTTP POST — tanpa override method). `hb` harus sudah membawa setiap field yang dibutuhkan `snap.HeaderBuilder` kecuali `Body`, yang diatur sendiri oleh `ApplyOTT` agar byte hasil marshal yang sama persis dipakai untuk signing dan wire body.
 
-Operasi ini tidak idempotent dan package ini tidak melakukan retry. Caller yang melakukan retry atas call yang gagal atau timeout sebaiknya memakai ulang X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server mengacu pada header tersebut.
+Tidak idempotent dan package ini tidak melakukan retry. Bila memanggil ulang setelah gagal/timeout, gunakan `X-EXTERNAL-ID` yang sama — deteksi duplikat di server mengacu pada header ini.
 
 ```go
 func ApplyOTT(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req ApplyOTTRequest) (ApplyOTTResponse, error)
 ```
 
-Endpoint ini tidak menerima request body bertipe di luar parameter call yang ditampilkan di atas.
+Endpoint ini tidak punya request body bertipe selain parameter panggilan di atas.
 
 **Response &mdash; `ApplyOTTResponse`**
-
-ApplyOTTResponse adalah response body untuk API Payment Redirect - Apply OTT.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -87,8 +83,8 @@ ApplyOTTResponse adalah response body untuk API Payment Redirect - Apply OTT.
 | `responseMessage` | `string` | Wajib |
 | `userResources` | `[]ApplyOTTUserResource` | Wajib |
 
-<Accordion title="ApplyOTTUserResource fields">
-ApplyOTTUserResource adalah satu entri dalam array userResources milik ApplyOTTResponse. Meski memakai nama field yang sama dengan request, ini adalah bentuk yang berbeda (sebuah object, bukan string biasa).
+<Accordion title="Field ApplyOTTUserResource">
+Satu entri dalam array `userResources` pada `ApplyOTTResponse`. Meski nama field-nya sama dengan request, ini bentuk yang berbeda (objek, bukan string biasa).
 
 | Field | Type | Presence |
 |---|---|---|
@@ -102,9 +98,9 @@ ApplyOTTUserResource adalah satu entri dalam array userResources milik ApplyOTTR
 
 ### `DecodeQRMPM`
 
-DecodeQRMPM memanggil endpoint SNAP Decode QR MPM (Service Code 48, path .../\{version\}/qr/qr-mpm-decode, HTTP POST — tanpa override method). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh DecodeQRMPM sehingga byte hasil marshal yang persis sama dipakai baik untuk signing maupun wire body.
+Memanggil endpoint SNAP Decode QR MPM (Service Code 48, path .../\{version\}/qr/qr-mpm-decode, HTTP POST — tanpa override method). `hb` harus sudah membawa setiap field yang dibutuhkan `snap.HeaderBuilder` kecuali `Body`, yang diatur sendiri oleh `DecodeQRMPM` agar byte hasil marshal yang sama persis dipakai untuk signing dan wire body.
 
-Ini adalah decode read-only; berbeda dari GenerateQRMPM, endpoint ini tidak membawa catatan non-idempotency.
+Ini decode read-only; tidak seperti `GenerateQRMPM`, tidak ada catatan non-idempotency.
 
 ```go
 func DecodeQRMPM(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req DecodeQRMPMRequest) (DecodeQRMPMResponse, error)
@@ -112,7 +108,7 @@ func DecodeQRMPM(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, 
 
 **Request &mdash; `DecodeQRMPMRequest`**
 
-DecodeQRMPMRequest adalah request body untuk API Decode QR MPM (Service Code 48). QRContent dan ScanTime bersifat Wajib menurut tab Guides.
+`QRContent` dan `ScanTime` wajib.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -125,9 +121,7 @@ DecodeQRMPMRequest adalah request body untuk API Decode QR MPM (Service Code 48)
 
 **Response &mdash; `DecodeQRMPMResponse`**
 
-DecodeQRMPMResponse adalah response body untuk API Decode QR MPM.
-
-ReferenceNo dan RedirectURL membawa label kondisional yang saling bertentangan pada dokumentasi sumber — "Wajib jika redirect" dan "Wajib jika mode H2H" secara berturut-turut, yang terbaca seperti dua cabang berlawanan dari kondisi yang sama (research §6 item 8, belum terselesaikan). Keduanya dimodelkan sebagai Opsional; tidak ada bacaan yang dipastikan benar di sini.
+`ReferenceNo` dan `RedirectURL` sama-sama dimodelkan Opsional — kondisi wajib dari standar untuk keduanya saling kontradiktif, jadi tidak ada yang dipaksakan di sini.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -142,10 +136,10 @@ ReferenceNo dan RedirectURL membawa label kondisional yang saling bertentangan p
 | `transactionAmount` | `*snap.Money` | Opsional |
 | `feeAmount` | `*snap.Money` | Opsional |
 
-<Accordion title="MPMMerchantInfo fields">
-MPMMerchantInfo adalah satu entri dalam array merchantInfos milik DecodeQRMPMResponse.
+<Accordion title="Field MPMMerchantInfo">
+Satu entri dalam array `merchantInfos` pada `DecodeQRMPMResponse`.
 
-MerchantPAN terdokumentasi Numeric(19) tetapi ditulis sebagai string berkutip pada wire (research §5.9 baris 194) — bentuk ambigu yang sama seperti CustomerMonthlyInLimit (Phase 17: terdokumentasi Numeric, berkutip pada wire). customerNo (Phase 14/15) adalah arah sebaliknya dari aturan yang sama (terdokumentasi String, angka polos pada wire). Kedua arah ini mendapat json.RawMessage, bukan string atau tipe numerik Go.
+`MerchantPAN` didokumentasikan numerik tapi dikirim sebagai string berkutip di wire — bentuk ambigu, jadi diketik `json.RawMessage`, bukan `string` atau tipe numerik.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -159,9 +153,9 @@ MerchantPAN terdokumentasi Numeric(19) tetapi ditulis sebagai string berkutip pa
 
 ### `QRMPMPaymentH2H`
 
-QRMPMPaymentH2H memanggil endpoint SNAP Payment - Host to Host (Service Code 50, path .../\{version\}/qr/qr-mpm-payment, HTTP POST — tanpa override method). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh QRMPMPaymentH2H sehingga byte hasil marshal yang persis sama dipakai baik untuk signing maupun wire body.
+Memanggil endpoint SNAP Payment - Host to Host (Service Code 50, path .../\{version\}/qr/qr-mpm-payment, HTTP POST — tanpa override method). `hb` harus sudah membawa setiap field yang dibutuhkan `snap.HeaderBuilder` kecuali `Body`, yang diatur sendiri oleh `QRMPMPaymentH2H` agar byte hasil marshal yang sama persis dipakai untuk signing dan wire body.
 
-Operasi ini tidak idempotent dan package ini tidak melakukan retry. Caller yang melakukan retry atas call yang gagal atau timeout sebaiknya memakai ulang X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server mengacu pada header tersebut.
+Tidak idempotent dan package ini tidak melakukan retry. Bila memanggil ulang setelah gagal/timeout, gunakan `X-EXTERNAL-ID` yang sama — deteksi duplikat di server mengacu pada header ini.
 
 ```go
 func QRMPMPaymentH2H(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req QRMPMPaymentH2HRequest) (QRMPMPaymentH2HResponse, error)
@@ -169,9 +163,9 @@ func QRMPMPaymentH2H(ctx context.Context, t *snap.Transport, hb snap.HeaderBuild
 
 **Request &mdash; `QRMPMPaymentH2HRequest`**
 
-QRMPMPaymentH2HRequest adalah request body untuk API Payment - Host to Host (Service Code 50). PartnerReferenceNo bersifat Wajib; setiap field lain Opsional menurut tab Guides.
+`PartnerReferenceNo` wajib; field lain Opsional.
 
-VerificationID juga muncul pada QRMPMPaymentH2HResponse dengan nama yang sama tetapi panjang terdokumentasi berbeda (String(32) di sini, String(64) pada response) — keduanya berupa string biasa di Go (tanpa penegakan panjang, sesuai kebiasaan package ini); ini catatan panjang, bukan perbedaan bentuk tipe, dicatat agar tidak dikira typo.
+`VerificationID` juga muncul di response dengan nama sama tapi batas panjang terdokumentasi berbeda — keduanya sama-sama `string` biasa di Go, package ini tidak menegakkan batas panjang.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -184,10 +178,6 @@ VerificationID juga muncul pada QRMPMPaymentH2HResponse dengan nama yang sama te
 | `verificationId` | `string` | Opsional |
 
 **Response &mdash; `QRMPMPaymentH2HResponse`**
-
-QRMPMPaymentH2HResponse adalah response body untuk API Payment - Host to Host.
-
-Bentuk dasar ReferenceNo/TransactionDate adalah pilihan pemodelan interpretatif, bukan transkripsi literal: research hanya mendokumentasikan response ini sebagai "menambahkan verificationId String(64) O" tanpa menyebut ini tambahan atas apa. Lihat dokumen desain Phase 22 untuk penjelasan lengkapnya.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -202,13 +192,11 @@ Bentuk dasar ReferenceNo/TransactionDate adalah pilihan pemodelan interpretatif,
 
 ### `QR MPM Payment Notification`
 
-<Info>Hanya masuk (inbound) &mdash; package ini tidak memanggil endpoint untuk hal ini. Partner/switcher akan mengirim POST ke callback URL **milik Anda**; unmarshal body ke `QRMPMPaymentNotificationRequest` setelah memverifikasinya dengan `snap.ServerVerifier` (lihat [Memverifikasi request masuk](/id/concepts/webhooks)), lalu balas dengan bentuk di bawah.</Info>
+<Info>Hanya masuk (inbound) &mdash; package ini tidak memanggil endpoint untuk ini. Partner/switcher yang POST ke callback URL **Anda**; unmarshal body ke `QRMPMPaymentNotificationRequest` setelah memverifikasinya dengan `snap.ServerVerifier` (lihat [Verifying inbound requests](/id/concepts/webhooks)), lalu balas dengan bentuk di bawah.</Info>
 
 **Diterima &mdash; `QRMPMPaymentNotificationRequest`**
 
-QRMPMPaymentNotificationRequest adalah request body untuk API Payment Notification (Service Code 52, path .../\{version\}/qr/qr-mpm-notify). Ini adalah callback settlement yang diterima PJP, bukan call yang dilakukan package ini — tidak disediakan calling function, sesuai konvensi package ini untuk endpoint notifikasi masuk (NotifyBulkCashInRequest, Phase 18): caller memasang HTTP handler sendiri untuk path ini, mengautentikasi call masuk dengan ServerVerifier.VerifyTransactionRequest, lalu melakukan json.Unmarshal body ke tipe ini.
-
-OriginalReferenceNo dan LatestTransactionStatus wajib menurut tab Guides; setiap field lain Opsional. Tidak ada di research §5.9 baris 202 yang menyatakan PJP mengirim call ini keluar (bandingkan dengan bahasa eksplisit "Callback yang dikirim PJP keluar" pada VA Notify Payment Intrabank, §5.3 baris 154 — satu-satunya pengecualian yang terkonfirmasi atas default ini), sehingga bacaan inbound adalah default, bukan tebakan.
+Ini adalah callback settlement yang diterima PJP, bukan panggilan dari package ini — buat HTTP handler sendiri untuk path ini, autentikasi dengan `ServerVerifier.VerifyTransactionRequest`, lalu `json.Unmarshal` body ke tipe ini. `OriginalReferenceNo` dan `LatestTransactionStatus` wajib; field lain Opsional.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -226,7 +214,7 @@ OriginalReferenceNo dan LatestTransactionStatus wajib menurut tab Guides; setiap
 
 **Handler Anda membalas dengan &mdash; `QRMPMPaymentNotificationResponse`**
 
-QRMPMPaymentNotificationResponse adalah response body yang dikirim balik caller untuk API Payment Notification. Research mendokumentasikan response ini sebagai "hanya envelope" (§5.9 baris 202) — tidak ada field di luar envelope responseCode/responseMessage standar.
+Tidak ada field lain selain envelope standar `responseCode`/`responseMessage`.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -238,9 +226,9 @@ QRMPMPaymentNotificationResponse adalah response body yang dikirim balik caller 
 
 ### `QRMPMQueryPayment`
 
-QRMPMQueryPayment memanggil endpoint SNAP Query Payment (Service Code 51, path .../\{version\}/qr/qr-mpm-query, HTTP POST — tanpa override method). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh QRMPMQueryPayment sehingga byte hasil marshal yang persis sama dipakai baik untuk signing maupun wire body.
+Memanggil endpoint SNAP Query Payment (Service Code 51, path .../\{version\}/qr/qr-mpm-query, HTTP POST — tanpa override method). `hb` harus sudah membawa setiap field yang dibutuhkan `snap.HeaderBuilder` kecuali `Body`, yang diatur sendiri oleh `QRMPMQueryPayment` agar byte hasil marshal yang sama persis dipakai untuk signing dan wire body.
 
-Ini adalah query status read-only; berbeda dari call mutating lain di package ini, endpoint ini tidak membawa catatan non-idempotency, mengikuti preseden TransactionStatusInquiryBank.
+Query status read-only; tidak ada catatan non-idempotency, sama seperti `TransactionStatusInquiryBank`.
 
 ```go
 func QRMPMQueryPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req QRMPMQueryPaymentRequest) (QRMPMQueryPaymentResponse, error)
@@ -248,7 +236,7 @@ func QRMPMQueryPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBui
 
 **Request &mdash; `QRMPMQueryPaymentRequest`**
 
-QRMPMQueryPaymentRequest adalah request body untuk API Query Payment (Service Code 51). Ini adalah superset dari TransactionStatusInquiryBankRequest (Phase 16) — field dasar originalX/serviceCode yang sama, karena research menyebut pola dasar yang sama di sini, ditambah MerchantID, SubMerchantID, dan ExternalStoreID. Ini benar-benar superset, bukan bentuk identik, sehingga sesuai praktik baku Phase 20, tipe ini didokumentasikan terpisah dalam prosa, bukan dijaga dari drift lewat reflection terhadap tipe dasar. ServiceCode adalah satu-satunya field wajib.
+Field dasar yang sama dengan [`TransactionStatusInquiryBankRequest`](/id/reference/transfer-credit/transaction-status), ditambah `MerchantID`, `SubMerchantID`, dan `ExternalStoreID`. `ServiceCode` satu-satunya field wajib.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -265,7 +253,7 @@ QRMPMQueryPaymentRequest adalah request body untuk API Query Payment (Service Co
 
 **Response &mdash; `QRMPMQueryPaymentResponse`**
 
-QRMPMQueryPaymentResponse adalah response body untuk API Query Payment. Response ini memakai ulang seluruh kumpulan field TransactionStatusInquiryBankResponse apa adanya (hubungan superset yang sama seperti request; lihat komentar dokumentasi tipe tersebut untuk alasan field seperti BeneficiaryAccountNo berlaku di sini meski bukan khusus QR — research mendokumentasikan ini sebagai skema response status generik yang bisa dipakai ulang) ditambah PaidTime dan TerminalID.
+Field yang sama dengan [`TransactionStatusInquiryBankResponse`](/id/reference/transfer-credit/transaction-status), ditambah `PaidTime` dan `TerminalID`.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -294,9 +282,9 @@ QRMPMQueryPaymentResponse adalah response body untuk API Query Payment. Response
 
 ### `QRMPMCancelPayment`
 
-QRMPMCancelPayment memanggil endpoint SNAP Cancel Payment (Service Code 77, path .../\{version\}/qr/qr-mpm-cancel, HTTP POST — tanpa override method). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh QRMPMCancelPayment sehingga byte hasil marshal yang persis sama dipakai baik untuk signing maupun wire body.
+Memanggil endpoint SNAP Cancel Payment (Service Code 77, path .../\{version\}/qr/qr-mpm-cancel, HTTP POST — tanpa override method). `hb` harus sudah membawa setiap field yang dibutuhkan `snap.HeaderBuilder` kecuali `Body`, yang diatur sendiri oleh `QRMPMCancelPayment` agar byte hasil marshal yang sama persis dipakai untuk signing dan wire body.
 
-Operasi ini tidak idempotent dan package ini tidak melakukan retry. Caller yang melakukan retry atas call yang gagal atau timeout sebaiknya memakai ulang X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server mengacu pada header tersebut.
+Tidak idempotent dan package ini tidak melakukan retry. Bila memanggil ulang setelah gagal/timeout, gunakan `X-EXTERNAL-ID` yang sama — deteksi duplikat di server mengacu pada header ini.
 
 ```go
 func QRMPMCancelPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req QRMPMCancelPaymentRequest) (QRMPMCancelPaymentResponse, error)
@@ -304,7 +292,7 @@ func QRMPMCancelPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBu
 
 **Request &mdash; `QRMPMCancelPaymentRequest`**
 
-QRMPMCancelPaymentRequest adalah request body untuk API Cancel Payment (Service Code 77). Berbeda dari endpoint pola-originalX lain di package ini, baris ini tidak mendokumentasikan field serviceCode dan mencatat ketiga field originalX sebagai Opsional — MerchantID dan Reason adalah satu-satunya field Wajib.
+Berbeda dari endpoint pola originalX lain di package ini, baris ini tidak mendokumentasikan field `serviceCode` dan ketiga field originalX-nya Opsional — `MerchantID` dan `Reason` satu-satunya yang wajib.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -319,7 +307,7 @@ QRMPMCancelPaymentRequest adalah request body untuk API Cancel Payment (Service 
 
 **Response &mdash; `QRMPMCancelPaymentResponse`**
 
-QRMPMCancelPaymentResponse adalah response body untuk API Cancel Payment. CancelTime bersifat Kondisional menurut research §5.9 baris 204 (tidak ada kondisi lebih lanjut yang disebutkan pada baris itu, berbeda dari catatan eksplisit "harus diisi jika transaksi yang dibatalkan berhasil" milik Transfer To OTC Cancel Payment, Phase 20) — dimodelkan Opsional, mengikuti penanganan standar package ini untuk field Kondisional. TransactionDate bersifat Opsional.
+`CancelTime` Kondisional (dimodelkan Opsional, sesuai penanganan standar package ini — lihat [Core Conventions](/id/concepts/conventions)); `TransactionDate` Opsional.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -333,9 +321,9 @@ QRMPMCancelPaymentResponse adalah response body untuk API Cancel Payment. Cancel
 
 ### `QRMPMRefundPayment`
 
-QRMPMRefundPayment memanggil endpoint SNAP Refund Payment (Service Code 78, path .../\{version\}/qr/qr-mpm-refund, HTTP POST — tanpa override method). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh QRMPMRefundPayment sehingga byte hasil marshal yang persis sama dipakai baik untuk signing maupun wire body.
+Memanggil endpoint SNAP Refund Payment (Service Code 78, path .../\{version\}/qr/qr-mpm-refund, HTTP POST — tanpa override method). `hb` harus sudah membawa setiap field yang dibutuhkan `snap.HeaderBuilder` kecuali `Body`, yang diatur sendiri oleh `QRMPMRefundPayment` agar byte hasil marshal yang sama persis dipakai untuk signing dan wire body.
 
-Operasi ini tidak idempotent dan package ini tidak melakukan retry. Caller yang melakukan retry atas call yang gagal atau timeout sebaiknya memakai ulang X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server mengacu pada header tersebut.
+Tidak idempotent dan package ini tidak melakukan retry. Bila memanggil ulang setelah gagal/timeout, gunakan `X-EXTERNAL-ID` yang sama — deteksi duplikat di server mengacu pada header ini.
 
 ```go
 func QRMPMRefundPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req QRMPMRefundPaymentRequest) (QRMPMRefundPaymentResponse, error)
@@ -343,7 +331,7 @@ func QRMPMRefundPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBu
 
 **Request &mdash; `QRMPMRefundPaymentRequest`**
 
-QRMPMRefundPaymentRequest adalah request body untuk API Refund Payment (Service Code 78). OriginalPartnerReferenceNo dan PartnerRefundNo bersifat Wajib; setiap field lain Opsional menurut tab Guides.
+`OriginalPartnerReferenceNo` dan `PartnerRefundNo` wajib; field lain Opsional.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -359,7 +347,7 @@ QRMPMRefundPaymentRequest adalah request body untuk API Refund Payment (Service 
 
 **Response &mdash; `QRMPMRefundPaymentResponse`**
 
-QRMPMRefundPaymentResponse adalah response body untuk API Refund Payment. RefundNo dan RefundTime bersifat Wajib; PartnerRefundNo dan RefundAmount bersifat Opsional (dikirim balik sebagai gema, tidak dijamin ada).
+`RefundNo` dan `RefundTime` wajib; `PartnerRefundNo` dan `RefundAmount` Opsional (dikembalikan lagi, tidak dijamin selalu ada).
 
 | Field | Type | Presence |
 |---|---|---|

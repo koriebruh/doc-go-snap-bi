@@ -1,11 +1,11 @@
 ---
 title: "Direct Debit"
-description: "Pembayaran direct-debit standar, notifikasi masuknya, dan status/batal/refund."
+description: "Pembayaran direct-debit standar, notifikasi masuknya, serta status/batal/refund."
 ---
 
 ## Direct Debit
 
-Pembayaran direct-debit standar, notifikasi masuknya, dan status/batal/refund.
+Pembayaran direct-debit standar, notifikasi masuknya, serta status/batal/refund.
 
 <CodeGroup>
 ```go example.go
@@ -20,9 +20,9 @@ if err != nil {
 
 ### `DirectDebitPayment`
 
-DirectDebitPayment memanggil endpoint SNAP Direct Debit Payment (Service Code 54, path .../\{version\}/debit/payment-host-to-host, HTTP POST — tanpa override method). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh DirectDebitPayment agar byte hasil marshal yang persis sama dipakai baik untuk signing maupun body di jalur kirim.
+DirectDebitPayment memanggil endpoint SNAP Direct Debit Payment (Service Code 54, HTTP POST). Isi `hb` dengan semua field kecuali `Body` — `DirectDebitPayment` melakukan marshal request itu sendiri dan memakai byte yang sama persis untuk signing maupun body di wire.
 
-Operasi ini tidak idempotent dan package ini tidak melakukan retry. Caller yang me-retry panggilan yang gagal atau timeout sebaiknya memakai ulang X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server berpatokan pada header tersebut.
+Operasi ini tidak idempotent dan package ini tidak melakukan retry. Bila memanggil ulang setelah gagal atau timeout, gunakan `X-EXTERNAL-ID` yang sama, karena deteksi duplikat di server mengacu pada header itu.
 
 ```go
 func DirectDebitPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req DirectDebitPaymentRequest) (DirectDebitPaymentResponse, error)
@@ -30,7 +30,7 @@ func DirectDebitPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBu
 
 **Request &mdash; `DirectDebitPaymentRequest`**
 
-DirectDebitPaymentRequest adalah body request untuk API Direct Debit Payment (Service Code 54). PartnerReferenceNo adalah satu-satunya field wajib menurut riset §5.1.
+DirectDebitPaymentRequest adalah request body untuk Direct Debit Payment. `partnerReferenceNo` satu-satunya field Wajib.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -54,7 +54,7 @@ DirectDebitPaymentRequest adalah body request untuk API Direct Debit Payment (Se
 | `additionalInfo` | `json.RawMessage` | Opsional |
 
 <Accordion title="DirectDebitPaymentURLParam fields">
-DirectDebitPaymentURLParam adalah satu entri dalam array "urlParams[]" pada request Direct Debit Payment. Type didokumentasikan sebagai PAY_RETURN atau PAY_NOTIFY tetapi dimodelkan sebagai string biasa karena riset tidak memberikan daftar tertutup yang lengkap. IsDeeplink adalah flag Y/N String(1) yang terdokumentasi, bukan kasus tipe-numerik-ambigu — string biasa, bukan json.RawMessage.
+DirectDebitPaymentURLParam adalah satu entri dalam array `urlParams[]` pada request — sebuah URL redirect dan cara memakainya. `isDeeplink` adalah flag `"Y"`/`"N"`.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -65,7 +65,7 @@ DirectDebitPaymentURLParam adalah satu entri dalam array "urlParams[]" pada requ
 </Accordion>
 
 <Accordion title="DirectDebitPayOptionDetail fields">
-DirectDebitPayOptionDetail adalah satu entri dalam array "payOptionDetails[]" pada request Direct Debit Payment. TransAmount dan FeeAmount didokumentasikan sebagai container Opsional dengan anggota Wajib — dimodelkan sebagai *snap.Money mengikuti perlakuan baku package ini (container Opsional menang atas penanda anggota internalnya).
+DirectDebitPayOptionDetail adalah satu entri dalam array `payOptionDetails[]` pada request, mendeskripsikan satu metode pembayaran yang tersedia.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -81,9 +81,15 @@ DirectDebitPayOptionDetail adalah satu entri dalam array "payOptionDetails[]" pa
 
 **Response &mdash; `DirectDebitPaymentResponse`**
 
-DirectDebitPaymentResponse adalah body response untuk API Direct Debit Payment. ReferenceNo bersifat Kondisional (hanya saat sukses). Tidak ada field response yang Wajib di luar envelope.
+DirectDebitPaymentResponse adalah response body untuk Direct Debit Payment. `referenceNo` bersifat Kondisional — hanya muncul saat berhasil.
 
-AppRedirectURL dan WebRedirectURL dikembalikan apa adanya dari server; package ini tidak melakukan validasi scheme/host. Caller yang mengarahkan WebView atau browser ke salah satu URL ini sebaiknya memvalidasi scheme-nya terlebih dahulu (https:// atau scheme app yang terdaftar milik caller sendiri), karena response yang dipalsukan atau disusupi bisa saja mengembalikan URL yang dikendalikan penyerang.
+<Warning>
+  `appRedirectUrl` dan `webRedirectUrl` datang langsung dari server tanpa
+  validasi apa pun. Sebelum membuka salah satunya di WebView atau browser,
+  periksa sendiri skema URL-nya (`https://` atau skema resmi aplikasi Anda) —
+  respons yang dimanipulasi atau dipalsukan bisa saja menyelipkan URL yang
+  dikendalikan penyerang.
+</Warning>
 
 | Field | Type | Presence |
 |---|---|---|
@@ -101,13 +107,13 @@ AppRedirectURL dan WebRedirectURL dikembalikan apa adanya dari server; package i
 
 ### `Direct Debit Payment Notification`
 
-<Info>Hanya masuk (inbound) &mdash; package ini tidak memanggil endpoint untuk hal ini. Partner/switcher yang mengirim POST ke callback URL **Anda**; unmarshal body ke `DirectDebitPaymentNotificationRequest` setelah memverifikasinya dengan `snap.ServerVerifier` (lihat [Memverifikasi request masuk](/id/concepts/webhooks)), lalu balas dengan bentuk di bawah.</Info>
+<Info>Hanya masuk (inbound) &mdash; package ini tidak memanggil endpoint untuk hal ini. Partner/switcher yang mengirim POST ke URL callback **Anda**; unmarshal body ke `DirectDebitPaymentNotificationRequest` setelah memverifikasinya dengan `snap.ServerVerifier` (lihat [Verifying inbound requests](/id/concepts/webhooks)), lalu balas dengan bentuk di bawah.</Info>
 
 **Diterima &mdash; `DirectDebitPaymentNotificationRequest`**
 
-DirectDebitPaymentNotificationRequest adalah body request untuk API Direct Debit Payment Notification (Service Code 56, path .../\{version\}/debit/notify). Ini adalah callback settlement yang diterima PJP, bukan panggilan yang dibuat package ini — tidak ada fungsi pemanggil yang disediakan, mengikuti konvensi baku package ini untuk endpoint notifikasi masuk (QRMPMPaymentNotificationRequest, Fase 23; NotifyBulkCashInRequest, Fase 18): caller memasang HTTP handler-nya sendiri untuk path ini, mengautentikasi panggilan masuk dengan ServerVerifier.VerifyTransactionRequest, dan melakukan json.Unmarshal pada body ke tipe ini.
+DirectDebitPaymentNotificationRequest adalah request body untuk Direct Debit Payment Notification (Service Code 56) — callback settlement yang diterima PJP, bukan panggilan yang dilakukan package ini. Buat HTTP handler Anda sendiri untuk path ini, autentikasi panggilan masuknya dengan `ServerVerifier.VerifyTransactionRequest`, lalu `json.Unmarshal` body ke tipe ini.
 
-OriginalReferenceNo dan LatestTransactionStatus bersifat Wajib menurut riset §5.1 baris 143; setiap field lain Opsional. Tidak ada apa pun pada baris tersebut yang menyatakan PJP mengirim panggilan ini keluar, sehingga pembacaan sebagai masuk (inbound) adalah default, bukan tebakan.
+`originalReferenceNo` dan `latestTransactionStatus` bersifat Wajib; field lainnya Opsional.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -126,7 +132,7 @@ OriginalReferenceNo dan LatestTransactionStatus bersifat Wajib menurut riset §5
 
 **Handler Anda membalas dengan &mdash; `DirectDebitPaymentNotificationResponse`**
 
-DirectDebitPaymentNotificationResponse adalah body response yang dikirim balik caller untuk API Direct Debit Payment Notification. ApprovalCode adalah satu-satunya field di luar envelope, dan bersifat Opsional. Contoh kerja riset menunjukkan urutan field non-standar (responseCode, approvalCode, responseMessage) — dicatat di sini karena urutan field JSON tidak membawa makna semantik; struct ini tetap memakai urutan envelope-lebih-dulu yang baku pada package.
+DirectDebitPaymentNotificationResponse punya satu field di luar envelope, `approvalCode`, dan sifatnya Opsional.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -139,9 +145,7 @@ DirectDebitPaymentNotificationResponse adalah body response yang dikirim balik c
 
 ### `DirectDebitPaymentStatus`
 
-DirectDebitPaymentStatus memanggil endpoint SNAP Direct Debit Payment Status (Service Code 55, path .../\{version\}/debit/status, HTTP POST — tanpa override method). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh DirectDebitPaymentStatus agar byte hasil marshal yang persis sama dipakai baik untuk signing maupun body di jalur kirim.
-
-Ini adalah query status yang hanya-baca dan tidak membawa catatan non-idempotency, mengikuti preseden TransactionStatusInquiryBank/TransactionStatusInquiryNonBank.
+DirectDebitPaymentStatus memanggil endpoint SNAP Direct Debit Payment Status (Service Code 55, HTTP POST) untuk mengecek status pembayaran sebelumnya. Isi `hb` dengan semua field kecuali `Body` — `DirectDebitPaymentStatus` melakukan marshal request itu sendiri. Ini pencarian read-only, aman untuk diulang kapan saja.
 
 ```go
 func DirectDebitPaymentStatus(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req DirectDebitPaymentStatusRequest) (DirectDebitPaymentStatusResponse, error)
@@ -149,7 +153,7 @@ func DirectDebitPaymentStatus(ctx context.Context, t *snap.Transport, hb snap.He
 
 **Request &mdash; `DirectDebitPaymentStatusRequest`**
 
-DirectDebitPaymentStatusRequest adalah body request untuk API Direct Debit Payment Status (Service Code 55). Memakai bentuk inti "originalX + serviceCode" yang dipakai bersama TransactionStatusInquiryBankRequest, tetapi dengan tambahan khas sub-grup ini sendiri (merchantId, subMerchantId, externalStoreId) — dijaga sebagai tipe independen alih-alih dipakai ulang/diperluas dari tipe dasar Transfer Kredit, karena keduanya berbeda komposisi field-nya. ServiceCode adalah satu-satunya field wajib.
+DirectDebitPaymentStatusRequest adalah request body untuk Direct Debit Payment Status. `serviceCode` satu-satunya field Wajib — pasangkan dengan reference apa pun yang Anda punya.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -165,7 +169,7 @@ DirectDebitPaymentStatusRequest adalah body request untuk API Direct Debit Payme
 
 **Response &mdash; `DirectDebitPaymentStatusResponse`**
 
-DirectDebitPaymentStatusResponse adalah body response untuk API Direct Debit Payment Status. LatestTransactionStatus adalah satu-satunya field wajib di luar envelope, sama dengan setiap kemunculan lain field ini di seluruh package.
+DirectDebitPaymentStatusResponse adalah response body untuk Direct Debit Payment Status. `latestTransactionStatus` satu-satunya field Wajib di luar envelope.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -190,7 +194,7 @@ DirectDebitPaymentStatusResponse adalah body response untuk API Direct Debit Pay
 | `paidTime` | `string` | Opsional |
 
 <Accordion title="DirectDebitRefundHistoryItem fields">
-DirectDebitRefundHistoryItem adalah satu entri dalam array "refundHistory[]" pada response Direct Debit Payment Status. RefundStatus adalah subset String(2) 00/03/06 dari enum transaksi 8-nilai yang terdokumentasi, dimodelkan sebagai string biasa, mengikuti konvensi package ini yang sudah ada untuk tidak membuat tipe enum bagi field status di tempat lain.
+DirectDebitRefundHistoryItem adalah satu entri dalam array `refundHistory[]` pada response — sebuah refund yang pernah terjadi pada pembayaran ini. `refundStatus` bernilai salah satu dari `00`, `03`, atau `06`.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -208,9 +212,9 @@ DirectDebitRefundHistoryItem adalah satu entri dalam array "refundHistory[]" pad
 
 ### `DirectDebitPaymentCancel`
 
-DirectDebitPaymentCancel memanggil endpoint SNAP Direct Debit Payment Cancel (Service Code 57, path .../\{version\}/debit/cancel, HTTP POST — tanpa override method). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh DirectDebitPaymentCancel agar byte hasil marshal yang persis sama dipakai baik untuk signing maupun body di jalur kirim.
+DirectDebitPaymentCancel memanggil endpoint SNAP Direct Debit Payment Cancel (Service Code 57, HTTP POST). Isi `hb` dengan semua field kecuali `Body` — `DirectDebitPaymentCancel` melakukan marshal request itu sendiri.
 
-Operasi ini tidak idempotent dan package ini tidak melakukan retry. Caller yang me-retry panggilan yang gagal atau timeout sebaiknya memakai ulang X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server berpatokan pada header tersebut.
+Operasi ini tidak idempotent dan package ini tidak melakukan retry. Bila memanggil ulang setelah gagal atau timeout, gunakan `X-EXTERNAL-ID` yang sama, karena deteksi duplikat di server mengacu pada header itu.
 
 ```go
 func DirectDebitPaymentCancel(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req DirectDebitPaymentCancelRequest) (DirectDebitPaymentCancelResponse, error)
@@ -218,7 +222,7 @@ func DirectDebitPaymentCancel(ctx context.Context, t *snap.Transport, hb snap.He
 
 **Request &mdash; `DirectDebitPaymentCancelRequest`**
 
-DirectDebitPaymentCancelRequest adalah body request untuk API Direct Debit Payment Cancel (Service Code 57). OriginalPartnerReferenceNo adalah satu-satunya field Wajib menurut riset §5.1.
+DirectDebitPaymentCancelRequest adalah request body untuk Direct Debit Payment Cancel. `originalPartnerReferenceNo` satu-satunya field Wajib.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -235,7 +239,7 @@ DirectDebitPaymentCancelRequest adalah body request untuk API Direct Debit Payme
 
 **Response &mdash; `DirectDebitPaymentCancelResponse`**
 
-DirectDebitPaymentCancelResponse adalah body response untuk API Direct Debit Payment Cancel. OriginalReferenceNo bersifat Kondisional (hanya saat sukses). CancelTime bersifat Kondisional menurut riset §5.1 ("wajib diisi jika berhasil"), sama perlakuannya dengan QRMPMCancelPaymentResponse.CancelTime (Fase 24). Tidak ada field yang Wajib di luar envelope.
+DirectDebitPaymentCancelResponse adalah response body untuk Direct Debit Payment Cancel. `originalReferenceNo` dan `cancelTime` bersifat Kondisional — hanya muncul saat berhasil.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -253,9 +257,9 @@ DirectDebitPaymentCancelResponse adalah body response untuk API Direct Debit Pay
 
 ### `DirectDebitPaymentRefund`
 
-DirectDebitPaymentRefund memanggil endpoint SNAP Direct Debit Payment Refund (Service Code 58, path .../\{version\}/debit/refund, HTTP POST — tanpa override method). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh DirectDebitPaymentRefund agar byte hasil marshal yang persis sama dipakai baik untuk signing maupun body di jalur kirim.
+DirectDebitPaymentRefund memanggil endpoint SNAP Direct Debit Payment Refund (Service Code 58, HTTP POST). Isi `hb` dengan semua field kecuali `Body` — `DirectDebitPaymentRefund` melakukan marshal request itu sendiri.
 
-Operasi ini tidak idempotent dan package ini tidak melakukan retry. Caller yang me-retry panggilan yang gagal atau timeout sebaiknya memakai ulang X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server berpatokan pada header tersebut.
+Operasi ini tidak idempotent dan package ini tidak melakukan retry. Bila memanggil ulang setelah gagal atau timeout, gunakan `X-EXTERNAL-ID` yang sama, karena deteksi duplikat di server mengacu pada header itu.
 
 ```go
 func DirectDebitPaymentRefund(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req DirectDebitPaymentRefundRequest) (DirectDebitPaymentRefundResponse, error)
@@ -263,7 +267,7 @@ func DirectDebitPaymentRefund(ctx context.Context, t *snap.Transport, hb snap.He
 
 **Request &mdash; `DirectDebitPaymentRefundRequest`**
 
-DirectDebitPaymentRefundRequest adalah body request untuk API Direct Debit Payment Refund (Service Code 58). OriginalPartnerReferenceNo dan PartnerRefundNo bersifat Wajib menurut riset §5.1.
+DirectDebitPaymentRefundRequest adalah request body untuk Direct Debit Payment Refund. `originalPartnerReferenceNo` dan `partnerRefundNo` bersifat Wajib.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -280,7 +284,7 @@ DirectDebitPaymentRefundRequest adalah body request untuk API Direct Debit Payme
 
 **Response &mdash; `DirectDebitPaymentRefundResponse`**
 
-DirectDebitPaymentRefundResponse adalah body response untuk API Direct Debit Payment Refund. OriginalReferenceNo bersifat Kondisional (hanya saat sukses). RefundNo, PartnerRefundNo, dan RefundTime bersifat Wajib menurut riset §5.1 — bukan salinan persis dari QRMPMRefundPaymentResponse, yang tidak punya penanda Wajib pada PartnerRefundNo; diturunkan secara independen dari tabel field endpoint ini sendiri.
+DirectDebitPaymentRefundResponse adalah response body untuk Direct Debit Payment Refund. `originalReferenceNo` bersifat Kondisional — hanya muncul saat berhasil. `refundNo`, `partnerRefundNo`, dan `refundTime` bersifat Wajib.
 
 | Field | Type | Presence |
 |---|---|---|

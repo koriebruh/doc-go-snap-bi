@@ -1,31 +1,31 @@
 ---
-title: "Header & Signing"
-description: "HeaderBuilder, Profile, dan bagaimana sebuah request mendapatkan header set SNAP-nya"
+title: "Headers & Signing"
+description: "HeaderBuilder, Profile, dan bagaimana sebuah request mendapat kumpulan header SNAP-nya"
 ---
 
-`HeaderBuilder` menyusun header set wajib SNAP untuk sebuah transaction
-request dan menandatanganinya dalam prosesnya — inilah satu-satunya type
-yang dipakai setiap calling function.
+`HeaderBuilder` menyusun kumpulan header wajib SNAP untuk sebuah request
+transaksi sekaligus menandatanganinya — ini satu-satunya tipe yang
+dibutuhkan setiap fungsi pemanggil.
 
 ## `HeaderBuilder`
 
 ```go
 type HeaderBuilder struct {
 	Method      string // metode HTTP, mis. "POST"
-	EndpointURL string // full endpoint URL yang dipakai dalam signed string
-	Body        []byte // bytes request body yang persis
+	EndpointURL string // URL endpoint lengkap yang dipakai dalam string yang ditandatangani
+	Body        []byte // byte body request yang sebenarnya
 
 	B2B2C                 bool   // apakah ini request B2B2C
-	AccessToken           string // Authorization bearer token
-	AuthorizationCustomer string // Authorization-Customer bearer token; wajib saat B2B2C true
-	DeviceID              string // X-DEVICE-ID; wajib saat B2B2C true
+	AccessToken           string // bearer token Authorization
+	AuthorizationCustomer string // bearer token Authorization-Customer; wajib bila B2B2C true
+	DeviceID              string // X-DEVICE-ID; wajib bila B2B2C true
 
 	ClientKey  string
 	PartnerID  string
 	ExternalID string
 	ChannelID  string
 
-	Origin    string // opsional; header dihilangkan saat kosong
+	Origin    string // opsional; header dihilangkan bila kosong
 	IPAddress string
 	Latitude  string
 	Longitude string
@@ -33,19 +33,19 @@ type HeaderBuilder struct {
 	Profile Profile
 
 	Symmetric    bool
-	ClientSecret string        // dipakai saat Symmetric true
-	Signer       crypto.Signer // dipakai saat Symmetric false
+	ClientSecret string        // dipakai bila Symmetric true
+	Signer       crypto.Signer // dipakai bila Symmetric false
 }
 ```
 
-`Symmetric` memilih fungsi signing mana yang dipakai, mengikuti parameter
-milik `BuildStringToSignTransaction` sendiri — isi tepat salah satu dari
-`ClientSecret` (HMAC) atau `Signer` (RSA), sesuai kesepakatan integrasi Anda
-dengan partner.
+`Symmetric` memilih fungsi signing mana yang dipakai, sesuai parameter
+`BuildStringToSignTransaction` sendiri — isi tepat salah satu dari
+`ClientSecret` (HMAC) atau `Signer` (RSA), sesuai kesepakatan integrasi
+Anda dengan partner saat registrasi.
 
-Calling function di setiap domain package men-set `Body` sendiri, dari
-bytes persis hasil marshal typed request — Anda tidak perlu men-set-nya
-sendiri untuk panggilan normal.
+Fungsi pemanggil di setiap package domain mengatur `Body` sendiri, dari
+byte hasil marshal request bertipe — Anda tidak perlu mengaturnya sendiri
+untuk pemanggilan normal.
 
 ### `Build()`
 
@@ -55,14 +55,14 @@ func (b HeaderBuilder) Build() (http.Header, error)
 
 Menyusun `http.Header` untuk request, menandatanganinya lewat
 `BuildStringToSignTransaction` dan `SignSymmetric`/`SignAsymmetric` sesuai
-flag `Symmetric`. Biasanya Anda tidak perlu memanggil ini langsung —
+flag `Symmetric`. Anda biasanya tidak pernah memanggil ini langsung —
 `snap.Transport.Do` yang memanggilnya untuk Anda.
 
 ## `Profile` — hook kustomisasi per-PJP
 
-Standar membiarkan dua hal terbuka untuk tiap PJP (Penyedia Jasa
-Pembayaran): format timestamp dan konstruksi URL path. `Profile` adalah
-interface yang dipanggil `HeaderBuilder` dan `TokenManager` untuk keduanya:
+Standar ini menyerahkan dua hal ke masing-masing PJP (Penyedia Jasa
+Pembayaran): format timestamp dan cara URL path dibangun. `Profile` adalah
+interface yang dipakai `HeaderBuilder` dan `TokenManager` untuk keduanya:
 
 ```go
 type Profile interface {
@@ -71,7 +71,7 @@ type Profile interface {
 }
 ```
 
-`DefaultProfile` mengimplementasikan perilaku standar persis:
+`DefaultProfile` mengimplementasikan perilaku standar apa adanya:
 
 ```go
 type DefaultProfile struct {
@@ -85,14 +85,14 @@ func (p DefaultProfile) TimestampLayout() string
 func (p DefaultProfile) BuildPath(serviceGroup, productType string) string
 ```
 
-`TimestampLayout` mengembalikan `snap.DefaultTimestampLayout` (layout waktu
-Go yang setara dengan format standar `yyyy-MM-ddTHH:mm:ss.SSSTZD`).
+`TimestampLayout` mengembalikan `snap.DefaultTimestampLayout` (layout time
+Go yang setara dengan `yyyy-MM-ddTHH:mm:ss.SSSTZD` milik standar).
 `BuildPath` mengembalikan `/{domain}/{version}/{service-group}/{product-type}`,
-dengan `Version` default ke `"v1.0"` saat tidak diisi.
+dengan `Version` default ke `"v1.0"` bila tidak diisi.
 
-Penyimpangan spesifik bank diekspresikan sebagai struct kecil yang meng-embed
-`DefaultProfile` dan meng-override satu method — bukan fork dari
-`HeaderBuilder`.
+Penyimpangan khusus suatu bank diekspresikan sebagai struct kecil yang
+meng-embed `DefaultProfile` dan meng-override satu method — bukan dengan
+fork dari `HeaderBuilder`.
 
 ## Selanjutnya
 
@@ -101,6 +101,6 @@ Penyimpangan spesifik bank diekspresikan sebagai struct kecil yang meng-embed
     Formula signing symmetric/asymmetric yang dipanggil `Build()`.
   </Card>
   <Card title="Transport" icon="server" href="/id/concepts/transport">
-    Bagaimana header yang sudah dibangun benar-benar dikirim, dan bagaimana response di-decode.
+    Bagaimana header yang sudah dibangun benar-benar dikirim, dan bagaimana responsnya didekode.
   </Card>
 </CardGroup>

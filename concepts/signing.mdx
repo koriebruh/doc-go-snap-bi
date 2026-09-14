@@ -33,10 +33,10 @@ lowercase hex. It takes a `crypto.Signer` rather than a concrete
 change. `VerifyAsymmetric` returns a non-nil error if `pub` isn't an RSA
 key, `signature` isn't valid hex, or the signature doesn't verify.
 
-Both functions reject RSA keys smaller than **2048 bits** — the standard's
-own 256-byte-modulus floor — since a weaker key would be practically
-forgeable, which matters most on the verify side where the public key may
-come from a partner-registered certificate.
+Both functions reject RSA keys smaller than **2048 bits** (the standard's
+own floor) since a weaker key can be forged in practice — this matters most
+on the verify side, where the public key comes from a partner-registered
+certificate you don't control.
 
 ```go
 func ParseRSAPrivateKeyPEM(pemBytes []byte) (crypto.Signer, error)
@@ -78,6 +78,10 @@ hashes to the SHA256 digest of an empty byte slice, not an empty string.
 </Warning>
 
 ## Sentinel errors
+
+A sentinel error is a fixed, exported error value (like `snap.ErrWeakRSAKey`)
+meant to be checked with `errors.Is`, not by comparing error text — the
+functions above return these so you can branch on the failure reason:
 
 | Sentinel | Returned by | Meaning |
 |---|---|---|

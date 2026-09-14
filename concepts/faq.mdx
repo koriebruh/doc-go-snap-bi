@@ -18,13 +18,11 @@ description: "Common questions when integrating go-snap-bi"
     its own token independently. See [Authentication](/concepts/authentication).
   </Accordion>
   <Accordion title="Is it safe to retry a failed call?">
-    Check that specific endpoint's reference page first. Most write
-    endpoints are explicitly **not idempotent** — retrying with a fresh
-    `X-EXTERNAL-ID` risks a duplicate transaction, since the server's own
-    duplicate-detection keys on that header. Reuse the *same*
-    `X-EXTERNAL-ID` on a genuine retry of the same logical call. See
-    [Errors](/concepts/errors) and the Glossary's
-    [Idempotency](/concepts/glossary) entry.
+    Check that endpoint's reference page first — most write endpoints are
+    **not idempotent** (retrying doesn't just "try again safely," it can
+    trigger the transaction twice). The server detects duplicates by
+    `X-EXTERNAL-ID`, so a genuine retry should reuse the *same*
+    `X-EXTERNAL-ID`, never a fresh one. See [Errors](/concepts/errors).
   </Accordion>
   <Accordion title="A field I need is typed json.RawMessage instead of string — why?">
     The SNAP standard documents that field's shape ambiguously (e.g. shown

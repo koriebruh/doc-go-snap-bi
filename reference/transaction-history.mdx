@@ -22,7 +22,7 @@ if err != nil {
 
 ### `TransactionHistoryList`
 
-TransactionHistoryList calls the SNAP Transaction History List endpoint (Service Code 12, path .../\{version\}/transaction-history-list). hb must already carry every field snap.HeaderBuilder needs except Body, which TransactionHistoryList sets itself so the exact marshaled bytes are used for both signing and the wire body.
+Lists past transactions in a date range (Service Code 12).
 
 ```go
 func TransactionHistoryList(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req TransactionHistoryListRequest) (TransactionHistoryListResponse, error)
@@ -30,9 +30,7 @@ func TransactionHistoryList(ctx context.Context, t *snap.Transport, hb snap.Head
 
 **Request &mdash; `TransactionHistoryListRequest`**
 
-TransactionHistoryListRequest is the request body for API Transaction History List (Service Code 12).
-
-PageSize and PageNumber are typed string, not int: the Guides tab types them "Integer", but the standard's own worked example sends them as quoted JSON strings (e.g. "10") — this models the actual wire example.
+`pageSize` and `pageNumber` are `string`, not `int` — the standard sends them as quoted numbers on the wire (e.g. `"10"`).
 
 | Field | Type | Presence |
 |---|---|---|
@@ -45,7 +43,7 @@ PageSize and PageNumber are typed string, not int: the Guides tab types them "In
 
 **Response &mdash; `TransactionHistoryListResponse`**
 
-TransactionHistoryListResponse is the response body for API Transaction History List.
+The response body.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -57,7 +55,7 @@ TransactionHistoryListResponse is the response body for API Transaction History 
 | `additionalInfo` | `json.RawMessage` | Optional |
 
 <Accordion title="TransactionDetail fields">
-TransactionDetail is one entry in a TransactionHistoryListResponse's detailData array. This differs from the otherwise-similar-looking Transaction History Detail (Service Code 13) endpoint, where research marks the equivalent amount container Mandatory — recorded per-occurrence, not harmonized.
+One entry in `detailData`.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -72,7 +70,7 @@ TransactionDetail is one entry in a TransactionHistoryListResponse's detailData 
 </Accordion>
 
 <Accordion title="SourceOfFund fields">
-SourceOfFund describes one source of funds used for a transaction, per the standard's "Definisi Tipe" reference. Source is Mandatory; Amount's container is Optional (only its own value/currency members are Mandatory), so it's modeled as *snap.Money — corrected from an earlier version that had it as a plain (non-pointer) snap.Money, found by re-checking the dedicated SourceOfFund type-definition table directly rather than leaving it unverified.
+Describes one source of funds used for a transaction. `source` is Mandatory; `amount` is a pointer since only its own `value`/`currency` are Mandatory, not the container itself.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -86,15 +84,13 @@ SourceOfFund describes one source of funds used for a transaction, per the stand
 
 ### `TransactionHistoryDetail`
 
-TransactionHistoryDetail calls the SNAP Transaction History Detail endpoint (Service Code 13, path .../\{version\}/transaction-history-detail). hb must already carry every field snap.HeaderBuilder needs except Body, which TransactionHistoryDetail sets itself so the exact marshaled bytes are used for both signing and the wire body.
+Fetches one transaction's full detail (Service Code 13).
 
 ```go
 func TransactionHistoryDetail(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req TransactionHistoryDetailRequest) (TransactionHistoryDetailResponse, error)
 ```
 
 **Request &mdash; `TransactionHistoryDetailRequest`**
-
-TransactionHistoryDetailRequest is the request body for API Transaction History Detail (Service Code 13, path .../\{version\}/transaction-history-detail).
 
 | Field | Type | Presence |
 |---|---|---|
@@ -103,7 +99,7 @@ TransactionHistoryDetailRequest is the request body for API Transaction History 
 
 **Response &mdash; `TransactionHistoryDetailResponse`**
 
-TransactionHistoryDetailResponse is the response body for API Transaction History Detail. Amount and RefundAmount are Optional containers with Mandatory members (the Guides tab marks both "O"), so both are modeled as *snap.Money, per this package's Optional-container convention — corrected from an earlier version of this type that had both modeled as plain (non-pointer) snap.Money based on a misreading of the Guides tab as Mandatory; caught by a go-review pass that re-fetched the raw table directly.
+`amount` and `refundAmount` are pointers since the container itself is Optional, even though `Money`'s own `value`/`currency` are Mandatory.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -122,7 +118,7 @@ TransactionHistoryDetailResponse is the response body for API Transaction Histor
 | `additionalInfo` | `json.RawMessage` | Optional |
 
 <Accordion title="SourceOfFund fields">
-SourceOfFund describes one source of funds used for a transaction, per the standard's "Definisi Tipe" reference. Source is Mandatory; Amount's container is Optional (only its own value/currency members are Mandatory), so it's modeled as *snap.Money — corrected from an earlier version that had it as a plain (non-pointer) snap.Money, found by re-checking the dedicated SourceOfFund type-definition table directly rather than leaving it unverified.
+Describes one source of funds used for a transaction. `source` is Mandatory; `amount` is a pointer since only its own `value`/`currency` are Mandatory, not the container itself.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -136,7 +132,7 @@ SourceOfFund describes one source of funds used for a transaction, per the stand
 
 ### `BankStatement`
 
-BankStatement calls the SNAP API Bank Statement endpoint (Service Code 14, path .../\{version\}/bank-statement). hb must already carry every field snap.HeaderBuilder needs except Body, which BankStatement sets itself so the exact marshaled bytes are used for both signing and the wire body.
+Fetches a bank-statement-style transaction listing with running balances (Service Code 14).
 
 ```go
 func BankStatement(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req BankStatementRequest) (BankStatementResponse, error)
@@ -144,9 +140,7 @@ func BankStatement(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder
 
 **Request &mdash; `BankStatementRequest`**
 
-BankStatementRequest is the request body for API Bank Statement (Service Code 14, Riwayat Transaksi group).
-
-BankCardToken and AccountNo are Conditional and mutually exclusive: per the spec, BankCardToken must be filled if AccountNo is null and vice versa. This package validates wire shape only, never business rules, so both are just tagged omitempty; enforcing the XOR is left to the caller.
+`bankCardToken` and `accountNo` are mutually exclusive — set exactly one. This package doesn't enforce that; the server does.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -159,7 +153,7 @@ BankCardToken and AccountNo are Conditional and mutually exclusive: per the spec
 
 **Response &mdash; `BankStatementResponse`**
 
-BankStatementResponse is the response body for API Bank Statement.
+The response body.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -176,7 +170,7 @@ BankStatementResponse is the response body for API Bank Statement.
 | `additionalInfo` | `json.RawMessage` | Optional |
 
 <Accordion title="BankStatementBalance fields">
-BankStatementBalance is one entry in BankStatementResponse's balance array: the starting and ending balance before the first/last transaction. Amount, StartingBalance, and EndingBalance all carry a dateTime member snap.Money lacks (per the worked example), so all three use the richer BankStatementBalanceAmount shape, not plain snap.Money. All three members are Mandatory per the field table.
+One entry in `balance`: the running balance before/after the statement period. Uses `BankStatementBalanceAmount` instead of plain `Money` because it also carries a `dateTime`.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -187,7 +181,7 @@ BankStatementBalance is one entry in BankStatementResponse's balance array: the 
 </Accordion>
 
 <Accordion title="BankStatementBalanceAmount fields">
-BankStatementBalanceAmount is the \{value, currency, dateTime\} shape used by BankStatementBalance's StartingBalance and EndingBalance members. It is distinct from snap.Money because it carries a dateTime member Money doesn't have; all three members are Mandatory per the field table.
+The `{value, currency, dateTime}` shape used by `BankStatementBalance` — like `Money`, plus a timestamp.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -198,9 +192,7 @@ BankStatementBalanceAmount is the \{value, currency, dateTime\} shape used by Ba
 </Accordion>
 
 <Accordion title="BankStatementEntryTotal fields">
-BankStatementEntryTotal is the shape shared by BankStatementResponse's totalCreditEntries and totalDebitEntries fields (identical per the field table, so they share this one type).
-
-NumberOfEntries is typed string, not int: the field table types it "int", but the standard's own worked example sends it as a quoted JSON string (e.g. "10") — this models the actual wire example, matching the PageSize/PageNumber precedent in transaction_history.go.
+Shared shape for `totalCreditEntries` and `totalDebitEntries`. `numberOfEntries` is `string`, not `int` — same reasoning as `pageSize`/`pageNumber` above.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -210,7 +202,7 @@ NumberOfEntries is typed string, not int: the field table types it "int", but th
 </Accordion>
 
 <Accordion title="BankStatementDetail fields">
-BankStatementDetail is one entry in BankStatementResponse's detailData array: a single transaction line. Amount and OriginAmount are Optional containers per the field table (both "O"), so both are modeled as *snap.Money — corrected from an earlier version that had both as plain (non-pointer) snap.Money, found by a pre-publish audit and confirmed by a direct re-fetch of the field table.
+One entry in `detailData`: a single transaction line.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -227,7 +219,7 @@ BankStatementDetail is one entry in BankStatementResponse's detailData array: a 
 </Accordion>
 
 <Accordion title="BankStatementDetailBalance fields">
-BankStatementDetailBalance is a BankStatementDetail's detailBalance object: the balance immediately before (StartAmount) and after (EndAmount) that one transaction.
+The balance immediately before (`startAmount`) and after (`endAmount`) one transaction.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -237,7 +229,7 @@ BankStatementDetailBalance is a BankStatementDetail's detailBalance object: the 
 </Accordion>
 
 <Accordion title="BankStatementDetailBalanceEntry fields">
-BankStatementDetailBalanceEntry is one entry in a BankStatementDetailBalance's StartAmount/EndAmount arrays. Amount is an Optional container per the field table ("O"), unlike BankStatementEntryTotal.Amount (also nested one level, but "M" there) — the two are not harmonized, each modeled per its own table row, confirmed by two independent targeted re-fetches.
+One entry in `startAmount`/`endAmount`.
 
 | Field | Type | Presence |
 |---|---|---|

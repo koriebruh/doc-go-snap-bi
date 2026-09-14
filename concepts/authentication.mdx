@@ -43,11 +43,10 @@ tm := &snap.TokenManager{
 token, err := tm.AccessTokenB2B(ctx)
 ```
 
-Concurrent callers during a refresh share one in-flight HTTP request
-rather than each firing their own — a mutex-guarded single-flight. The
-refresh itself runs on a context detached from any individual caller, so
-one caller's cancellation can't poison the result every other concurrent
-caller receives.
+If several goroutines call this at once while the token is expired, only
+one HTTP request goes out — the rest wait and share its result. That
+request runs on its own context, so one caller cancelling doesn't break
+the result for everyone else waiting on it.
 
 Caching uses the server-reported `expiresIn` minus a small safety margin
 (refetch slightly before actual expiry), floored at half of `expiresIn` so

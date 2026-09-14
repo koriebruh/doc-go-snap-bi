@@ -15,6 +15,9 @@
   "fonts": {
     "family": "Inter"
   },
+  "icons": {
+    "library": "lucide"
+  },
   "favicon": "/images/snap-favicon.png",
   "logo": {
     "light": "/images/snap-logo.png",
@@ -46,6 +49,7 @@
             "groups": [
               {
                 "group": "Getting Started",
+                "icon": "rocket",
                 "pages": [
                   "introduction",
                   "quickstart"
@@ -53,6 +57,7 @@
               },
               {
                 "group": "Concepts",
+                "icon": "book",
                 "pages": [
                   "concepts/conventions",
                   "concepts/headers",
@@ -73,24 +78,28 @@
             "groups": [
               {
                 "group": "Registrasi",
+                "icon": "id-card",
                 "pages": [
                   "reference/registration"
                 ]
               },
               {
                 "group": "Informasi Saldo",
+                "icon": "wallet",
                 "pages": [
                   "reference/balance-info"
                 ]
               },
               {
                 "group": "Riwayat Transaksi",
+                "icon": "scroll-text",
                 "pages": [
                   "reference/transaction-history"
                 ]
               },
               {
                 "group": "Transfer Kredit",
+                "icon": "banknote-arrow-up",
                 "pages": [
                   "reference/transfer-credit/account-inquiry",
                   "reference/transfer-credit/trigger-transfer",
@@ -105,6 +114,7 @@
               },
               {
                 "group": "Transfer Debit",
+                "icon": "banknote-arrow-down",
                 "pages": [
                   "reference/transfer-debit/auth-payment",
                   "reference/transfer-debit/cpm",
@@ -125,6 +135,7 @@
             "groups": [
               {
                 "group": "Getting Started",
+                "icon": "rocket",
                 "pages": [
                   "id/introduction",
                   "id/quickstart"
@@ -132,6 +143,7 @@
               },
               {
                 "group": "Concepts",
+                "icon": "book",
                 "pages": [
                   "id/concepts/conventions",
                   "id/concepts/headers",
@@ -152,24 +164,28 @@
             "groups": [
               {
                 "group": "Registrasi",
+                "icon": "id-card",
                 "pages": [
                   "id/reference/registration"
                 ]
               },
               {
                 "group": "Informasi Saldo",
+                "icon": "wallet",
                 "pages": [
                   "id/reference/balance-info"
                 ]
               },
               {
                 "group": "Riwayat Transaksi",
+                "icon": "scroll-text",
                 "pages": [
                   "id/reference/transaction-history"
                 ]
               },
               {
                 "group": "Transfer Kredit",
+                "icon": "banknote-arrow-up",
                 "pages": [
                   "id/reference/transfer-credit/account-inquiry",
                   "id/reference/transfer-credit/trigger-transfer",
@@ -184,6 +200,7 @@
               },
               {
                 "group": "Transfer Debit",
+                "icon": "banknote-arrow-down",
                 "pages": [
                   "id/reference/transfer-debit/auth-payment",
                   "id/reference/transfer-debit/cpm",

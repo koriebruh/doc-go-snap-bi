@@ -22,7 +22,7 @@ if err != nil {
 
 ### `CPMGenerateQR`
 
-CPMGenerateQR calls the SNAP Generate QR CPM endpoint (Service Code 59, path .../\{version\}/qr/qr-cpm-generate, HTTP POST — no method override). hb must already carry every field snap.HeaderBuilder needs except Body, which CPMGenerateQR sets itself so the exact marshaled bytes are used for both signing and the wire body.
+CPMGenerateQR calls the SNAP Generate QR CPM endpoint (Service Code 59, HTTP POST). Pass `hb` with everything except `Body` already set — `CPMGenerateQR` marshals the request itself and uses those exact bytes for both signing and the wire body.
 
 This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it.
 
@@ -32,7 +32,7 @@ func CPMGenerateQR(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder
 
 **Request &mdash; `CPMGenerateQRRequest`**
 
-CPMGenerateQRRequest is the request body for API Generate QR CPM (Service Code 59). PartnerTrxDate is the only Mandatory field per research §5.2.
+CPMGenerateQRRequest is the request body for Generate QR CPM. `partnerTrxDate` is the only Mandatory field.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -45,7 +45,7 @@ CPMGenerateQRRequest is the request body for API Generate QR CPM (Service Code 5
 
 **Response &mdash; `CPMGenerateQRResponse`**
 
-CPMGenerateQRResponse is the response body for API Generate QR CPM. ExpiryTime is the only Mandatory field beyond the envelope. Unlike GenerateQRMPMResponse (Transfer Kredit, Service 47), QRContent/QRURL here carry no one-of-three conditional rule — both are plain Optional, and there is no QRImage field in this sub-group at all; this is independently derived from this endpoint's own field table, not a copy of that sibling.
+CPMGenerateQRResponse is the response body for Generate QR CPM. `expiryTime` is the only other Mandatory field; `qrContent`/`qrUrl` are both plain Optional (no one-of-many rule between them).
 
 | Field | Type | Presence |
 |---|---|---|
@@ -63,7 +63,7 @@ CPMGenerateQRResponse is the response body for API Generate QR CPM. ExpiryTime i
 
 ### `CPMPayment`
 
-CPMPayment calls the SNAP CPM Payment endpoint (Service Code 60, path .../\{version\}/qr/qr-cpm-payment, HTTP POST — no method override). hb must already carry every field snap.HeaderBuilder needs except Body, which CPMPayment sets itself so the exact marshaled bytes are used for both signing and the wire body.
+CPMPayment calls the SNAP CPM Payment endpoint (Service Code 60, HTTP POST). Pass `hb` with everything except `Body` already set — `CPMPayment` marshals the request itself.
 
 This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it.
 
@@ -73,9 +73,9 @@ func CPMPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, r
 
 **Request &mdash; `CPMPaymentRequest`**
 
-CPMPaymentRequest is the request body for API CPM Payment (Service Code 60). PartnerReferenceNo, QRContent, and MerchantID are Mandatory per research §5.2.
+CPMPaymentRequest is the request body for CPM Payment. `partnerReferenceNo`, `qrContent`, and `merchantId` are Mandatory.
 
-Items is documented as an unstructured "Object" with no item-level field table given anywhere in research — modeled as json.RawMessage, matching the package's existing treatment of genuinely untyped fields (same rationale as AdditionalInfo; also already used for AccountBindingRequest.AdditionalData and VerifyOTPResponse.QParams, so this is precedented, not a new convention).
+`items` has no fixed schema in the standard, so it's typed `json.RawMessage` — the same treatment as `additionalInfo` and every other genuinely untyped field.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -97,7 +97,7 @@ Items is documented as an unstructured "Object" with no item-level field table g
 | `additionalInfo` | `json.RawMessage` | Optional |
 
 <Accordion title="CPMPaymentScannerInfo fields">
-CPMPaymentScannerInfo is the CPM Payment request's optional "scannerInfo" nested object. All four members are Optional per research §5.2.
+CPMPaymentScannerInfo is the optional `scannerInfo` object describing the device that scanned the QR. All four fields are Optional.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -110,7 +110,7 @@ CPMPaymentScannerInfo is the CPM Payment request's optional "scannerInfo" nested
 
 **Response &mdash; `CPMPaymentResponse`**
 
-CPMPaymentResponse is the response body for API CPM Payment. ReferenceNo is Conditional (success only). No field is Mandatory beyond the envelope.
+CPMPaymentResponse is the response body for CPM Payment. `referenceNo` is Conditional — present only on success. No other field is Mandatory.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -130,9 +130,9 @@ CPMPaymentResponse is the response body for API CPM Payment. ReferenceNo is Cond
 
 **Received &mdash; `CPMPaymentNotificationRequest`**
 
-CPMPaymentNotificationRequest is the request body for API Payment Notification (Service Code 79, path .../\{version\}/qr/qr-cpm-notify). This is a settlement callback the PJP receives, not a call this package makes — no calling function is provided, matching the package's established convention for inbound notification endpoints (QRMPMPaymentNotificationRequest, Phase 23; DirectDebitPaymentNotificationRequest, Phase 27): a caller wires their own HTTP handler for this path, authenticates the inbound call with ServerVerifier.VerifyTransactionRequest, and json.Unmarshals the body into this type.
+CPMPaymentNotificationRequest is the request body for Payment Notification (Service Code 79) — a settlement callback the PJP receives, not a call this package makes. Wire your own HTTP handler for this path, authenticate the inbound call with `ServerVerifier.VerifyTransactionRequest`, then `json.Unmarshal` the body into this type.
 
-MerchantID and LatestTransactionStatus are Mandatory per research §5.2; every other field is Optional. Research explicitly confirms this endpoint matches QRMPMPaymentNotification's shape and direction (envelope-only response, inbound), unlike Cancel Payment (62)'s contradicted "structurally identical" claim in the same section — this citation held up under verification.
+`merchantId` and `latestTransactionStatus` are Mandatory; every other field is Optional.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -154,7 +154,7 @@ MerchantID and LatestTransactionStatus are Mandatory per research §5.2; every o
 
 **Your handler replies with &mdash; `CPMPaymentNotificationResponse`**
 
-CPMPaymentNotificationResponse is the response body a caller sends back for API Payment Notification. Research documents this response as envelope-only — no fields beyond the standard responseCode/responseMessage envelope.
+CPMPaymentNotificationResponse is envelope-only — just `responseCode` and `responseMessage`, no other fields.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -166,9 +166,7 @@ CPMPaymentNotificationResponse is the response body a caller sends back for API 
 
 ### `CPMQueryPayment`
 
-CPMQueryPayment calls the SNAP Query Payment endpoint (Service Code 61, path .../\{version\}/qr/qr-cpm-query, HTTP POST — no method override). hb must already carry every field snap.HeaderBuilder needs except Body, which CPMQueryPayment sets itself so the exact marshaled bytes are used for both signing and the wire body.
-
-This is a read-only status query and carries no non-idempotency note, matching TransactionStatusInquiryBank's precedent.
+CPMQueryPayment calls the SNAP Query Payment endpoint (Service Code 61, HTTP POST) to check a previous CPM payment's status. Pass `hb` with everything except `Body` already set — `CPMQueryPayment` marshals the request itself. This is a read-only lookup, safe to retry freely.
 
 ```go
 func CPMQueryPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req CPMQueryPaymentRequest) (CPMQueryPaymentResponse, error)
@@ -176,7 +174,7 @@ func CPMQueryPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBuild
 
 **Request &mdash; `CPMQueryPaymentRequest`**
 
-CPMQueryPaymentRequest is the request body for API Query Payment (Service Code 61). No field is Mandatory per research §5.2.
+CPMQueryPaymentRequest is the request body for Query Payment. No field is Mandatory — query by whichever reference, merchant, or store ID you have.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -190,7 +188,7 @@ CPMQueryPaymentRequest is the request body for API Query Payment (Service Code 6
 
 **Response &mdash; `CPMQueryPaymentResponse`**
 
-CPMQueryPaymentResponse is the response body for API Query Payment. LatestTransactionStatus and PaidTime are Mandatory per research §5.2. OriginalReferenceNo is Conditional (success only).
+CPMQueryPaymentResponse is the response body for Query Payment. `latestTransactionStatus` and `paidTime` are Mandatory; `originalReferenceNo` is Conditional — present only on success.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -210,7 +208,7 @@ CPMQueryPaymentResponse is the response body for API Query Payment. LatestTransa
 
 ### `CPMCancelPayment`
 
-CPMCancelPayment calls the SNAP Cancel Payment endpoint (Service Code 62, path .../\{version\}/qr/qr-cpm-cancel, HTTP POST — no method override). hb must already carry every field snap.HeaderBuilder needs except Body, which CPMCancelPayment sets itself so the exact marshaled bytes are used for both signing and the wire body.
+CPMCancelPayment calls the SNAP Cancel Payment endpoint (Service Code 62, HTTP POST). Pass `hb` with everything except `Body` already set — `CPMCancelPayment` marshals the request itself.
 
 This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it.
 
@@ -220,9 +218,7 @@ func CPMCancelPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBuil
 
 **Request &mdash; `CPMCancelPaymentRequest`**
 
-CPMCancelPaymentRequest is the request body for API Cancel Payment (Service Code 62). OriginalPartnerReferenceNo is the only Mandatory field per research §5.2's own field table.
-
-Research's summary prose claims this endpoint is "structurally identical to QRMPMCancelPaymentRequest/Response" (Phase 24) — that claim does not hold: QRMPMCancelPaymentRequest's Mandatory fields are MerchantID/Reason (all three originalX Optional there too), a disjoint set from this endpoint's own Mandatory OriginalPartnerReferenceNo. The per-field table is authoritative here, not the summary sentence — see the design doc for the full comparison. Modeled as an independent type, with no reflection-drift-guard against QRMPMCancelPaymentRequest since they are not the same shape.
+CPMCancelPaymentRequest is the request body for Cancel Payment. `originalPartnerReferenceNo` is the only Mandatory field.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -238,7 +234,7 @@ Research's summary prose claims this endpoint is "structurally identical to QRMP
 
 **Response &mdash; `CPMCancelPaymentResponse`**
 
-CPMCancelPaymentResponse is the response body for API Cancel Payment. OriginalReferenceNo is Conditional (success only). CancelTime is Conditional ("filled if successful"), matching QRMPMCancelPaymentResponse.CancelTime's identical treatment — but this response also carries originalX fields that QRMPMCancelPaymentResponse does not have at all, so it is not a shared/identical shape with that sibling either.
+CPMCancelPaymentResponse is the response body for Cancel Payment. `originalReferenceNo` and `cancelTime` are Conditional — present only on success.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -256,7 +252,7 @@ CPMCancelPaymentResponse is the response body for API Cancel Payment. OriginalRe
 
 ### `CPMRefundPayment`
 
-CPMRefundPayment calls the SNAP Refund Payment endpoint (Service Code 80, path .../\{version\}/qr/qr-cpm-refund, HTTP POST — no method override). hb must already carry every field snap.HeaderBuilder needs except Body, which CPMRefundPayment sets itself so the exact marshaled bytes are used for both signing and the wire body.
+CPMRefundPayment calls the SNAP Refund Payment endpoint (Service Code 80, HTTP POST). Pass `hb` with everything except `Body` already set — `CPMRefundPayment` marshals the request itself.
 
 This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it.
 
@@ -266,7 +262,7 @@ func CPMRefundPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBuil
 
 **Request &mdash; `CPMRefundPaymentRequest`**
 
-CPMRefundPaymentRequest is the request body for API Refund Payment (Service Code 80). OriginalPartnerReferenceNo and PartnerRefundNo are Mandatory per research §5.2.
+CPMRefundPaymentRequest is the request body for Refund Payment. `originalPartnerReferenceNo` and `partnerRefundNo` are Mandatory.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -283,7 +279,7 @@ CPMRefundPaymentRequest is the request body for API Refund Payment (Service Code
 
 **Response &mdash; `CPMRefundPaymentResponse`**
 
-CPMRefundPaymentResponse is the response body for API Refund Payment. RefundNo and RefundTime are Mandatory per research §5.2. OriginalReferenceNo carries no C/M marker in this endpoint's own research row (unlike every other occurrence of this field in the package) — modeled Optional per the package's default-to-omitempty handling for an unmarked field, recorded as shown rather than guessed. PartnerRefundNo is Optional here in the response, unlike Direct Debit Payment Refund's Mandatory PartnerRefundNo in its own response (Phase 27) — independently derived from this endpoint's own field table, not copied.
+CPMRefundPaymentResponse is the response body for Refund Payment. `refundNo` and `refundTime` are Mandatory; `partnerRefundNo` is Optional here (unlike Direct Debit Payment Refund's own response, where it's Mandatory).
 
 | Field | Type | Presence |
 |---|---|---|
@@ -297,4 +293,3 @@ CPMRefundPaymentResponse is the response body for API Refund Payment. RefundNo a
 | `refundAmount` | `*snap.Money` | Optional |
 | `refundTime` | `string` | Mandatory |
 | `additionalInfo` | `json.RawMessage` | Optional |
-

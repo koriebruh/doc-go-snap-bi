@@ -49,7 +49,7 @@ CreateVARequest is the request body for API VA - Create VA (Service Code 27). Vi
 | `additionalInfo` | `json.RawMessage` | Optional |
 
 <Accordion title="BillDetail fields">
-BillDetail is one entry in the Virtual Account sub-group's "billDetails[]" array (max 24 entries). All fields are unmarked for M/O in the source, so all carry omitempty; BillDescription, BillAmount, and Reason are pointers since omitempty has no effect on a non-pointer struct value. BillReferenceNo is documented Numeric in the Guides tab (research §5.3); per the package's ambiguous-type rule, a documented Numeric field is typed json.RawMessage rather than string, since a plain string field fails the entire decode if any issuer sends it as a bare JSON number, matching the existing AccountTransactionLimit/APIKey precedent. BillDetail is also used in request bodies (CreateVARequest.BillDetails, UpdateVARequest.BillDetails), so a caller setting BillReferenceNo must supply a complete JSON value (e.g. json.RawMessage(`"BILLREF1"`) or json.RawMessage(`123`)), not a bare Go string — an incomplete value fails json.Marshal for the whole request.
+BillDetail is one entry in the `billDetails[]` array (max 24 entries) used across the Virtual Account group. `billReferenceNo` is `json.RawMessage` because the standard documents it as Numeric but some issuers send it as a bare JSON number — when you set it yourself (e.g. in `CreateVARequest`), supply a complete JSON value like `json.RawMessage(\`"BILLREF1"\`)` or `json.RawMessage(\`123\`)`, not a bare Go string.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -110,7 +110,7 @@ CreateVAData is the "virtualAccountData" object in CreateVAResponse.
 </Accordion>
 
 <Accordion title="BillDetail fields">
-BillDetail is one entry in the Virtual Account sub-group's "billDetails[]" array (max 24 entries). All fields are unmarked for M/O in the source, so all carry omitempty; BillDescription, BillAmount, and Reason are pointers since omitempty has no effect on a non-pointer struct value. BillReferenceNo is documented Numeric in the Guides tab (research §5.3); per the package's ambiguous-type rule, a documented Numeric field is typed json.RawMessage rather than string, since a plain string field fails the entire decode if any issuer sends it as a bare JSON number, matching the existing AccountTransactionLimit/APIKey precedent. BillDetail is also used in request bodies (CreateVARequest.BillDetails, UpdateVARequest.BillDetails), so a caller setting BillReferenceNo must supply a complete JSON value (e.g. json.RawMessage(`"BILLREF1"`) or json.RawMessage(`123`)), not a bare Go string — an incomplete value fails json.Marshal for the whole request.
+BillDetail is one entry in the `billDetails[]` array (max 24 entries) used across the Virtual Account group. `billReferenceNo` is `json.RawMessage` because the standard documents it as Numeric but some issuers send it as a bare JSON number — when you set it yourself (e.g. in `CreateVARequest`), supply a complete JSON value like `json.RawMessage(\`"BILLREF1"\`)` or `json.RawMessage(\`123\`)`, not a bare Go string.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -173,7 +173,7 @@ UpdateVARequest is the request body for API VA - Update VA (Service Code 28). Pa
 | `additionalInfo` | `json.RawMessage` | Optional |
 
 <Accordion title="BillDetail fields">
-BillDetail is one entry in the Virtual Account sub-group's "billDetails[]" array (max 24 entries). All fields are unmarked for M/O in the source, so all carry omitempty; BillDescription, BillAmount, and Reason are pointers since omitempty has no effect on a non-pointer struct value. BillReferenceNo is documented Numeric in the Guides tab (research §5.3); per the package's ambiguous-type rule, a documented Numeric field is typed json.RawMessage rather than string, since a plain string field fails the entire decode if any issuer sends it as a bare JSON number, matching the existing AccountTransactionLimit/APIKey precedent. BillDetail is also used in request bodies (CreateVARequest.BillDetails, UpdateVARequest.BillDetails), so a caller setting BillReferenceNo must supply a complete JSON value (e.g. json.RawMessage(`"BILLREF1"`) or json.RawMessage(`123`)), not a bare Go string — an incomplete value fails json.Marshal for the whole request.
+BillDetail is one entry in the `billDetails[]` array (max 24 entries) used across the Virtual Account group. `billReferenceNo` is `json.RawMessage` because the standard documents it as Numeric but some issuers send it as a bare JSON number — when you set it yourself (e.g. in `CreateVARequest`), supply a complete JSON value like `json.RawMessage(\`"BILLREF1"\`)` or `json.RawMessage(\`123\`)`, not a bare Go string.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -236,7 +236,7 @@ UpdateVAData is the "virtualAccountData" object in UpdateVAResponse — Create V
 </Accordion>
 
 <Accordion title="BillDetail fields">
-BillDetail is one entry in the Virtual Account sub-group's "billDetails[]" array (max 24 entries). All fields are unmarked for M/O in the source, so all carry omitempty; BillDescription, BillAmount, and Reason are pointers since omitempty has no effect on a non-pointer struct value. BillReferenceNo is documented Numeric in the Guides tab (research §5.3); per the package's ambiguous-type rule, a documented Numeric field is typed json.RawMessage rather than string, since a plain string field fails the entire decode if any issuer sends it as a bare JSON number, matching the existing AccountTransactionLimit/APIKey precedent. BillDetail is also used in request bodies (CreateVARequest.BillDetails, UpdateVARequest.BillDetails), so a caller setting BillReferenceNo must supply a complete JSON value (e.g. json.RawMessage(`"BILLREF1"`) or json.RawMessage(`123`)), not a bare Go string — an incomplete value fails json.Marshal for the whole request.
+BillDetail is one entry in the `billDetails[]` array (max 24 entries) used across the Virtual Account group. `billReferenceNo` is `json.RawMessage` because the standard documents it as Numeric but some issuers send it as a bare JSON number — when you set it yourself (e.g. in `CreateVARequest`), supply a complete JSON value like `json.RawMessage(\`"BILLREF1"\`)` or `json.RawMessage(\`123\`)`, not a bare Go string.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -325,7 +325,7 @@ UpdateStatusVAData is the "virtualAccountData" object in UpdateStatusVAResponse 
 </Accordion>
 
 <Accordion title="BillDetail fields">
-BillDetail is one entry in the Virtual Account sub-group's "billDetails[]" array (max 24 entries). All fields are unmarked for M/O in the source, so all carry omitempty; BillDescription, BillAmount, and Reason are pointers since omitempty has no effect on a non-pointer struct value. BillReferenceNo is documented Numeric in the Guides tab (research §5.3); per the package's ambiguous-type rule, a documented Numeric field is typed json.RawMessage rather than string, since a plain string field fails the entire decode if any issuer sends it as a bare JSON number, matching the existing AccountTransactionLimit/APIKey precedent. BillDetail is also used in request bodies (CreateVARequest.BillDetails, UpdateVARequest.BillDetails), so a caller setting BillReferenceNo must supply a complete JSON value (e.g. json.RawMessage(`"BILLREF1"`) or json.RawMessage(`123`)), not a bare Go string — an incomplete value fails json.Marshal for the whole request.
+BillDetail is one entry in the `billDetails[]` array (max 24 entries) used across the Virtual Account group. `billReferenceNo` is `json.RawMessage` because the standard documents it as Numeric but some issuers send it as a bare JSON number — when you set it yourself (e.g. in `CreateVARequest`), supply a complete JSON value like `json.RawMessage(\`"BILLREF1"\`)` or `json.RawMessage(\`123\`)`, not a bare Go string.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -411,7 +411,7 @@ InquiryVAData is the "virtualAccountData" object in InquiryVAResponse — per th
 </Accordion>
 
 <Accordion title="BillDetail fields">
-BillDetail is one entry in the Virtual Account sub-group's "billDetails[]" array (max 24 entries). All fields are unmarked for M/O in the source, so all carry omitempty; BillDescription, BillAmount, and Reason are pointers since omitempty has no effect on a non-pointer struct value. BillReferenceNo is documented Numeric in the Guides tab (research §5.3); per the package's ambiguous-type rule, a documented Numeric field is typed json.RawMessage rather than string, since a plain string field fails the entire decode if any issuer sends it as a bare JSON number, matching the existing AccountTransactionLimit/APIKey precedent. BillDetail is also used in request bodies (CreateVARequest.BillDetails, UpdateVARequest.BillDetails), so a caller setting BillReferenceNo must supply a complete JSON value (e.g. json.RawMessage(`"BILLREF1"`) or json.RawMessage(`123`)), not a bare Go string — an incomplete value fails json.Marshal for the whole request.
+BillDetail is one entry in the `billDetails[]` array (max 24 entries) used across the Virtual Account group. `billReferenceNo` is `json.RawMessage` because the standard documents it as Numeric but some issuers send it as a bare JSON number — when you set it yourself (e.g. in `CreateVARequest`), supply a complete JSON value like `json.RawMessage(\`"BILLREF1"\`)` or `json.RawMessage(\`123\`)`, not a bare Go string.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -494,7 +494,7 @@ DeleteVAData is the "virtualAccountData" object in DeleteVAResponse — a smalle
 
 ### `VAInquiry`
 
-VAInquiry calls the SNAP VA - VA Inquiry endpoint (Service Code 24, path .../\{version\}/transfer-va/inquiry, HTTP POST — no method override, unlike Phase 13's PUT/DELETE endpoints). hb must already carry every field snap.HeaderBuilder needs except Body, which VAInquiry sets itself so the exact marshaled bytes are used for both signing and the wire body.
+VAInquiry calls the SNAP VA - VA Inquiry endpoint (Service Code 24, path .../\{version\}/transfer-va/inquiry). hb must already carry every field snap.HeaderBuilder needs except Body, which VAInquiry sets itself so the exact marshaled bytes are used for both signing and the wire body.
 
 ```go
 func VAInquiry(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req VAInquiryRequest) (VAInquiryResponse, error)
@@ -502,7 +502,7 @@ func VAInquiry(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, re
 
 **Request &mdash; `VAInquiryRequest`**
 
-VAInquiryRequest is the request body for API VA - VA Inquiry (Service Code 24). PartnerServiceID, CustomerNo, VirtualAccountNo, and InquiryRequestID are mandatory per the Guides tab. CustomerNo is json.RawMessage rather than string: it is documented String(20) but appears as a bare JSON number in this endpoint's sibling VA Inquiry Status (26) worked example (research §5.3) — see the Phase 14 design doc's ambiguous-type table. A caller setting CustomerNo or ChannelCode must supply a complete JSON value (e.g. json.RawMessage(`"98765"`) or json.RawMessage(`98765`)), not a bare Go string.
+VAInquiryRequest is the request body for API VA - VA Inquiry (Service Code 24). `partnerServiceId`, `customerNo`, `virtualAccountNo`, and `inquiryRequestId` are Mandatory. `customerNo` is `json.RawMessage` because a sibling endpoint's worked example shows it as a bare JSON number, not a quoted string — supply a complete JSON value (e.g. `json.RawMessage(\`"98765"\`)` or `json.RawMessage(\`98765\`)`), not a bare Go string.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -563,7 +563,7 @@ LocalizedText is the shared \{english, indonesia\} bilingual text shape used acr
 </Accordion>
 
 <Accordion title="BillDetail fields">
-BillDetail is one entry in the Virtual Account sub-group's "billDetails[]" array (max 24 entries). All fields are unmarked for M/O in the source, so all carry omitempty; BillDescription, BillAmount, and Reason are pointers since omitempty has no effect on a non-pointer struct value. BillReferenceNo is documented Numeric in the Guides tab (research §5.3); per the package's ambiguous-type rule, a documented Numeric field is typed json.RawMessage rather than string, since a plain string field fails the entire decode if any issuer sends it as a bare JSON number, matching the existing AccountTransactionLimit/APIKey precedent. BillDetail is also used in request bodies (CreateVARequest.BillDetails, UpdateVARequest.BillDetails), so a caller setting BillReferenceNo must supply a complete JSON value (e.g. json.RawMessage(`"BILLREF1"`) or json.RawMessage(`123`)), not a bare Go string — an incomplete value fails json.Marshal for the whole request.
+BillDetail is one entry in the `billDetails[]` array (max 24 entries) used across the Virtual Account group. `billReferenceNo` is `json.RawMessage` because the standard documents it as Numeric but some issuers send it as a bare JSON number — when you set it yourself (e.g. in `CreateVARequest`), supply a complete JSON value like `json.RawMessage(\`"BILLREF1"\`)` or `json.RawMessage(\`123\`)`, not a bare Go string.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -598,7 +598,7 @@ func VAPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, re
 
 **Request &mdash; `VAPaymentRequest`**
 
-VAPaymentRequest is the request body for API VA - VA Payment (Service Code 25). PartnerServiceID, CustomerNo, VirtualAccountNo, PaymentRequestID, and PaidAmount are mandatory per the Guides tab. TrxID is Conditional — "mandatory if from Create VA" per research §5.3, a data-dependent condition the type system can't express, so it's Optional (omitempty) here. CustomerNo, ChannelCode, and PaymentType are json.RawMessage: see the Phase 14 design doc's ambiguous-type table (PaymentType is documented String(1) but every worked example shows a bare number).
+VAPaymentRequest is the request body for API VA - VA Payment (Service Code 25). `partnerServiceId`, `customerNo`, `virtualAccountNo`, `paymentRequestId`, and `paidAmount` are Mandatory. `trxId` is Conditional — required if the VA was created via `CreateVA`. `customerNo`, `channelCode`, and `paymentType` are `json.RawMessage` since the standard's worked examples show them as bare numbers rather than quoted strings.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -625,7 +625,7 @@ VAPaymentRequest is the request body for API VA - VA Payment (Service Code 25). 
 | `additionalInfo` | `json.RawMessage` | Optional |
 
 <Accordion title="BillDetail fields">
-BillDetail is one entry in the Virtual Account sub-group's "billDetails[]" array (max 24 entries). All fields are unmarked for M/O in the source, so all carry omitempty; BillDescription, BillAmount, and Reason are pointers since omitempty has no effect on a non-pointer struct value. BillReferenceNo is documented Numeric in the Guides tab (research §5.3); per the package's ambiguous-type rule, a documented Numeric field is typed json.RawMessage rather than string, since a plain string field fails the entire decode if any issuer sends it as a bare JSON number, matching the existing AccountTransactionLimit/APIKey precedent. BillDetail is also used in request bodies (CreateVARequest.BillDetails, UpdateVARequest.BillDetails), so a caller setting BillReferenceNo must supply a complete JSON value (e.g. json.RawMessage(`"BILLREF1"`) or json.RawMessage(`123`)), not a bare Go string — an incomplete value fails json.Marshal for the whole request.
+BillDetail is one entry in the `billDetails[]` array (max 24 entries) used across the Virtual Account group. `billReferenceNo` is `json.RawMessage` because the standard documents it as Numeric but some issuers send it as a bare JSON number — when you set it yourself (e.g. in `CreateVARequest`), supply a complete JSON value like `json.RawMessage(\`"BILLREF1"\`)` or `json.RawMessage(\`123\`)`, not a bare Go string.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -666,7 +666,7 @@ VAPaymentResponse is the response body for API VA - VA Payment.
 | `virtualAccountData` | `*VAPaymentData` | Optional |
 
 <Accordion title="VAPaymentData fields">
-VAPaymentData is the "virtualAccountData" object in VAPaymentResponse — per research §5.3, the response mirrors the full request field set plus PaymentFlagReason and PaymentFlagStatus. Per-bill status/reason need no new field: BillDetail already carries Status and Reason (Phase 13).
+VAPaymentData is the `virtualAccountData` object in VAPaymentResponse — it mirrors the request's fields plus `paymentFlagReason` and `paymentFlagStatus`.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -697,7 +697,7 @@ VAPaymentData is the "virtualAccountData" object in VAPaymentResponse — per re
 </Accordion>
 
 <Accordion title="BillDetail fields">
-BillDetail is one entry in the Virtual Account sub-group's "billDetails[]" array (max 24 entries). All fields are unmarked for M/O in the source, so all carry omitempty; BillDescription, BillAmount, and Reason are pointers since omitempty has no effect on a non-pointer struct value. BillReferenceNo is documented Numeric in the Guides tab (research §5.3); per the package's ambiguous-type rule, a documented Numeric field is typed json.RawMessage rather than string, since a plain string field fails the entire decode if any issuer sends it as a bare JSON number, matching the existing AccountTransactionLimit/APIKey precedent. BillDetail is also used in request bodies (CreateVARequest.BillDetails, UpdateVARequest.BillDetails), so a caller setting BillReferenceNo must supply a complete JSON value (e.g. json.RawMessage(`"BILLREF1"`) or json.RawMessage(`123`)), not a bare Go string — an incomplete value fails json.Marshal for the whole request.
+BillDetail is one entry in the `billDetails[]` array (max 24 entries) used across the Virtual Account group. `billReferenceNo` is `json.RawMessage` because the standard documents it as Numeric but some issuers send it as a bare JSON number — when you set it yourself (e.g. in `CreateVARequest`), supply a complete JSON value like `json.RawMessage(\`"BILLREF1"\`)` or `json.RawMessage(\`123\`)`, not a bare Go string.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -732,7 +732,7 @@ LocalizedText is the shared \{english, indonesia\} bilingual text shape used acr
 
 ### `VAInquiryStatus`
 
-VAInquiryStatus calls the SNAP VA - VA Inquiry Status endpoint (Service Code 26, path .../\{version\}/transfer-va/status, HTTP POST — no method override; the path was previously misstated here as transfer-va/inquiry-status with no recorded justification — corrected against research §1's own path table). hb must already carry every field snap.HeaderBuilder needs except Body, which VAInquiryStatus sets itself so the exact marshaled bytes are used for both signing and the wire body.
+VAInquiryStatus calls the SNAP VA - VA Inquiry Status endpoint (Service Code 26, path .../\{version\}/transfer-va/status). hb must already carry every field snap.HeaderBuilder needs except Body, which VAInquiryStatus sets itself so the exact marshaled bytes are used for both signing and the wire body.
 
 ```go
 func VAInquiryStatus(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req VAInquiryStatusRequest) (VAInquiryStatusResponse, error)
@@ -740,7 +740,7 @@ func VAInquiryStatus(ctx context.Context, t *snap.Transport, hb snap.HeaderBuild
 
 **Request &mdash; `VAInquiryStatusRequest`**
 
-VAInquiryStatusRequest is the request body for API VA - VA Inquiry Status (Service Code 26). PartnerServiceID, CustomerNo, and VirtualAccountNo (the identity triple) are mandatory per the Guides tab; InquiryRequestID and PaymentRequestID are both Optional/ Conditional (omitempty). Research §5.3 notes an unresolved contradiction: the portal text says "if InquiryRequestID is not sent, returns array based on virtualAccountNo," but the response is documented elsewhere as a single Object — this package models the single-Object reading (see the Phase 14 design doc) and does not attempt to guess at the array reading.
+VAInquiryStatusRequest is the request body for API VA - VA Inquiry Status (Service Code 26). `partnerServiceId`, `customerNo`, and `virtualAccountNo` (the identity triple) are Mandatory; `inquiryRequestId` and `paymentRequestId` are Optional/Conditional. This package always decodes the response as a single object, per the standard's own type declaration.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -762,7 +762,7 @@ VAInquiryStatusResponse is the response body for API VA - VA Inquiry Status.
 | `virtualAccountData` | `*VAInquiryStatusData` | Optional |
 
 <Accordion title="VAInquiryStatusData fields">
-VAInquiryStatusData is the "virtualAccountData" object in VAInquiryStatusResponse — per research §5.3, "mirrors VA Payment's response shape plus transactionDate." It is a distinct type from VAPaymentData (not a reuse), per the package's "distinct types per service code even for identical/near-identical shapes" convention; transfer_shared_types_test.go guards the two against field/tag drift.
+VAInquiryStatusData is the `virtualAccountData` object in VAInquiryStatusResponse — the same shape as `VAPaymentData` plus `transactionDate`, kept as its own type since it belongs to a different Service Code.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -794,7 +794,7 @@ VAInquiryStatusData is the "virtualAccountData" object in VAInquiryStatusRespons
 </Accordion>
 
 <Accordion title="BillDetail fields">
-BillDetail is one entry in the Virtual Account sub-group's "billDetails[]" array (max 24 entries). All fields are unmarked for M/O in the source, so all carry omitempty; BillDescription, BillAmount, and Reason are pointers since omitempty has no effect on a non-pointer struct value. BillReferenceNo is documented Numeric in the Guides tab (research §5.3); per the package's ambiguous-type rule, a documented Numeric field is typed json.RawMessage rather than string, since a plain string field fails the entire decode if any issuer sends it as a bare JSON number, matching the existing AccountTransactionLimit/APIKey precedent. BillDetail is also used in request bodies (CreateVARequest.BillDetails, UpdateVARequest.BillDetails), so a caller setting BillReferenceNo must supply a complete JSON value (e.g. json.RawMessage(`"BILLREF1"`) or json.RawMessage(`123`)), not a bare Go string — an incomplete value fails json.Marshal for the whole request.
+BillDetail is one entry in the `billDetails[]` array (max 24 entries) used across the Virtual Account group. `billReferenceNo` is `json.RawMessage` because the standard documents it as Numeric but some issuers send it as a bare JSON number — when you set it yourself (e.g. in `CreateVARequest`), supply a complete JSON value like `json.RawMessage(\`"BILLREF1"\`)` or `json.RawMessage(\`123\`)`, not a bare Go string.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -829,7 +829,7 @@ LocalizedText is the shared \{english, indonesia\} bilingual text shape used acr
 
 ### `VAInquiryPaymentIntrabank`
 
-VAInquiryPaymentIntrabank calls the SNAP VA - Inquiry Payment Intrabank endpoint (Service Code 32, path .../\{version\}/transfer-va/inquiry-intrabank, HTTP POST — no method override; the path was previously misstated here as transfer-va/inquiry-payment-intrabank with no recorded justification — corrected against research §1's own path table). hb must already carry every field snap.HeaderBuilder needs except Body, which VAInquiryPaymentIntrabank sets itself so the exact marshaled bytes are used for both signing and the wire body.
+VAInquiryPaymentIntrabank calls the SNAP VA - Inquiry Payment Intrabank endpoint (Service Code 32, path .../\{version\}/transfer-va/inquiry-intrabank). hb must already carry every field snap.HeaderBuilder needs except Body, which VAInquiryPaymentIntrabank sets itself so the exact marshaled bytes are used for both signing and the wire body.
 
 ```go
 func VAInquiryPaymentIntrabank(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req VAInquiryPaymentIntrabankRequest) (VAInquiryPaymentIntrabankResponse, error)
@@ -837,7 +837,7 @@ func VAInquiryPaymentIntrabank(ctx context.Context, t *snap.Transport, hb snap.H
 
 **Request &mdash; `VAInquiryPaymentIntrabankRequest`**
 
-VAInquiryPaymentIntrabankRequest is the request body for API VA - Inquiry Payment Intrabank (Service Code 32). PartnerServiceID, CustomerNo, and VirtualAccountNo (the identity triple) are mandatory per the Guides tab. CustomerNo is json.RawMessage: this endpoint's own worked example shows it as a bare JSON number (research §5.3 line 135) — see the Phase 15 design doc's ambiguous-type table. Only the fields §5.3's own field-summary row names for this endpoint are modeled; billDetails/freeTexts/totalAmount/feeAmount are not restated for 32 the way they are for endpoint 24, so they are not added here.
+VAInquiryPaymentIntrabankRequest is the request body for API VA - Inquiry Payment Intrabank (Service Code 32). `partnerServiceId`, `customerNo`, and `virtualAccountNo` (the identity triple) are Mandatory. `customerNo` is `json.RawMessage` since the standard's worked example for this endpoint shows it as a bare JSON number.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -860,7 +860,7 @@ VAInquiryPaymentIntrabankResponse is the response body for API VA - Inquiry Paym
 | `virtualAccountdata` | `*VAInquiryPaymentIntrabankData` | Optional |
 
 <Accordion title="VAInquiryPaymentIntrabankData fields">
-VAInquiryPaymentIntrabankData is the "virtualAccountdata" object (lowercase d — confirmed by research §5.3 line 132 as not a table typo, unlike every VA type from Phases 13-14 which use capital-D virtualAccountData) in VAInquiryPaymentIntrabankResponse.
+VAInquiryPaymentIntrabankData is the `virtualAccountdata` object (lowercase "d" — deliberately matching the standard's own wire key, unlike most other VA endpoints which use `virtualAccountData`) in VAInquiryPaymentIntrabankResponse.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -892,7 +892,7 @@ func VAPaymentIntrabank(ctx context.Context, t *snap.Transport, hb snap.HeaderBu
 
 **Request &mdash; `VAPaymentIntrabankRequest`**
 
-VAPaymentIntrabankRequest is the request body for API VA - Payment Intrabank (Service Code 33). PartnerServiceID, CustomerNo, VirtualAccountNo, PartnerReferenceNo, and PaidAmount are mandatory per the Guides tab. CustomerNo is json.RawMessage (research §5.3 line 135, bare-number worked example). ReferenceNo is json.RawMessage too: this endpoint's own worked request shows it as a bare number (§5.3 line 137), even though its own response shows it quoted — see the Phase 15 design doc's ambiguous-type table. PaymentStatus is a free-text status string, explicitly distinct from the package's transactionStatus 2-digit enum (research §5.3 line 153).
+VAPaymentIntrabankRequest is the request body for API VA - Payment Intrabank (Service Code 33). `partnerServiceId`, `customerNo`, `virtualAccountNo`, `partnerReferenceNo`, and `paidAmount` are Mandatory. `customerNo` and `referenceNo` are `json.RawMessage` since the standard's worked examples show both as bare numbers, even though `referenceNo` appears quoted in the response. `paymentStatus` is a free-text status string, not the package's usual 2-digit `transactionStatus` code.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -921,7 +921,7 @@ VAPaymentIntrabankResponse is the response body for API VA - Payment Intrabank.
 | `virtualAccountdata` | `*VAPaymentIntrabankData` | Optional |
 
 <Accordion title="VAPaymentIntrabankData fields">
-VAPaymentIntrabankData is the "virtualAccountdata" object (lowercase d, research §5.3 line 132) in VAPaymentIntrabankResponse — mirrors VAPaymentIntrabankRequest's fields, per the same request-mirrors-into-response convention used for VAPaymentData in Phase 14.
+VAPaymentIntrabankData is the `virtualAccountdata` object (lowercase "d") in VAPaymentIntrabankResponse — it mirrors the request's own fields.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -956,7 +956,7 @@ func VANotifyPaymentIntrabank(ctx context.Context, t *snap.Transport, hb snap.He
 
 **Request &mdash; `VANotifyPaymentIntrabankRequest`**
 
-VANotifyPaymentIntrabankRequest is the request body for API VA - Notify Payment Intrabank (Service Code 34). Per research §5.3 line 154, this is "a callback the PJP sends outward" — the PJP initiates this call, unlike the RTGS/SKNBI/Interbank-Bulk notification endpoints (Phase 12), which the PJP only receives. It is therefore a normal calling function, not a struct-only inbound type. PartnerServiceID is documented "StringNumber" (a literal typo in the source table, §5.3 line 140) but shown quoted in this endpoint's own worked example, so it stays string — see the Phase 15 design doc's ambiguous-type table. CustomerNo is json.RawMessage (§5.3 line 135, bare-number worked example).
+VANotifyPaymentIntrabankRequest is the request body for API VA - Notify Payment Intrabank (Service Code 34). Unlike the RTGS/SKNBI/Interbank-Bulk notifications, this one is outbound — your code calls it, the PJP receives it — so it's a normal calling function, not an inbound-only struct. `customerNo` is `json.RawMessage` since the standard's worked example shows it as a bare number.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -992,7 +992,7 @@ VANotifyPaymentIntrabankResponse is the response body for API VA - Notify Paymen
 | `virtualAccountdata` | `*VANotifyPaymentIntrabankData` | Optional |
 
 <Accordion title="VANotifyPaymentIntrabankData fields">
-VANotifyPaymentIntrabankData is the "virtualAccountdata" object (lowercase d, research §5.3 line 132) in VANotifyPaymentIntrabankResponse — mirrors VANotifyPaymentIntrabankRequest's fields, per §5.3 line 154 ("response mirrors most request fields plus envelope").
+VANotifyPaymentIntrabankData is the `virtualAccountdata` object (lowercase "d") in VANotifyPaymentIntrabankResponse — it mirrors most of the request's fields, plus the envelope.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -1024,7 +1024,7 @@ LocalizedText is the shared \{english, indonesia\} bilingual text shape used acr
 
 ### `VAGetReport`
 
-VAGetReport calls the SNAP VA - Get Report endpoint (Service Code 35, path .../\{version\}/transfer-va/report — the path was previously misstated here as transfer-va/get-report with no recorded justification, corrected against research §1's own path table). hb must already carry every field snap.HeaderBuilder needs except Method and Body: VAGetReport sets Method to POST itself — this is the one VA endpoint where the source spec contradicts itself (GET per the Guides tab, POST-with-body per the code snippet), and the package has chosen POST (see the type comment above), so the method is not caller-configurable, the same way the PUT/DELETE endpoints in Phase 13 fix their own method — and Body, so the exact marshaled bytes are used for both signing and the wire body.
+VAGetReport calls the SNAP VA - Get Report endpoint (Service Code 35, path .../\{version\}/transfer-va/report). hb must already carry every field snap.HeaderBuilder needs except Method and Body: VAGetReport sets Method to POST itself (the standard documents this endpoint inconsistently as both GET and POST-with-body; this package always uses POST) and Body, so the exact marshaled bytes are used for both signing and the wire body.
 
 A report covering a wide date range can return an unbounded number of array entries; the shared transport layer caps every response body at 10 MiB (see transport.go), so callers pulling large reports should page by narrower date/time ranges rather than one unbounded call.
 
@@ -1034,7 +1034,7 @@ func VAGetReport(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, 
 
 **Request &mdash; `VAGetReportRequest`**
 
-VAGetReportRequest is the request body for API VA - Get Report (Service Code 35). PartnerServiceID is the only mandatory field per the Guides tab; research §5.3 line 155 documents its type as flipping to Number for this endpoint specifically (String everywhere else in the package), so it is json.RawMessage — see the Phase 15 design doc's ambiguous-type table. This endpoint is documented both as GET (Guides tab) and POST-with-body (code snippet); this package models it as POST with a JSON body, matching every other endpoint in the group — see the design doc for the unresolved GET/POST contradiction (research §6 item 1).
+VAGetReportRequest is the request body for API VA - Get Report (Service Code 35). `partnerServiceId` is the only Mandatory field; it's `json.RawMessage` here because the standard documents it as a Number for this endpoint specifically, unlike every other VA endpoint where it's a String.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -1047,7 +1047,7 @@ VAGetReportRequest is the request body for API VA - Get Report (Service Code 35)
 
 **Response &mdash; `VAGetReportResponse`**
 
-VAGetReportResponse is the response body for API VA - Get Report. It is the only VA response in the package whose data field is an array rather than a single object (research §5.3 line 155).
+VAGetReportResponse is the response body for API VA - Get Report — the only VA response in this package whose data field is an array rather than a single object.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -1056,7 +1056,7 @@ VAGetReportResponse is the response body for API VA - Get Report. It is the only
 | `virtualAccountdata` | `[]GetReportData` | Optional |
 
 <Accordion title="GetReportData fields">
-GetReportData is one entry in VAGetReportResponse's "virtualAccountdata" array (lowercase d, research §5.3 line 132) — field-identical to VAInquiryStatusData, per §5.3 line 155's "each item shaped like the Payment/Inquiry-Status response object." It is a distinct type (not a reuse), per the package's "distinct types per service code even for identical shapes" convention; transfer_shared_types_test.go guards the two against field/tag drift with a full-equality check.
+GetReportData is one entry in VAGetReportResponse's `virtualAccountdata` array (lowercase "d") — the same shape as `VAInquiryStatusData`, kept as its own type since it belongs to a different Service Code.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -1088,7 +1088,7 @@ GetReportData is one entry in VAGetReportResponse's "virtualAccountdata" array (
 </Accordion>
 
 <Accordion title="BillDetail fields">
-BillDetail is one entry in the Virtual Account sub-group's "billDetails[]" array (max 24 entries). All fields are unmarked for M/O in the source, so all carry omitempty; BillDescription, BillAmount, and Reason are pointers since omitempty has no effect on a non-pointer struct value. BillReferenceNo is documented Numeric in the Guides tab (research §5.3); per the package's ambiguous-type rule, a documented Numeric field is typed json.RawMessage rather than string, since a plain string field fails the entire decode if any issuer sends it as a bare JSON number, matching the existing AccountTransactionLimit/APIKey precedent. BillDetail is also used in request bodies (CreateVARequest.BillDetails, UpdateVARequest.BillDetails), so a caller setting BillReferenceNo must supply a complete JSON value (e.g. json.RawMessage(`"BILLREF1"`) or json.RawMessage(`123`)), not a bare Go string — an incomplete value fails json.Marshal for the whole request.
+BillDetail is one entry in the `billDetails[]` array (max 24 entries) used across the Virtual Account group. `billReferenceNo` is `json.RawMessage` because the standard documents it as Numeric but some issuers send it as a bare JSON number — when you set it yourself (e.g. in `CreateVARequest`), supply a complete JSON value like `json.RawMessage(\`"BILLREF1"\`)` or `json.RawMessage(\`123\`)`, not a bare Go string.
 
 | Field | Type | Presence |
 |---|---|---|

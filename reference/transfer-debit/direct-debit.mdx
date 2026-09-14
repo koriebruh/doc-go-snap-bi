@@ -20,7 +20,7 @@ if err != nil {
 
 ### `DirectDebitPayment`
 
-DirectDebitPayment calls the SNAP Direct Debit Payment endpoint (Service Code 54, path .../\{version\}/debit/payment-host-to-host, HTTP POST — no method override). hb must already carry every field snap.HeaderBuilder needs except Body, which DirectDebitPayment sets itself so the exact marshaled bytes are used for both signing and the wire body.
+DirectDebitPayment calls the SNAP Direct Debit Payment endpoint (Service Code 54, HTTP POST). Pass `hb` with everything except `Body` already set — `DirectDebitPayment` marshals the request itself and uses those exact bytes for both signing and the wire body.
 
 This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it.
 
@@ -30,7 +30,7 @@ func DirectDebitPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBu
 
 **Request &mdash; `DirectDebitPaymentRequest`**
 
-DirectDebitPaymentRequest is the request body for API Direct Debit Payment (Service Code 54). PartnerReferenceNo is the only mandatory field per research §5.1.
+DirectDebitPaymentRequest is the request body for Direct Debit Payment. `partnerReferenceNo` is the only Mandatory field.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -54,7 +54,7 @@ DirectDebitPaymentRequest is the request body for API Direct Debit Payment (Serv
 | `additionalInfo` | `json.RawMessage` | Optional |
 
 <Accordion title="DirectDebitPaymentURLParam fields">
-DirectDebitPaymentURLParam is one entry in Direct Debit Payment's request "urlParams[]" array. Type is documented as PAY_RETURN or PAY_NOTIFY but modeled as a plain string since research gives no exhaustive closed list. IsDeeplink is a documented String(1) Y/N flag, not the ambiguous-numeric-type case — plain string, not json.RawMessage.
+DirectDebitPaymentURLParam is one entry in the request's `urlParams[]` array — a redirect URL and how to use it. `isDeeplink` is a `"Y"`/`"N"` flag.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -65,7 +65,7 @@ DirectDebitPaymentURLParam is one entry in Direct Debit Payment's request "urlPa
 </Accordion>
 
 <Accordion title="DirectDebitPayOptionDetail fields">
-DirectDebitPayOptionDetail is one entry in Direct Debit Payment's request "payOptionDetails[]" array. TransAmount and FeeAmount are documented as Optional containers with Mandatory members — modeled as *snap.Money per the package's established handling (Optional container wins over internal-member markers).
+DirectDebitPayOptionDetail is one entry in the request's `payOptionDetails[]` array, describing one available payment method.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -81,9 +81,14 @@ DirectDebitPayOptionDetail is one entry in Direct Debit Payment's request "payOp
 
 **Response &mdash; `DirectDebitPaymentResponse`**
 
-DirectDebitPaymentResponse is the response body for API Direct Debit Payment. ReferenceNo is Conditional (success only). No response field is Mandatory beyond the envelope.
+DirectDebitPaymentResponse is the response body for Direct Debit Payment. `referenceNo` is Conditional — present only on success.
 
-AppRedirectURL and WebRedirectURL are returned verbatim from the server; this package does no scheme/host validation. Callers that navigate a WebView or browser to either URL should validate the scheme (https:// or the caller's own registered app scheme) first, since a spoofed or compromised response could otherwise return an attacker-controlled URL.
+<Warning>
+  `appRedirectUrl` and `webRedirectUrl` come straight from the server with no
+  validation. Before opening either in a WebView or browser, check the
+  scheme yourself (`https://` or your app's own registered scheme) — a
+  tampered or spoofed response could otherwise hand you an attacker-controlled URL.
+</Warning>
 
 | Field | Type | Presence |
 |---|---|---|
@@ -105,9 +110,9 @@ AppRedirectURL and WebRedirectURL are returned verbatim from the server; this pa
 
 **Received &mdash; `DirectDebitPaymentNotificationRequest`**
 
-DirectDebitPaymentNotificationRequest is the request body for API Direct Debit Payment Notification (Service Code 56, path .../\{version\}/debit/notify). This is a settlement callback the PJP receives, not a call this package makes — no calling function is provided, matching the package's established convention for inbound notification endpoints (QRMPMPaymentNotificationRequest, Phase 23; NotifyBulkCashInRequest, Phase 18): a caller wires their own HTTP handler for this path, authenticates the inbound call with ServerVerifier.VerifyTransactionRequest, and json.Unmarshals the body into this type.
+DirectDebitPaymentNotificationRequest is the request body for Direct Debit Payment Notification (Service Code 56) — a settlement callback the PJP receives, not a call this package makes. Wire your own HTTP handler for this path, authenticate the inbound call with `ServerVerifier.VerifyTransactionRequest`, then `json.Unmarshal` the body into this type.
 
-OriginalReferenceNo and LatestTransactionStatus are Mandatory per research §5.1 line 143; every other field is Optional. Nothing in that line states the PJP sends this call outward, so the inbound reading is the default, not a guess.
+`originalReferenceNo` and `latestTransactionStatus` are Mandatory; every other field is Optional.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -126,7 +131,7 @@ OriginalReferenceNo and LatestTransactionStatus are Mandatory per research §5.1
 
 **Your handler replies with &mdash; `DirectDebitPaymentNotificationResponse`**
 
-DirectDebitPaymentNotificationResponse is the response body a caller sends back for API Direct Debit Payment Notification. ApprovalCode is the only field beyond the envelope, and is Optional. Research's worked example shows a non-standard field order (responseCode, approvalCode, responseMessage) — recorded here since JSON field order carries no semantic meaning; this struct keeps the package's conventional envelope-first order.
+DirectDebitPaymentNotificationResponse has one field beyond the envelope, `approvalCode`, and it's Optional.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -139,9 +144,7 @@ DirectDebitPaymentNotificationResponse is the response body a caller sends back 
 
 ### `DirectDebitPaymentStatus`
 
-DirectDebitPaymentStatus calls the SNAP Direct Debit Payment Status endpoint (Service Code 55, path .../\{version\}/debit/status, HTTP POST — no method override). hb must already carry every field snap.HeaderBuilder needs except Body, which DirectDebitPaymentStatus sets itself so the exact marshaled bytes are used for both signing and the wire body.
-
-This is a read-only status query and carries no non-idempotency note, matching TransactionStatusInquiryBank/TransactionStatusInquiryNonBank precedent.
+DirectDebitPaymentStatus calls the SNAP Direct Debit Payment Status endpoint (Service Code 55, HTTP POST) to check a previous payment's status. Pass `hb` with everything except `Body` already set — `DirectDebitPaymentStatus` marshals the request itself. This is a read-only lookup, safe to retry freely.
 
 ```go
 func DirectDebitPaymentStatus(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req DirectDebitPaymentStatusRequest) (DirectDebitPaymentStatusResponse, error)
@@ -149,7 +152,7 @@ func DirectDebitPaymentStatus(ctx context.Context, t *snap.Transport, hb snap.He
 
 **Request &mdash; `DirectDebitPaymentStatusRequest`**
 
-DirectDebitPaymentStatusRequest is the request body for API Direct Debit Payment Status (Service Code 55). Uses the "originalX + serviceCode" core shape shared with TransactionStatusInquiryBankRequest, but with this sub-group's own distinct additions (merchantId, subMerchantId, externalStoreId) — kept as an independent type rather than reused/extended from Transfer Kredit's base type, since the two differ in field composition. ServiceCode is the only mandatory field.
+DirectDebitPaymentStatusRequest is the request body for Direct Debit Payment Status. `serviceCode` is the only Mandatory field — pair it with whichever reference you have.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -165,7 +168,7 @@ DirectDebitPaymentStatusRequest is the request body for API Direct Debit Payment
 
 **Response &mdash; `DirectDebitPaymentStatusResponse`**
 
-DirectDebitPaymentStatusResponse is the response body for API Direct Debit Payment Status. LatestTransactionStatus is the only mandatory field beyond the envelope, matching every other occurrence of this field package-wide.
+DirectDebitPaymentStatusResponse is the response body for Direct Debit Payment Status. `latestTransactionStatus` is the only Mandatory field beyond the envelope.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -190,7 +193,7 @@ DirectDebitPaymentStatusResponse is the response body for API Direct Debit Payme
 | `paidTime` | `string` | Optional |
 
 <Accordion title="DirectDebitRefundHistoryItem fields">
-DirectDebitRefundHistoryItem is one entry in Direct Debit Payment Status's response "refundHistory[]" array. RefundStatus is a documented String(2) 00/03/06 subset of the 8-value transaction enum, modeled as plain string, matching the package's existing convention of not creating enum types for status fields elsewhere.
+DirectDebitRefundHistoryItem is one entry in the response's `refundHistory[]` array — a past refund against this payment. `refundStatus` is one of `00`, `03`, or `06`.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -208,7 +211,7 @@ DirectDebitRefundHistoryItem is one entry in Direct Debit Payment Status's respo
 
 ### `DirectDebitPaymentCancel`
 
-DirectDebitPaymentCancel calls the SNAP Direct Debit Payment Cancel endpoint (Service Code 57, path .../\{version\}/debit/cancel, HTTP POST — no method override). hb must already carry every field snap.HeaderBuilder needs except Body, which DirectDebitPaymentCancel sets itself so the exact marshaled bytes are used for both signing and the wire body.
+DirectDebitPaymentCancel calls the SNAP Direct Debit Payment Cancel endpoint (Service Code 57, HTTP POST). Pass `hb` with everything except `Body` already set — `DirectDebitPaymentCancel` marshals the request itself.
 
 This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it.
 
@@ -218,7 +221,7 @@ func DirectDebitPaymentCancel(ctx context.Context, t *snap.Transport, hb snap.He
 
 **Request &mdash; `DirectDebitPaymentCancelRequest`**
 
-DirectDebitPaymentCancelRequest is the request body for API Direct Debit Payment Cancel (Service Code 57). OriginalPartnerReferenceNo is the only Mandatory field per research §5.1.
+DirectDebitPaymentCancelRequest is the request body for Direct Debit Payment Cancel. `originalPartnerReferenceNo` is the only Mandatory field.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -235,7 +238,7 @@ DirectDebitPaymentCancelRequest is the request body for API Direct Debit Payment
 
 **Response &mdash; `DirectDebitPaymentCancelResponse`**
 
-DirectDebitPaymentCancelResponse is the response body for API Direct Debit Payment Cancel. OriginalReferenceNo is Conditional (success only). CancelTime is Conditional per research §5.1 ("required if successful"), matching QRMPMCancelPaymentResponse.CancelTime's identical treatment (Phase 24). No field is Mandatory beyond the envelope.
+DirectDebitPaymentCancelResponse is the response body for Direct Debit Payment Cancel. `originalReferenceNo` and `cancelTime` are Conditional — present only on success.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -253,7 +256,7 @@ DirectDebitPaymentCancelResponse is the response body for API Direct Debit Payme
 
 ### `DirectDebitPaymentRefund`
 
-DirectDebitPaymentRefund calls the SNAP Direct Debit Payment Refund endpoint (Service Code 58, path .../\{version\}/debit/refund, HTTP POST — no method override). hb must already carry every field snap.HeaderBuilder needs except Body, which DirectDebitPaymentRefund sets itself so the exact marshaled bytes are used for both signing and the wire body.
+DirectDebitPaymentRefund calls the SNAP Direct Debit Payment Refund endpoint (Service Code 58, HTTP POST). Pass `hb` with everything except `Body` already set — `DirectDebitPaymentRefund` marshals the request itself.
 
 This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it.
 
@@ -263,7 +266,7 @@ func DirectDebitPaymentRefund(ctx context.Context, t *snap.Transport, hb snap.He
 
 **Request &mdash; `DirectDebitPaymentRefundRequest`**
 
-DirectDebitPaymentRefundRequest is the request body for API Direct Debit Payment Refund (Service Code 58). OriginalPartnerReferenceNo and PartnerRefundNo are Mandatory per research §5.1.
+DirectDebitPaymentRefundRequest is the request body for Direct Debit Payment Refund. `originalPartnerReferenceNo` and `partnerRefundNo` are Mandatory.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -280,7 +283,7 @@ DirectDebitPaymentRefundRequest is the request body for API Direct Debit Payment
 
 **Response &mdash; `DirectDebitPaymentRefundResponse`**
 
-DirectDebitPaymentRefundResponse is the response body for API Direct Debit Payment Refund. OriginalReferenceNo is Conditional (success only). RefundNo, PartnerRefundNo, and RefundTime are Mandatory per research §5.1 — not a byte-for-byte copy of QRMPMRefundPaymentResponse, which has no Mandatory marker on PartnerRefundNo; independently derived from this endpoint's own field table.
+DirectDebitPaymentRefundResponse is the response body for Direct Debit Payment Refund. `originalReferenceNo` is Conditional — present only on success. `refundNo`, `partnerRefundNo`, and `refundTime` are Mandatory.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -295,4 +298,3 @@ DirectDebitPaymentRefundResponse is the response body for API Direct Debit Payme
 | `refundAmount` | `*snap.Money` | Optional |
 | `refundTime` | `string` | Mandatory |
 | `additionalInfo` | `json.RawMessage` | Optional |
-

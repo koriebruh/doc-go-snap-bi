@@ -15,11 +15,10 @@ func CheckResponseStatus(responseCode string, httpStatus int) error
 
 `CheckResponseStatus` is the single authoritative success/failure check
 used by every calling function. A non-2xx HTTP status is **never** treated
-as success, even if `responseCode`'s own embedded status class claims
-otherwise — for example a stale cached body from a misbehaving
-intermediary, or an out-of-band 500 with a templated "success" body.
-Conversely a 2xx status with a malformed or missing `responseCode` is
-still treated as success (nothing else to check against).
+as success, even if `responseCode` itself claims otherwise — for example, a
+stale cached body from a broken proxy. The reverse also holds: a 2xx
+status with a missing or malformed `responseCode` still counts as success,
+since there's nothing else to check it against.
 
 Returns `nil` for success, or one of the sentinel errors below.
 

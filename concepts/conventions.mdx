@@ -4,9 +4,9 @@ description: "The shape every package, endpoint, and type in go-snap-bi follows"
 ---
 
 Every domain package (`registration`, `balanceinfo`, `transactionhistory`,
-`transfercredit`, `transferdebit`) is built against the same small set of
-rules. Once you know these, every endpoint's shape is predictable — you're
-reading a specific field table, not learning a new pattern.
+`transfercredit`, `transferdebit`) follows the same small set of rules
+below. Learn them once and every endpoint becomes predictable — you're
+just reading a field table, not learning a new pattern each time.
 
 ## One package per ASPI portal category
 
@@ -48,13 +48,12 @@ condition). This package expresses that as Go's `omitempty`:
 - Every other field carries `omitempty`.
 
 <Note>
-  The reference pages' "Presence" column collapses Optional and Conditional
-  into a single **Optional** bucket, because both compile to the same
-  `omitempty` tag — there's no way to tell them apart from the Go struct
-  alone. Where a field is Conditional, its endpoint's request-type doc
-  paragraph (reproduced above the field table) says so explicitly, e.g.
-  *"OriginatorInfos is Conditional"* — read that paragraph, not just the
-  table, before treating an Optional field as "safe to always omit."
+  Optional and Conditional both use the same `omitempty` tag, so the
+  reference pages' "Presence" column shows both as **Optional** — Go
+  can't tell them apart. If a field is actually Conditional, the
+  paragraph above the table says so directly (e.g. *"OriginatorInfos is
+  Conditional"*). Read that paragraph before assuming an Optional field
+  is always safe to skip.
 </Note>
 
 This package validates wire shape only, never the standard's business
@@ -90,7 +89,7 @@ floating-point rounding on money. `Currency` is ISO 4217 (e.g. `"IDR"`).
   <Card title="Headers & Signing" icon="key" href="/concepts/headers">
     How `HeaderBuilder` assembles and signs a request.
   </Card>
-  <Card title="Errors" icon="triangle-exclamation" href="/concepts/errors">
+  <Card title="Errors" icon="triangle-alert" href="/concepts/errors">
     Response codes, sentinel errors, and the HTTP-status-wins rule in detail.
   </Card>
 </CardGroup>

@@ -22,7 +22,7 @@ if err != nil {
 
 ### `AuthPayment`
 
-AuthPayment calls the SNAP Auth Payment endpoint (Service Code 63, HTTP POST — no method override; research's Overview tab marks this GET, but every worked example across all 7 Auth Payment endpoints is POST-shaped with a mandatory JSON body, and this package's signing path has no representation for a body-carrying GET). hb must already carry every field snap.HeaderBuilder needs except Body, which AuthPayment sets itself so the exact marshaled bytes are used for both signing and the wire body.
+AuthPayment calls the SNAP Auth Payment endpoint (Service Code 63, HTTP POST). It places a hold on funds without charging them. Pass `hb` with everything except `Body` already set — `AuthPayment` marshals the request itself and uses those exact bytes for both signing and the wire body.
 
 This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it.
 
@@ -32,9 +32,9 @@ func AuthPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, 
 
 **Request &mdash; `AuthPaymentRequest`**
 
-AuthPaymentRequest is the request body for API Auth Payment (Service Code 63, path .../\{version\}/auth/payment). This places a hold on funds; Capture (65) later charges some or all of the held amount, Void (67) releases held-but-uncaptured funds.
+AuthPaymentRequest is the request body for Auth Payment. It places a hold on funds — Capture (65) later charges some or all of it, Void (67) releases what wasn't captured.
 
-Items is documented as a list of purchased goods with no full item-level schema given anywhere beyond the worked example's goodsId/price/category/unit/quantity — modeled as json.RawMessage, matching the package's established treatment of genuinely untyped fields (the same rationale as AdditionalInfo; also already used for AccountBindingRequest.AdditionalData, VerifyOTPResponse.QParams, and CPMPaymentRequest.Items, the last being the exact same field name and shape precedent).
+`items` (a list of purchased goods) has no fixed schema in the standard, so it's typed `json.RawMessage` — the same treatment as `additionalInfo` and every other field the standard leaves genuinely untyped.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -51,7 +51,7 @@ Items is documented as a list of purchased goods with no full item-level schema 
 
 **Response &mdash; `AuthPaymentResponse`**
 
-AuthPaymentResponse is the response body for API Auth Payment. ReferenceNo is Conditional (success only). Research leaves the Amount container unmarked here, same as the request side, but marks both its value/currency members Mandatory; Amount is modeled as a plain (non-pointer) snap.Money — unlike the request side's *snap.Money — since this is the success response for a hold that was just placed, and an amount is expected to always be present on it. This is a narrower judgment call than the Optional-container-marked cases elsewhere in the package (compare AuthPaymentQueryResponse.Amount, which research explicitly marks amount O and which is modeled as *snap.Money).
+AuthPaymentResponse is the response body for Auth Payment. `referenceNo` is Conditional — present only on success.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -68,7 +68,7 @@ AuthPaymentResponse is the response body for API Auth Payment. ReferenceNo is Co
 
 ### `AuthPaymentQuery`
 
-AuthPaymentQuery calls the SNAP Payment Query endpoint (Service Code 64, HTTP POST — no method override, same GET/POST resolution as AuthPayment). hb must already carry every field snap.HeaderBuilder needs except Body, which AuthPaymentQuery sets itself so the exact marshaled bytes are used for both signing and the wire body.
+AuthPaymentQuery calls the SNAP Payment Query endpoint (Service Code 64, HTTP POST) to check a previous Auth Payment's status. Pass `hb` with everything except `Body` already set — `AuthPaymentQuery` marshals the request itself.
 
 ```go
 func AuthPaymentQuery(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req AuthPaymentQueryRequest) (AuthPaymentQueryResponse, error)
@@ -76,7 +76,7 @@ func AuthPaymentQuery(ctx context.Context, t *snap.Transport, hb snap.HeaderBuil
 
 **Request &mdash; `AuthPaymentQueryRequest`**
 
-AuthPaymentQueryRequest is the request body for API Payment Query (Service Code 64, path .../\{version\}/auth/query). No field is Mandatory.
+AuthPaymentQueryRequest is the request body for Payment Query. No field is Mandatory — query by whichever reference, merchant, or store ID you have.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -89,9 +89,7 @@ AuthPaymentQueryRequest is the request body for API Payment Query (Service Code 
 
 **Response &mdash; `AuthPaymentQueryResponse`**
 
-AuthPaymentQueryResponse is the response body for API Payment Query. PaidTime and LatestTransactionStatus are Mandatory. Amount is modeled as *snap.Money since research explicitly marks the container Optional (amount O, members M) — the package's established rule for an Optional container is *snap.Money regardless of its members' own markers (see e.g. TransactionStatusInquiryBankResponse.Amount).
-
-The worked response example in research key-cases originalpartnerReferenceNo (lowercase p) against the field table's originalPartnerReferenceNo (research §6 item 2). This field is request-Optional and only echoed back in the response here, and Go's encoding/json unmarshal is case-insensitive, so either wire casing populates OriginalPartnerReferenceNo correctly — the field table's casing is used for the Go tag, consistent with every other occurrence of this field name across the package.
+AuthPaymentQueryResponse is the response body for Payment Query. `paidTime` and `latestTransactionStatus` are Mandatory.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -110,7 +108,7 @@ The worked response example in research key-cases originalpartnerReferenceNo (lo
 
 ### `AuthCapture`
 
-AuthCapture calls the SNAP Capture endpoint (Service Code 65, HTTP POST — no method override, same GET/POST resolution as AuthPayment, Phase 31). hb must already carry every field snap.HeaderBuilder needs except Body, which AuthCapture sets itself so the exact marshaled bytes are used for both signing and the wire body.
+AuthCapture calls the SNAP Capture endpoint (Service Code 65, HTTP POST). Pass `hb` with everything except `Body` already set — `AuthCapture` marshals the request itself.
 
 This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it.
 
@@ -120,9 +118,9 @@ func AuthCapture(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, 
 
 **Request &mdash; `AuthCaptureRequest`**
 
-AuthCaptureRequest is the request body for API Capture (Service Code 65, path .../\{version\}/auth/capture). Charges some or all of an amount previously held by Auth Payment (63); may be called multiple times for partial captures.
+AuthCaptureRequest is the request body for Capture. It charges some or all of an amount held by Auth Payment (63) — call it multiple times for partial captures.
 
-LastCapture is documented String(8) but carries the worked-example value "TRUE" — a boolean-shaped value in a string field. Research states the wire shape (a quoted string) is unambiguous here (§6 item 6), so it is modeled as plain string, not json.RawMessage.
+`lastCapture` is a string holding `"true"`/`"false"`, not a real boolean — set it to mark the final capture in a partial-capture sequence.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -138,7 +136,7 @@ LastCapture is documented String(8) but carries the worked-example value "TRUE" 
 
 **Response &mdash; `AuthCaptureResponse`**
 
-AuthCaptureResponse is the response body for API Capture. CaptureNo and CaptureTime are Conditional (success only). CaptureAmount's container is left unmarked in research alongside Mandatory members — the same ambiguity as AuthPaymentResponse.Amount (Phase 31) — and is modeled the same way, as a plain (non-pointer) snap.Money, since this is a success-response field.
+AuthCaptureResponse is the response body for Capture. `captureNo` and `captureTime` are Conditional — present only on success.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -157,7 +155,7 @@ AuthCaptureResponse is the response body for API Capture. CaptureNo and CaptureT
 
 ### `AuthCaptureQuery`
 
-AuthCaptureQuery calls the SNAP Capture Query endpoint (Service Code 66, HTTP POST — no method override; research's Overview tab marks this GET, but every worked example across all 7 Auth Payment endpoints is POST-shaped with a mandatory JSON body, and this package's signing path has no representation for a body-carrying GET — see AuthPayment's doc comment for the full reasoning). hb must already carry every field snap.HeaderBuilder needs except Body, which AuthCaptureQuery sets itself so the exact marshaled bytes are used for both signing and the wire body.
+AuthCaptureQuery calls the SNAP Capture Query endpoint (Service Code 66, HTTP POST) to check a previous Capture's status. Pass `hb` with everything except `Body` already set — `AuthCaptureQuery` marshals the request itself.
 
 ```go
 func AuthCaptureQuery(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req AuthCaptureQueryRequest) (AuthCaptureQueryResponse, error)
@@ -165,7 +163,7 @@ func AuthCaptureQuery(ctx context.Context, t *snap.Transport, hb snap.HeaderBuil
 
 **Request &mdash; `AuthCaptureQueryRequest`**
 
-AuthCaptureQueryRequest is the request body for API Capture Query (Service Code 66, path .../\{version\}/auth/capture-query). OriginalReferenceNo, MerchantID, and PartnerCaptureNo are Mandatory.
+AuthCaptureQueryRequest is the request body for Capture Query (Service Code 66). `originalReferenceNo`, `merchantId`, and `partnerCaptureNo` are Mandatory.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -179,7 +177,7 @@ AuthCaptureQueryRequest is the request body for API Capture Query (Service Code 
 
 **Response &mdash; `AuthCaptureQueryResponse`**
 
-AuthCaptureQueryResponse is the response body for API Capture Query. CaptureAmount and PartnerCaptureNo are Mandatory here — unlike AuthCaptureResponse, where PartnerCaptureNo is Optional. LatestCaptureStatus is the shared 3-value enum (research §3: INIT/SUCCESS/FAILED).
+AuthCaptureQueryResponse is the response body for Capture Query. `captureAmount` and `partnerCaptureNo` are Mandatory here — unlike Capture's own response, where `partnerCaptureNo` is Optional. `latestCaptureStatus` is one of `INIT`, `SUCCESS`, or `FAILED`.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -199,7 +197,7 @@ AuthCaptureQueryResponse is the response body for API Capture Query. CaptureAmou
 
 ### `AuthVoid`
 
-AuthVoid calls the SNAP Void endpoint (Service Code 67, HTTP POST — no method override; research's Overview tab marks this GET, but every worked example across all 7 Auth Payment endpoints is POST-shaped with a mandatory JSON body, and this package's signing path has no representation for a body-carrying GET — see AuthPayment's doc comment for the full reasoning). hb must already carry every field snap.HeaderBuilder needs except Body, which AuthVoid sets itself so the exact marshaled bytes are used for both signing and the wire body.
+AuthVoid calls the SNAP Void endpoint (Service Code 67, HTTP POST). Pass `hb` with everything except `Body` already set — `AuthVoid` marshals the request itself.
 
 This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it.
 
@@ -209,9 +207,9 @@ func AuthVoid(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req
 
 **Request &mdash; `AuthVoidRequest`**
 
-AuthVoidRequest is the request body for API Void (Service Code 67, path .../\{version\}/auth/void). Releases held-but-uncaptured funds from a hold previously placed by Auth Payment (63).
+AuthVoidRequest is the request body for Void. It releases funds a hold from Auth Payment (63) never captured.
 
-VoidRemainingAmount is documented String(8) but carries the worked-example value "TRUE", same convention as AuthCaptureRequest.LastCapture (research §6 item 6) — modeled as plain string.
+`voidRemainingAmount` is a string holding `"true"`/`"false"`, the same convention as Capture's `lastCapture`.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -227,7 +225,7 @@ VoidRemainingAmount is documented String(8) but carries the worked-example value
 
 **Response &mdash; `AuthVoidResponse`**
 
-AuthVoidResponse is the response body for API Void. VoidNo and VoidTime are Conditional (success only). PartnerVoidNo and VoidAmount are Mandatory here — research states both plainly, no unmarked-container ambiguity (unlike AuthCaptureResponse.CaptureAmount).
+AuthVoidResponse is the response body for Void. `voidNo` and `voidTime` are Conditional — present only on success.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -246,7 +244,7 @@ AuthVoidResponse is the response body for API Void. VoidNo and VoidTime are Cond
 
 ### `AuthVoidQuery`
 
-AuthVoidQuery calls the SNAP Void Query endpoint (Service Code 68, HTTP POST — no method override; research's Overview tab marks this GET, but every worked example across all 7 Auth Payment endpoints is POST-shaped with a mandatory JSON body, and this package's signing path has no representation for a body-carrying GET — see AuthPayment's doc comment for the full reasoning). hb must already carry every field snap.HeaderBuilder needs except Body, which AuthVoidQuery sets itself so the exact marshaled bytes are used for both signing and the wire body.
+AuthVoidQuery calls the SNAP Void Query endpoint (Service Code 68, HTTP POST) to check a previous Void's status. Pass `hb` with everything except `Body` already set — `AuthVoidQuery` marshals the request itself.
 
 ```go
 func AuthVoidQuery(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req AuthVoidQueryRequest) (AuthVoidQueryResponse, error)
@@ -254,7 +252,7 @@ func AuthVoidQuery(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder
 
 **Request &mdash; `AuthVoidQueryRequest`**
 
-AuthVoidQueryRequest is the request body for API Void Query (Service Code 68, path .../\{version\}/auth/void-query). OriginalReferenceNo, MerchantID, and PartnerVoidNo are Mandatory.
+AuthVoidQueryRequest is the request body for Void Query. `originalReferenceNo`, `merchantId`, and `partnerVoidNo` are Mandatory.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -268,7 +266,7 @@ AuthVoidQueryRequest is the request body for API Void Query (Service Code 68, pa
 
 **Response &mdash; `AuthVoidQueryResponse`**
 
-AuthVoidQueryResponse is the response body for API Void Query. VoidAmount is Mandatory; PartnerVoidNo is Optional here — unlike AuthVoidResponse, where PartnerVoidNo is Mandatory. LatestVoidStatus is the shared 3-value enum (research §3: INIT/SUCCESS/FAILED).
+AuthVoidQueryResponse is the response body for Void Query. `voidAmount` is Mandatory; `partnerVoidNo` is Optional here — unlike Void's own response, where it's Mandatory. `latestVoidStatus` is one of `INIT`, `SUCCESS`, or `FAILED`.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -288,7 +286,7 @@ AuthVoidQueryResponse is the response body for API Void Query. VoidAmount is Man
 
 ### `AuthRefund`
 
-AuthRefund calls the SNAP Refund endpoint (Service Code 69, HTTP POST — no method override, same GET/POST resolution as AuthPayment, Phase 31). hb must already carry every field snap.HeaderBuilder needs except Body, which AuthRefund sets itself so the exact marshaled bytes are used for both signing and the wire body.
+AuthRefund calls the SNAP Refund endpoint (Service Code 69, HTTP POST). Pass `hb` with everything except `Body` already set — `AuthRefund` marshals the request itself.
 
 This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it.
 
@@ -298,9 +296,9 @@ func AuthRefund(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, r
 
 **Request &mdash; `AuthRefundRequest`**
 
-AuthRefundRequest is the request body for API Refund (Service Code 69, path .../\{version\}/auth/refund). Reverses an amount already captured by Auth Capture (65).
+AuthRefundRequest is the request body for Refund. It reverses an amount already captured by Auth Capture (65).
 
-OriginalCaptureNo is Conditional, "must be filled upon unsuccessful transaction" — the opposite condition-sense from most Conditional fields in this package, which are typically filled on success (research §5.3). Recorded here verbatim, not adjusted; this package enforces no field-level business-rule validation, so the direction of the trigger has no code consequence beyond this note.
+`originalCaptureNo` is Conditional — unlike most Conditional fields in this package, it's required when the *original* transaction failed, not when it succeeded.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -317,9 +315,9 @@ OriginalCaptureNo is Conditional, "must be filled upon unsuccessful transaction"
 
 **Response &mdash; `AuthRefundResponse`**
 
-AuthRefundResponse is the response body for API Refund. RefundNo and RefundTime are Mandatory. PartnerRefundNo is Optional here — unlike Direct Debit Payment Refund's own response, where PartnerRefundNo is Mandatory (Phase 27) — recorded per-occurrence, not harmonized.
+AuthRefundResponse is the response body for Refund. `refundNo` and `refundTime` are Mandatory; `partnerRefundNo` is Optional.
 
-OriginalCaptureNo and OriginalReferenceNo are both Conditional, but with opposite success/failure triggers from each other: OriginalCaptureNo is filled on an unsuccessful transaction (same condition as the request field of the same name), while OriginalReferenceNo is filled on a successful one. Research §6 item 3 flags this as not yet independently verified — it reads as a genuine distinction rather than a copy-paste duplicate of the same note, but research itself leaves it open pending confirmation. This package models the wire shape as documented either way (both fields Conditional → omitempty), since it enforces no field-level business-rule validation regardless of which direction the trigger actually runs.
+`originalCaptureNo` and `originalReferenceNo` are both Conditional but on opposite triggers: `originalCaptureNo` appears when the transaction failed, `originalReferenceNo` when it succeeded.
 
 | Field | Type | Presence |
 |---|---|---|
@@ -333,4 +331,3 @@ OriginalCaptureNo and OriginalReferenceNo are both Conditional, but with opposit
 | `refundAmount` | `*snap.Money` | Optional |
 | `refundTime` | `string` | Mandatory |
 | `additionalInfo` | `json.RawMessage` | Optional |
-

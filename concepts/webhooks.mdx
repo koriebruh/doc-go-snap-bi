@@ -19,14 +19,12 @@ type KeyStore interface {
 }
 ```
 
-Key/secret storage is an application concern (database, vault, etc.) —
-this package doesn't own it. For an unrecognized `clientKey`, your
-implementation **must** return a non-nil error rather than a zero value
-with a nil error: this package treats a nil error as "the lookup
-succeeded," so a zero-value-with-nil-error response for an unknown key is
-indistinguishable from a misconfigured store, and would surface as a
-confusing `ErrSignatureMismatch`/`ErrEmptyClientSecret` instead of a clear
-"unknown client" failure.
+Key/secret storage is your application's job (database, vault, whatever
+you use) — this package doesn't own it. One rule: for an unrecognized
+`clientKey`, your implementation **must** return a non-nil error, never a
+zero value with `nil`. A nil error means "lookup succeeded," so returning
+one for an unknown key would surface later as a confusing
+`ErrSignatureMismatch` instead of a clear "unknown client" failure.
 
 ## `SignatureMode`
 
@@ -103,15 +101,12 @@ var notif transfercredit.NotifyBulkCashInRequest
 json.Unmarshal(bodyBytes, &notif)
 ```
 
-The standard requires timestamp freshness checking, so a `ServerVerifier`
-left at its zero-value `TimestampWindow` fails closed with
-`DefaultTimestampWindow` (5 minutes) rather than silently skipping the
-check — the same "absent means safe default, never disabled" rule every
-other optional field on this type follows. To explicitly disable
-freshness checking, set `TimestampWindow` to the distinct sentinel value
-`DisableTimestampFreshnessCheck`, never to the zero value — that
-distinction keeps "I forgot to set this" and "I deliberately don't want
-this" from being confused.
+The standard requires checking that a request's timestamp is fresh, so
+leaving `TimestampWindow` unset doesn't skip that check — it defaults to
+`DefaultTimestampWindow` (5 minutes). To turn freshness checking off on
+purpose, set `TimestampWindow` to `DisableTimestampFreshnessCheck`
+explicitly; the zero value always means "use the default," never
+"disabled."
 
 ## Sentinel errors
 
@@ -132,7 +127,7 @@ checks.
   <Card title="Signing" icon="signature" href="/concepts/signing">
     The underlying `VerifySymmetric`/`VerifyAsymmetric` primitives.
   </Card>
-  <Card title="Bulk Cash In" icon="money-bill-transfer" href="/reference/transfer-credit/bulk-cashin">
+  <Card title="Bulk Cash In" icon="hand-coins" href="/reference/transfer-credit/bulk-cashin">
     A worked example of an inbound notification type to verify and unmarshal.
   </Card>
 </CardGroup>

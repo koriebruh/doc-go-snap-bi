@@ -46,14 +46,14 @@ signing/token/transport core.
 | Keamanan | root `snap` package ([Authentication](/concepts/authentication)) | 73–74 | — |
 | Administrasi | *(no API endpoints on the portal — onboarding docs only)* | — | — |
 
-Keamanan's Access Token B2B/B2B2C endpoints live in the root package
-because every other package depends on them to get a token in the first
-place — they're authentication infrastructure, not a peer domain endpoint.
+Keamanan's Access Token endpoints live in the root package instead of
+their own subpackage: every other package needs them just to get a
+token, so they're infrastructure, not a peer domain.
 
 ## Design
 
 <CardGroup cols={2}>
-  <Card title="One core, five domain packages" icon="layer-group">
+  <Card title="One core, five domain packages" icon="layers">
     The root `snap` package holds only what every domain package needs:
     request signing, the access-token lifecycle, inbound-request
     verification, header assembly, response-code parsing, and the shared
@@ -65,13 +65,13 @@ place — they're authentication infrastructure, not a peer domain endpoint.
     authoritative over the SNAP `responseCode` body, never the other way
     around), and unmarshal into a typed response.
   </Card>
-  <Card title="Wire-shape fidelity over convenience" icon="file-signature">
+  <Card title="Wire-shape fidelity over convenience" icon="file-check">
     Mandatory/Optional/Conditional field markers from the standard are
     preserved exactly as `omitempty` presence; genuinely ambiguous or
     unspecified-shape fields are modeled as `json.RawMessage` rather than
     guessed at.
   </Card>
-  <Card title="Zero third-party dependencies" icon="cube">
+  <Card title="Zero third-party dependencies" icon="box">
     Everything is Go standard library — `net/http`, `crypto/rsa`,
     `crypto/hmac`, `encoding/json`.
   </Card>
