@@ -1,0 +1,112 @@
+---
+title: "Bulk Cash In"
+description: "Kirim sekumpulan instruksi cash-in; hasil settlement datang sebagai notifikasi masuk (inbound), bukan response sinkron."
+---
+
+## Bulk Cash In
+
+Kirim sekumpulan instruksi cash-in; hasil settlement datang sebagai notifikasi masuk (inbound), bukan response sinkron.
+
+<CodeGroup>
+```go example.go
+resp, err := transfercredit.SubmitBulkCashIn(ctx, transport, hb, transfercredit.SubmitBulkCashInRequest{
+	TransactionDate: "2026-09-14T10:00:00+07:00",
+})
+if err != nil {
+	// errors.Is(err, snap.ErrBadRequest), snap.ErrUnauthorized, etc.
+}
+```
+</CodeGroup>
+
+### `SubmitBulkCashIn`
+
+SubmitBulkCashIn memanggil endpoint SNAP Submit Bulk Cash In (Service Code 40, path .../\{version\}/emoney/bulk-cashin-payment — path ini sebelumnya salah tertulis sebagai submit-bulk-cash-in tanpa justifikasi yang tercatat, sudah dikoreksi berdasarkan tabel path pada research §1, HTTP POST — tanpa override method). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh SubmitBulkCashIn sehingga byte hasil marshal yang persis sama dipakai baik untuk signing maupun wire body.
+
+Operasi ini tidak idempotent dan package ini tidak melakukan retry. Caller yang melakukan retry atas call yang gagal atau timeout sebaiknya memakai ulang X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server mengacu pada header tersebut.
+
+```go
+func SubmitBulkCashIn(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req SubmitBulkCashInRequest) (SubmitBulkCashInResponse, error)
+```
+
+**Request &mdash; `SubmitBulkCashInRequest`**
+
+SubmitBulkCashInRequest adalah request body untuk API Submit Bulk Cash In (Service Code 40). TransactionDate adalah satu-satunya field wajib di level atas menurut tab Guides.
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerBulkId` | `string` | Opsional |
+| `transactionDate` | `string` | Wajib |
+| `currency` | `string` | Opsional |
+| `bulkObject` | `[]BulkCashInItem` | Opsional |
+| `feeType` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+<Accordion title="BulkCashInItem fields">
+BulkCashInItem adalah satu entri dalam array "bulkObject[]" pada request Submit Bulk Cash In. AccountNumber dan PartnerReferenceNo wajib diisi menurut tab Guides.
+
+| Field | Type | Presence |
+|---|---|---|
+| `accountNumber` | `string` | Wajib |
+| `accountName` | `string` | Opsional |
+| `amount` | `*snap.Money` | Opsional |
+| `partnerReferenceNo` | `string` | Wajib |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+</Accordion>
+
+**Response &mdash; `SubmitBulkCashInResponse`**
+
+SubmitBulkCashInResponse adalah response body untuk API Submit Bulk Cash In. Tag JSON milik BulkID adalah "bulkid" (huruf d kecil), sesuai dengan tabel field endpoint ini sendiri (research §5.6 baris 172) — dokumen research itu sendiri menandai ini "kemungkinan typo untuk bulkId, belum terselesaikan," namun tidak ada contoh nyata yang bisa memutuskan mana yang benar, sehingga package ini memodelkan penulisan huruf yang secara literal terdokumentasi apa adanya, bukan menebak koreksinya. Endpoint 41 (NotifyBulkCashInResponse) memakai camelCase "bulkId" menurut deskripsi field-nya sendiri yang terpisah.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `bulkid` | `string` | Wajib |
+| `partnerBulkId` | `string` | Opsional |
+
+
+---
+
+### `Notify Bulk Cash In`
+
+<Info>Hanya masuk (inbound) &mdash; package ini tidak memanggil endpoint untuk hal ini. Partner/switcher akan mengirim POST ke callback URL **milik Anda**; unmarshal body ke `NotifyBulkCashInRequest` setelah memverifikasinya dengan `snap.ServerVerifier` (lihat [Memverifikasi request masuk](/id/concepts/webhooks)), lalu balas dengan bentuk di bawah.</Info>
+
+**Diterima &mdash; `NotifyBulkCashInRequest`**
+
+NotifyBulkCashInRequest adalah request body untuk API Notify Bulk Cash In (Service Code 41, path .../\{version\}/emoney/bulk-cashin-notify — path ini sebelumnya salah tertulis sebagai notify-bulk-cash-in tanpa justifikasi yang tercatat, sudah dikoreksi berdasarkan tabel path pada research §1). Ini adalah callback settlement yang diterima PJP, bukan call yang dilakukan package ini — tidak disediakan calling function, sesuai konvensi package ini untuk endpoint notifikasi masuk (InterbankBulkTransferNotificationRequest, Phase 12): caller memasang HTTP handler sendiri untuk path ini, mengautentikasi call masuk dengan ServerVerifier.VerifyTransactionRequest, lalu melakukan json.Unmarshal body ke tipe ini.
+
+Bukti research terdekat mengarah ke arah ini, bukan arah keluar (outbound) seperti yang awalnya dikirim Phase 18 (ditemukan oleh sebuah santa-loop finding): SubmitBulkCashInResponse.BulkID diterbitkan oleh bank (wajib pada response Submit), dan bentuk pada research §5.6 baris 174 — bulkId/partnerBulkId ditambah responseCode/responseMessage per-item — mencerminkan baris 116 untuk Service 21 (Interbank Bulk Transfer - Notification), yang oleh research secara eksplisit ditandai "bentuk callback settlement" dan yang oleh package ini sudah dimodelkan sebagai inbound-only. Tidak ada di §5.6 yang menyatakan PJP mengirim call ini keluar (bandingkan dengan bahasa eksplisit "Callback yang dikirim PJP keluar" pada research §5.6 baris 154 untuk VA Notify Payment Intrabank, yang menjadi alasan hanya endpoint itu yang punya calling function). BulkID dan PartnerBulkID wajib diisi menurut tab Guides.
+
+| Field | Type | Presence |
+|---|---|---|
+| `bulkId` | `string` | Wajib |
+| `partnerBulkId` | `string` | Wajib |
+| `bulkObject` | `[]BulkCashInNotificationItem` | Wajib |
+
+<Accordion title="BulkCashInNotificationItem fields">
+BulkCashInNotificationItem adalah satu entri dalam array "bulkObject[]" pada request Notify Bulk Cash In — bentuk hasil settlement, berbeda dari bentuk instruksi transfer milik BulkCashInItem (sesuai konvensi "tipe berbeda per service code": tipe ini punya 8 field dibanding 3 field milik InterbankBulkTransferNotificationItem dari Phase 12, jadi bukan reuse dari tipe itu juga). CustomerNumber, ReferenceNo, PartnerReferenceNo, ResponseCode, dan ResponseMessage semuanya wajib menurut tab Guides (notasi garis miring pada research §5.6 baris 174 mendaftar tiap pasangan sebagai sama-sama Wajib, bukan salah satu — lihat dokumen desain Phase 18).
+
+| Field | Type | Presence |
+|---|---|---|
+| `customerNumber` | `string` | Wajib |
+| `customerName` | `string` | Opsional |
+| `amount` | `*snap.Money` | Opsional |
+| `referenceNo` | `string` | Wajib |
+| `partnerReferenceNo` | `string` | Wajib |
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+</Accordion>
+
+**Handler Anda membalas dengan &mdash; `NotifyBulkCashInResponse`**
+
+NotifyBulkCashInResponse adalah response body yang dikirim balik caller untuk API Notify Bulk Cash In. BulkID dan PartnerBulkID wajib menurut tab Guides (research §5.6 baris 174: "Resp: envelope + bulkId/partnerBulkId M" — bukti yang lebih kuat dan spesifik-endpoint dibanding preseden Service 21 pada Phase 12, yang field response-nya tidak berlabel huruf dan bersifat Opsional menurut default package). Tag JSON milik BulkID di sini adalah camelCase "bulkId" — berbeda dari "bulkid" berhuruf d kecil pada SubmitBulkCashInResponse (lihat komentar dokumentasi tipe tersebut untuk kontradiksi research yang belum terselesaikan).
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `bulkId` | `string` | Wajib |
+| `partnerBulkId` | `string` | Wajib |

@@ -1,0 +1,66 @@
+---
+title: "FAQ"
+description: "Pertanyaan umum saat mengintegrasikan go-snap-bi"
+---
+
+<AccordionGroup>
+  <Accordion title="Mode signing mana yang harus saya pakai — Symmetric atau Asymmetric?">
+    Sesuai kesepakatan dengan partner Anda (PJP di sisi lain) saat
+    registrasi — package ini tidak memilihkannya untuk Anda. Set
+    `HeaderBuilder.Symmetric` sesuai: `true` dengan `ClientSecret` untuk
+    HMAC-SHA512, atau `false` dengan `Signer` untuk SHA256withRSA. Lihat
+    [Signing](/id/concepts/signing).
+  </Accordion>
+  <Accordion title="Apakah saya butuh database untuk memakai TokenManager?">
+    Tidak. `TokenManager.AccessTokenB2B` meng-cache token di memori selama
+    umur nilai `*TokenManager` — tidak ada penyimpanan eksternal. Jika Anda
+    menjalankan banyak proses/instance, masing-masing menyimpan cache-nya
+    sendiri dan mengambil token-nya sendiri secara independen. Lihat
+    [Authentication](/id/concepts/authentication).
+  </Accordion>
+  <Accordion title="Apakah aman untuk retry panggilan yang gagal?">
+    Cek dulu halaman referensi endpoint spesifik tersebut. Sebagian besar
+    endpoint tulis secara eksplisit **tidak idempotent** — retry dengan
+    `X-EXTERNAL-ID` baru berisiko menghasilkan transaksi duplikat, karena
+    deteksi duplikat milik server sendiri berpatokan pada header tersebut.
+    Gunakan ulang `X-EXTERNAL-ID` yang *sama* untuk retry panggilan logis
+    yang sama. Lihat [Error](/id/concepts/errors) dan entri
+    [Idempotency](/id/concepts/glossary) di Glosarium.
+  </Accordion>
+  <Accordion title="Sebuah field yang saya butuhkan bertipe json.RawMessage, bukan string — kenapa?">
+    Standar SNAP mendokumentasikan bentuk field tersebut secara ambigu
+    (misalnya ditampilkan sebagai angka JSON polos di satu contoh dan
+    string berkutip di contoh lain). Men-decode-nya sebagai tipe Go yang
+    tetap akan menolak response yang sah di bawah salah satu dari dua
+    bentuk tersebut; `json.RawMessage` menerima keduanya tanpa kehilangan
+    data. Lihat [Konvensi Inti](/id/concepts/conventions).
+  </Accordion>
+  <Accordion title="Kenapa tabel request sebuah endpoint menampilkan semua field sebagai Optional padahal paragraf dokumentasinya bilang sebagian Conditional?">
+    Optional dan Conditional sama-sama ter-compile menjadi `omitempty`
+    milik Go — tidak ada perbedaan di level wire, jadi tabel tidak bisa
+    membedakan keduanya. Baca paragraf di atas tabel (direproduksi dari doc
+    comment sumbernya sendiri) untuk tahu field Optional mana yang
+    sebenarnya Conditional. Lihat [Konvensi Inti](/id/concepts/conventions).
+  </Accordion>
+  <Accordion title="Bagaimana cara menangani notifikasi/callback pembayaran?">
+    Verifikasi dulu dengan `snap.ServerVerifier` — jangan pernah meng-unmarshal
+    body inbound sebelum memeriksa signature-nya. Setiap bagian "Inbound
+    only" di halaman referensi menyebutkan type `...NotificationRequest`
+    persis untuk di-decode dan bentuk `...NotificationResponse` untuk
+    dibalas. Lihat [Verifikasi request inbound](/id/concepts/webhooks).
+  </Accordion>
+  <Accordion title="Apakah package ini melakukan retry atau rate-limit request untuk saya?">
+    Tidak. `snap.Transport.Do` mengirim tepat satu request lalu selesai —
+    tidak ada retry, backoff, atau rate-limiting. Bangun sendiri di kode
+    pemanggil Anda jika dibutuhkan, memakai catatan idempotency
+    masing-masing endpoint untuk menentukan apa yang aman di-retry. Lihat
+    [Transport](/id/concepts/transport).
+  </Accordion>
+  <Accordion title="Versi Go berapa yang saya butuhkan?">
+    Go 1.21 atau lebih baru, sesuai [`go.mod`](https://github.com/koriebruh/go-snap-bi/blob/main/go.mod).
+  </Accordion>
+  <Accordion title="Apakah package ini punya dependency pihak ketiga?">
+    Tidak — semuanya standard library Go (`net/http`, `crypto/rsa`,
+    `crypto/hmac`, `encoding/json`, dan seterusnya).
+  </Accordion>
+</AccordionGroup>

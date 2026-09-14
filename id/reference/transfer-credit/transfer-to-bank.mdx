@@ -1,0 +1,98 @@
+---
+title: "Transfer to Bank"
+description: "Inquiry dan pembayaran untuk transfer yang ditujukan ke bank eksternal."
+---
+
+## Transfer to Bank
+
+Inquiry dan pembayaran untuk transfer yang ditujukan ke bank eksternal.
+
+<CodeGroup>
+```go example.go
+resp, err := transfercredit.TransferToBankPayment(ctx, transport, hb, transfercredit.TransferToBankPaymentRequest{
+	PartnerReferenceNo: "2020102900000000000001",
+	CustomerNumber: "2020102900000000000001",
+	BeneficiaryAccountNumber: "...",
+	Amount: snap.Money{Value: "500000.00", Currency: "IDR"},
+})
+if err != nil {
+	// errors.Is(err, snap.ErrBadRequest), snap.ErrUnauthorized, etc.
+}
+```
+</CodeGroup>
+
+### `TransferToBankAccountInquiry`
+
+TransferToBankAccountInquiry memanggil endpoint SNAP Transfer To Bank - Account Inquiry (Service Code 42, path .../\{version\}/emoney/bank-account-inquiry, HTTP POST — tanpa override method). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh TransferToBankAccountInquiry sehingga byte hasil marshal yang persis sama dipakai baik untuk signing maupun wire body.
+
+```go
+func TransferToBankAccountInquiry(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req TransferToBankAccountInquiryRequest) (TransferToBankAccountInquiryResponse, error)
+```
+
+**Request &mdash; `TransferToBankAccountInquiryRequest`**
+
+TransferToBankAccountInquiryRequest adalah request body untuk API Transfer To Bank - Account Inquiry (Service Code 42). CustomerNumber dan Amount wajib menurut tab Guides. Tag JSON milik CustomerNumber adalah "CustomerNumber" (huruf C kapital) — tabel field endpoint ini sendiri mendokumentasikannya begitu, berbeda dari setiap endpoint lain di package ini yang memakai huruf kecil di awal "customerNumber." Tidak ada contoh nyata yang bisa memastikan apakah ini typo, sehingga package ini memodelkan penulisan huruf yang secara literal terdokumentasi apa adanya, bukan menebak (research §6 item 7).
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Opsional |
+| `CustomerNumber` | `string` | Wajib |
+| `amount` | `snap.Money` | Wajib |
+| `beneficiaryAccountNumber` | `string` | Opsional |
+
+**Response &mdash; `TransferToBankAccountInquiryResponse`**
+
+TransferToBankAccountInquiryResponse adalah response body untuk API Transfer To Bank - Account Inquiry.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `accountType` | `string` | Opsional |
+| `beneficiaryAccountNumber` | `string` | Wajib |
+| `beneficiaryAccountName` | `string` | Wajib |
+| `beneficiaryBankCode` | `string` | Opsional |
+| `beneficiaryBankShortName` | `string` | Opsional |
+| `beneficiaryBankName` | `string` | Opsional |
+| `amount` | `snap.Money` | Wajib |
+| `sessionId` | `string` | Opsional |
+
+
+---
+
+### `TransferToBankPayment`
+
+TransferToBankPayment memanggil endpoint SNAP Transfer To Bank - Payment Transaction (Service Code 43, path .../\{version\}/emoney/transfer-bank, HTTP POST — tanpa override method). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh TransferToBankPayment sehingga byte hasil marshal yang persis sama dipakai baik untuk signing maupun wire body.
+
+Operasi ini tidak idempotent dan package ini tidak melakukan retry. Caller yang melakukan retry atas call yang gagal atau timeout sebaiknya memakai ulang X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server mengacu pada header tersebut.
+
+```go
+func TransferToBankPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req TransferToBankPaymentRequest) (TransferToBankPaymentResponse, error)
+```
+
+**Request &mdash; `TransferToBankPaymentRequest`**
+
+TransferToBankPaymentRequest adalah request body untuk API Transfer To Bank - Payment Transaction (Service Code 43). PartnerReferenceNo, CustomerNumber, BeneficiaryAccountNumber, dan Amount wajib menurut tab Guides. Tag JSON milik CustomerNumber di sini adalah "customerNumber" huruf kecil standar — daftar field endpoint ini sendiri memakai penulisan normal, berbeda dari "CustomerNumber" pada endpoint 42 (lihat komentar dokumentasi TransferToBankAccountInquiryRequest).
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Wajib |
+| `customerNumber` | `string` | Wajib |
+| `accountType` | `string` | Opsional |
+| `beneficiaryAccountNumber` | `string` | Wajib |
+| `beneficiaryBankCode` | `string` | Opsional |
+| `amount` | `snap.Money` | Wajib |
+| `sessionId` | `string` | Opsional |
+| `feeType` | `string` | Opsional |
+
+**Response &mdash; `TransferToBankPaymentResponse`**
+
+TransferToBankPaymentResponse adalah response body untuk API Transfer To Bank - Payment Transaction. ReferenceNo dan ReferenceNumber sama-sama ada dan berbeda satu sama lain — research §5.7 secara eksplisit mencatat ReferenceNumber "adalah field yang berbeda dari referenceNo, keduanya sama-sama ada," pola koeksistensi yang sama seperti yang sudah ada pada CustomerTopUpResponse (Phase 17).
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `referenceNo` | `string` | Opsional |
+| `transactionDate` | `string` | Opsional |
+| `referenceNumber` | `string` | Wajib |

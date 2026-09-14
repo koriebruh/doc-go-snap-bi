@@ -1,0 +1,612 @@
+---
+title: "Registrasi"
+description: "Registrasi — Service Codes 01-10, 81 — 11 endpoints"
+---
+
+## Registrasi
+
+Account binding, registrasi kartu, dan verifikasi OTP — package `registration` (Service Codes 01-10, 81). Ada dua alur di sini: alur **account** (binding berbasis OAuth, digerakkan oleh `GetOAuthURL` → `AccountBinding`) dan alur **card** (`CardRegistration` beserta varian Set Limit/Inquiry/Unbinding-nya).
+
+<CodeGroup>
+```go example.go
+resp, err := registration.AccountBinding(ctx, transport, hb, registration.AccountBindingRequest{
+	MerchantID: "...",
+})
+if err != nil {
+	// errors.Is(err, snap.ErrBadRequest), snap.ErrUnauthorized, etc.
+}
+```
+</CodeGroup>
+
+### `GetOAuthURL`
+
+GetOAuthURL memanggil endpoint SNAP Get OAuth URL (Service Code 10, path .../\{version\}/get-auth-code). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Method dan Body, yang diisi sendiri oleh GetOAuthURL: Method menjadi GET dan Body menjadi nil, karena ini adalah panggilan read-only berbasis query string saja. hb.EndpointURL harus berupa URL http(s) dengan host, tanpa userinfo, dan tanpa query string atau fragment (pengecekan defensif yang sama seperti CardRegistrationInquiry, endpoint lain di package ini yang membangun URL) — GetOAuthURL menolak URL yang tidak memenuhi itu, alih-alih diam-diam menimpa atau menggabungkannya ke query string yang sudah disediakan pemanggil.
+
+```go
+func GetOAuthURL(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req GetOAuthURLRequest) (GetOAuthURLResponse, error)
+```
+
+**Request &mdash; `GetOAuthURLRequest`**
+
+GetOAuthURLRequest menyimpan parameter API Get OAuth URL (Service Code 10, grup Registrasi). Berbeda dari setiap calling function lain di package ini, field-field ini tidak pernah di-JSON-marshal — Guides tab mendokumentasikannya sebagai query string, bukan request body — sehingga tipe ini tidak punya json tag; GetOAuthURL membangun query string url.Values langsung darinya. RedirectURL, Scopes, dan State bersifat Wajib; semua field lain Opsional kecuali SeamlessSign, yang bersifat Kondisional ("harus diisi jika seamlessData ada") — package ini hanya memvalidasi wire shape, tidak pernah aturan bisnis, jadi SeamlessSign begitu saja dihilangkan dari query saat kosong, sama seperti setiap field Opsional lain di sini.
+
+| Query parameter | Type | Presence |
+|---|---|---|
+| `RedirectURL` | `string` | Wajib |
+| `Scopes` | `[]string` (digabung dengan `,`) | Wajib |
+| `State` | `string` | Wajib |
+| `MerchantID` | `string` | Opsional |
+| `SubMerchantID` | `string` | Opsional |
+| `Lang` | `string` (ISO 639-1) | Opsional |
+| `AllowRegistration` | `*bool` | Opsional |
+| `SeamlessData` | `string` | Opsional |
+| `MobileNumber` | `string` | Opsional |
+| `VerifiedTime` | `string` | Opsional |
+| `ExternalUID` | `string` | Opsional |
+| `DeviceID` | `string` | Opsional |
+| `SeamlessSign` | `string` | Kondisional — wajib jika `SeamlessData` diisi |
+
+**Response &mdash; `GetOAuthURLResponse`**
+
+GetOAuthURLResponse adalah response body untuk API Get OAuth URL. Setiap field bersifat Wajib.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `authCode` | `string` | Wajib |
+| `state` | `string` | Wajib |
+
+
+---
+
+### `AccountCreation`
+
+AccountCreation memanggil endpoint SNAP Account Creation (Service Code 06, path .../\{version\}/registration-account-creation). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh AccountCreation agar byte hasil marshal yang sama dipakai untuk signing maupun wire body.
+
+Operasi ini tidak idempotent dan package ini tidak melakukan retry. Pemanggil yang me-retry panggilan yang gagal atau timeout (misalnya setelah network error) harus memakai ulang X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server bergantung pada header itu — X-EXTERNAL-ID baru saat retry berisiko membuat akun kedua.
+
+```go
+func AccountCreation(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req AccountCreationRequest) (AccountCreationResponse, error)
+```
+
+**Request &mdash; `AccountCreationRequest`**
+
+AccountCreationRequest adalah request body untuk API Account Creation (Service Code 06). Setiap field bersifat opsional menurut standar — endpoint ini mendukung beberapa alur onboarding (seamless data, redirect OAuth, pembuatan langsung) yang masing-masing memakai subset field berbeda.
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Opsional |
+| `countryCode` | `string` | Opsional |
+| `customerId` | `string` | Opsional |
+| `deviceInfo` | `*DeviceInfo` | Opsional |
+| `email` | `string` | Opsional |
+| `lang` | `string` | Opsional |
+| `locale` | `string` | Opsional |
+| `name` | `string` | Opsional |
+| `onboardingPartner` | `string` | Opsional |
+| `phoneNo` | `string` | Opsional |
+| `redirectUrl` | `string` | Opsional |
+| `scopes` | `string` | Opsional |
+| `seamlessData` | `string` | Opsional |
+| `seamlessSign` | `string` | Opsional |
+| `state` | `string` | Opsional |
+| `merchantId` | `string` | Opsional |
+| `subMerchantId` | `string` | Opsional |
+| `terminalType` | `json.RawMessage` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+<Accordion title="Field DeviceInfo">
+DeviceInfo mendeskripsikan perangkat yang memulai request registrasi.
+
+| Field | Type | Presence |
+|---|---|---|
+| `os` | `string` | Opsional |
+| `osVersion` | `string` | Opsional |
+| `model` | `string` | Opsional |
+| `manufacturer` | `string` | Opsional |
+
+</Accordion>
+
+**Response &mdash; `AccountCreationResponse`**
+
+AccountCreationResponse adalah response body untuk API Account Creation. APIKey bertipe json.RawMessage, bukan string atau tipe numerik: tabel Guides standar menandainya "Numeric" tanpa contoh kerja untuk memastikan apakah server benar-benar mengirimnya dalam tanda kutip JSON, dan tidak ada tipe tetap yang mendominasi kedua kemungkinan — tipe numerik menolak nilai berkutip, sedangkan field string biasa menggagalkan SELURUH decode (membuang ReferenceNo/AccountID/AuthCode juga) jika server mengirimnya tanpa kutip, untuk operasi non-idempotent di mana akun mungkin sudah ada. json.RawMessage menerima kedua bentuk wire tanpa kehilangan data; pemanggil sendiri yang melepas tanda kutip di sekelilingnya jika nilainya berkutip. JSON null di-decode menjadi RawMessage("null") yang non-nil, berbeda dari key yang absen (nil) — bentuk ketiga yang harus diperhitungkan pemanggil saat mengecek keberadaannya.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `referenceNo` | `string` | Opsional |
+| `partnerReferenceNo` | `string` | Opsional |
+| `authCode` | `string` | Opsional |
+| `apiKey` | `json.RawMessage` | Opsional |
+| `accountId` | `string` | Opsional |
+| `state` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+
+---
+
+### `AccountBinding`
+
+AccountBinding memanggil endpoint SNAP Account Binding (Service Code 07, path .../\{version\}/registration-account-binding). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh AccountBinding agar byte hasil marshal yang sama dipakai untuk signing maupun wire body.
+
+Operasi ini tidak idempotent dan package ini tidak melakukan retry. Pemanggil yang me-retry panggilan yang gagal atau timeout harus memakai ulang X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server bergantung pada header itu — X-EXTERNAL-ID baru saat retry berisiko membuat binding duplikat atau penerbitan token kedua.
+
+```go
+func AccountBinding(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req AccountBindingRequest) (AccountBindingResponse, error)
+```
+
+**Request &mdash; `AccountBindingRequest`**
+
+AccountBindingRequest adalah request body untuk API Account Binding (Service Code 07). MerchantID adalah satu-satunya field wajib.
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Opsional |
+| `action` | `string` | Opsional |
+| `additionalData` | `json.RawMessage` | Opsional |
+| `userId` | `string` | Opsional |
+| `email` | `string` | Opsional |
+| `postalAddress` | `string` | Opsional |
+| `authCode` | `string` | Opsional |
+| `grantType` | `string` | Opsional |
+| `isBindAndPay` | `string` | Opsional |
+| `lang` | `string` | Opsional |
+| `locale` | `string` | Opsional |
+| `merchantId` | `string` | Wajib |
+| `subMerchantId` | `string` | Opsional |
+| `msisdn` | `string` | Opsional |
+| `otp` | `string` | Opsional |
+| `phoneNo` | `string` | Opsional |
+| `platformType` | `string` | Opsional |
+| `redirectUrl` | `string` | Opsional |
+| `referenceId` | `string` | Opsional |
+| `refreshToken` | `string` | Opsional |
+| `successParams` | `*BindingSuccessParams` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+<Accordion title="Field BindingSuccessParams">
+BindingSuccessParams adalah objek "successParams" sisi request untuk Account Binding.
+
+| Field | Type | Presence |
+|---|---|---|
+| `accountId` | `string` | Opsional |
+| `terminalId` | `string` | Opsional |
+| `tokenRequestorId` | `string` | Opsional |
+
+</Accordion>
+
+**Response &mdash; `AccountBindingResponse`**
+
+AccountBindingResponse adalah response body untuk API Account Binding.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `referenceNo` | `string` | Opsional |
+| `partnerReferenceNo` | `string` | Opsional |
+| `accountToken` | `string` | Opsional |
+| `accessTokenInfo` | `*BindingAccessTokenInfo` | Opsional |
+| `linkId` | `string` | Opsional |
+| `nextAction` | `string` | Opsional |
+| `linkageToken` | `string` | Opsional |
+| `params` | `json.RawMessage` | Opsional |
+| `pinWebViewUrl` | `string` | Opsional |
+| `redirectToDeeplink` | `string` | Opsional |
+| `redirectUrl` | `string` | Opsional |
+| `userInfo` | `*BindingUserInfo` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+<Accordion title="Field BindingAccessTokenInfo">
+BindingAccessTokenInfo adalah objek "accessTokenInfo" sisi response untuk Account Binding. ExpiresIn/ReExpiresIn di sini adalah string datetime ISO 8601 menurut Guides tab ("Datetime of token expiration. Format: ISO 8601") — sengaja tidak dibuat sama bentuknya dengan Token.ExpiresIn (time.Duration yang di-parse dari string hitungan detik, sesuai endpoint access-token B2B/B2B2C terpisah di token.go). Nama field sama, endpoint berbeda, makna berbeda.
+
+| Field | Type | Presence |
+|---|---|---|
+| `accessToken` | `string` | Opsional |
+| `expiresIn` | `string` | Opsional |
+| `refreshToken` | `string` | Opsional |
+| `reExpiresIn` | `string` | Opsional |
+| `tokenStatus` | `string` | Opsional |
+
+</Accordion>
+
+<Accordion title="Field BindingUserInfo">
+BindingUserInfo adalah objek "userInfo" sisi response untuk Account Binding.
+
+| Field | Type | Presence |
+|---|---|---|
+| `publicUserId` | `string` | Opsional |
+
+</Accordion>
+
+
+---
+
+### `AccountBindingInquiry`
+
+AccountBindingInquiry memanggil endpoint SNAP Account Binding Inquiry (Service Code 08). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh AccountBindingInquiry agar byte hasil marshal yang sama dipakai untuk signing maupun wire body.
+
+```go
+func AccountBindingInquiry(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req AccountBindingInquiryRequest) (AccountBindingInquiryResponse, error)
+```
+
+**Request &mdash; `AccountBindingInquiryRequest`**
+
+AccountBindingInquiryRequest adalah request body untuk API Account Binding Inquiry (Service Code 08, path .../\{version\}/registration-account-inquiry — perhatikan segmen URL-nya menghilangkan kata "binding", sesuai portal). Baik tabel field di Guides tab maupun tipe ini tidak mendefinisikan field identifier akun; contoh kerja dari portal hanya membawa header Authorization B2B biasa — bagaimana suatu PJP mengidentifikasi akun mana yang dilaporkan tidak dijelaskan di sini; pemanggil yang PJP-nya butuh identifier konsumen untuk panggilan ini menaruhnya di AdditionalInfo.
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+**Response &mdash; `AccountBindingInquiryResponse`**
+
+AccountBindingInquiryResponse adalah response body untuk API Account Binding Inquiry. Berbeda dari AccountBindingResponse (Service Code 07), response ini datar — tidak ada nesting accessTokenInfo/userInfo.
+
+AccountTransactionLimit bertipe json.RawMessage, bukan string atau tipe numerik, dengan alasan yang sama seperti AccountCreationResponse.APIKey: Guides tab menandainya "Numeric", dan meski satu-satunya contoh kerja portal ini merendernya sebagai nilai wire berkutip ("accountTransactionLimit":"1000000"), SNAP adalah standar multi-PJP dan satu contoh dari satu PJP adalah bukti yang tipis soal apa yang dikirim setiap issuer. Field string biasa akan menggagalkan SELURUH decode (membuang ResponseCode, AccountNo, AccountName, dll. juga) jika issuer lain mengirimnya tanpa kutip, untuk field yang tidak bisa di-retry ulang oleh package ini. json.RawMessage menerima kedua bentuk wire tanpa kehilangan data; pemanggil sendiri yang melepas tanda kutip di sekelilingnya jika nilainya berkutip. JSON null di-decode menjadi RawMessage("null") yang non-nil, berbeda dari key yang absen (nil) — bentuk ketiga yang harus diperhitungkan pemanggil saat mengecek keberadaannya.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `referenceNo` | `string` | Opsional |
+| `partnerReferenceNo` | `string` | Opsional |
+| `accountCurrency` | `string` | Opsional |
+| `accountName` | `string` | Opsional |
+| `accountNo` | `string` | Opsional |
+| `accountTransactionLimit` | `json.RawMessage` | Opsional |
+| `endDatePeriod` | `string` | Opsional |
+| `startDatePeriod` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+
+---
+
+### `AccountUnbinding`
+
+AccountUnbinding memanggil endpoint SNAP Account Unbinding (Service Code 09). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh AccountUnbinding agar byte hasil marshal yang sama dipakai untuk signing maupun wire body.
+
+Operasi ini tidak idempotent dan package ini tidak melakukan retry. Pemanggil yang me-retry panggilan yang gagal atau timeout harus memakai ulang X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server bergantung pada header itu.
+
+```go
+func AccountUnbinding(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req AccountUnbindingRequest) (AccountUnbindingResponse, error)
+```
+
+**Request &mdash; `AccountUnbindingRequest`**
+
+AccountUnbindingRequest adalah request body untuk API Account Unbinding (Service Code 09, path .../\{version\}/registration-account-unbinding). MerchantID adalah satu-satunya field wajib menurut Guides tab; LinkID dan TokenID — field yang sebenarnya mengidentifikasi binding mana yang dihapus — keduanya Opsional. Pembagian M/O di Guides tab adalah ambiguitas standar itu sendiri, bukan celah yang diisi package ini: tipe ini tidak menegakkan bahwa minimal satu dari LinkID/TokenID harus ada, sejalan dengan sikap package ini yang sudah mapan (lihat BalanceInquiryRequest) bahwa server yang memvalidasi aturan bisnis yang tidak tertangkap oleh wire shape saja.
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Opsional |
+| `linkId` | `string` | Opsional |
+| `merchantId` | `string` | Wajib |
+| `subMerchantId` | `string` | Opsional |
+| `tokenId` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+**Response &mdash; `AccountUnbindingResponse`**
+
+AccountUnbindingResponse adalah response body untuk API Account Unbinding. UnlinkResult bertipe string, bukan bool: nilai contohnya ("success") terbaca seperti status, tapi Guides tab tidak mencantumkan nilai enumerasi.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `referenceNo` | `string` | Opsional |
+| `partnerReferenceNo` | `string` | Opsional |
+| `merchantId` | `string` | Opsional |
+| `subMerchantId` | `string` | Opsional |
+| `linkId` | `string` | Opsional |
+| `unlinkResult` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+
+---
+
+### `OTP`
+
+OTP memanggil endpoint SNAP API OTP (Service Code 81). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh OTP agar byte hasil marshal yang sama dipakai untuk signing maupun wire body.
+
+Operasi ini memicu efek samping eksternal yang nyata (pengiriman OTP, mis. SMS) dan package ini tidak melakukan retry. Pemanggil yang me-retry panggilan yang gagal atau timeout harus memakai ulang X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server bergantung pada header itu — X-EXTERNAL-ID baru saat retry berisiko mengirim OTP duplikat.
+
+```go
+func OTP(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req OTPRequest) (OTPResponse, error)
+```
+
+**Request &mdash; `OTPRequest`**
+
+OTPRequest adalah request body untuk API OTP (Service Code 81, path v1.0/otp — perhatikan path endpoint ini tidak ditemplat dengan \{version\} seperti endpoint lain di package ini; path portal-nya sendiri adalah literal "v1.0/otp"). JourneyID adalah satu-satunya field wajib menurut Guides tab.
+
+Contoh kerja endpoint ini adalah yang pertama di package ini yang menyertakan header Authorization-Customer — panggilan berbentuk B2B2C. Tipe ini tidak punya parameter khusus untuk itu: pemanggil mengatur snap.HeaderBuilder.B2B2C (dan AuthorizationCustomer/DeviceID, yang sudah diwajibkan snap.HeaderBuilder.Build saat B2B2C bernilai true) sama seperti panggilan B2B2C lainnya.
+
+SubMerchant dinamai tanpa akhiran "Id", berbeda dari subMerchantId di setiap endpoint lain di package ini — inkonsistensi milik standar itu sendiri, dibiarkan apa adanya. BankCardToken bersifat Kondisional menurut Guides tab (satu-satunya field bertanda Kondisional yang ditemukan di seluruh grup Registrasi yang diriset); field ini tetap memakai omitempty sama seperti field Opsional lainnya, karena yang membuatnya kondisional adalah keberadaan field itu, bukan json tag-nya. TrxDateTime bertipe string meski dilabeli "Date" (label tipe unik di seluruh dokumen ini — setiap field mirip-tanggal lainnya dilabeli "String"): JSON tidak punya primitif tanggal, dan contoh kerjanya adalah string ISO-8601 berkutip biasa, jadi string tidak ambigu terlepas dari label uniknya — alasan yang sama seperti CardRegistrationUnbindingResponse.UnsubscribeDate.
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Opsional |
+| `journeyId` | `string` | Wajib |
+| `merchantId` | `string` | Opsional |
+| `subMerchant` | `string` | Opsional |
+| `externalStoreId` | `string` | Opsional |
+| `trxDateTime` | `string` | Opsional |
+| `bankCardToken` | `string` | Opsional |
+| `otpTrxCode` | `string` | Opsional |
+| `otpReasonCode` | `string` | Opsional |
+| `otpReasonMessage` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+**Response &mdash; `OTPResponse`**
+
+OTPResponse adalah response body untuk API OTP. ChargeToken bersifat wajib di sini, berbeda dari ChargeToken yang Opsional pada CardRegistrationResponse (Service Code 01) — nama field sama, endpoint berbeda, sifat wajib berbeda.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `referenceNo` | `string` | Opsional |
+| `partnerReferenceNo` | `string` | Opsional |
+| `chargeToken` | `string` | Wajib |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+
+---
+
+### `VerifyOTP`
+
+VerifyOTP memanggil endpoint SNAP Verify OTP (Direct Integration) (Service Code 04). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh VerifyOTP agar byte hasil marshal yang sama dipakai untuk signing maupun wire body.
+
+Operasi ini mengonsumsi state di sisi server — ia membatalkan OTP yang sedang diverifikasi dan, kemungkinan besar, menambah penghitung percobaan — sehingga package ini memperlakukannya sebagai non-idempotent dan tidak melakukan retry. Pemanggil yang me-retry panggilan yang gagal atau timeout harus memakai ulang X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server bergantung pada header itu; X-EXTERNAL-ID baru saat retry berisiko membakar satu percobaan OTP ekstra atau memproses ulang panggilan yang sudah diselesaikan server.
+
+```go
+func VerifyOTP(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req VerifyOTPRequest) (VerifyOTPResponse, error)
+```
+
+**Request &mdash; `VerifyOTPRequest`**
+
+VerifyOTPRequest adalah request body untuk API Verify OTP (Direct Integration) (Service Code 04, path .../\{version\}/otp-verification). Setiap field bersifat Opsional menurut Guides tab.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originalPartnerReferenceNo` | `string` | Opsional |
+| `originalReferenceNo` | `string` | Opsional |
+| `action` | `string` | Opsional |
+| `merchantId` | `string` | Opsional |
+| `otp` | `string` | Opsional |
+| `chargeToken` | `string` | Opsional |
+| `type` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+**Response &mdash; `VerifyOTPResponse`**
+
+VerifyOTPResponse adalah response body untuk API Verify OTP (Direct Integration).
+
+TransactionTimestamp adalah artefak dari sumbernya, tidak direkonsiliasi: deskripsi Guides tab untuk field ini ("Random String to generate validation for webview") tidak cocok dengan namanya, dan contoh kerjanya berisi nilai yang tampak seperti string acak, bukan timestamp sungguhan.
+
+Wire tag QParamsURL adalah "qParamsURL" (URL berhuruf besar), sesuai contoh kerja portal itu sendiri — berbeda dari setiap field URL lain di package ini (redirectUrl, merchantLogoUrl, pinWebViewUrl), yang memakai "Url" berhuruf kecil. Dipertahankan persis seperti yang ditampilkan sumbernya, bukan "dikoreksi" agar cocok dengan penulisan endpoint sejenis lainnya.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `originalReferenceNo` | `string` | Opsional |
+| `originalPartnerReferenceNo` | `string` | Opsional |
+| `accountNo` | `string` | Opsional |
+| `bankCardToken` | `string` | Opsional |
+| `cardPan` | `string` | Opsional |
+| `customerId` | `string` | Opsional |
+| `email` | `string` | Opsional |
+| `expiredDatetime` | `string` | Opsional |
+| `expiryDate` | `string` | Opsional |
+| `identificationNo` | `string` | Opsional |
+| `linkageToken` | `string` | Opsional |
+| `phoneNo` | `string` | Opsional |
+| `qParamsURL` | `string` | Opsional |
+| `qParams` | `json.RawMessage` | Opsional |
+| `sendOtpFlag` | `string` | Opsional |
+| `subscribeDatetime` | `string` | Opsional |
+| `tokenExpiryTime` | `string` | Opsional |
+| `transactionTimestamp` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+
+---
+
+### `CardRegistration`
+
+CardRegistration memanggil endpoint SNAP Card Registration (Service Code 01). Endpoint ini menerbitkan BankCardToken, sehingga operasi ini tidak idempotent dan package ini tidak melakukan retry. Pemanggil yang me-retry panggilan yang gagal atau timeout harus memakai ulang X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server bergantung pada header itu — X-EXTERNAL-ID baru saat retry berisiko membuat bind kartu duplikat.
+
+hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh CardRegistration agar byte hasil marshal yang sama dipakai untuk signing maupun wire body.
+
+```go
+func CardRegistration(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req CardRegistrationRequest) (CardRegistrationResponse, error)
+```
+
+**Request &mdash; `CardRegistrationRequest`**
+
+CardRegistrationRequest adalah request body untuk API Card Registration (Service Code 01, path .../\{version\}/registration-card-bind). BankCardNo dan CustIDMerchant adalah dua field wajib menurut Guides tab — kolom Mandatory milik CardData sendiri kosong/tidak ditandai, bukan "M". Revisi doc comment sebelumnya sempat mengklaim CardData juga wajib dan menghapus omitempty-nya, berdasarkan salah baca Guides tab (sel Data Type "Encrypted Object" salah dikira sebagai penanda Mandatory); go-review mengecek ulang tabel mentahnya langsung dan menangkap kesalahan baca itu sebelum rilis, jadi sudah dikembalikan ke bentuk aslinya yang benar.
+
+CardData dan Limit bertipe json.RawMessage: Guides tab melabeli CardData "Encrypted Object" dan Limit "decimal", masing-masing mengizinkan representasi JSON bukan-string (objek murni, angka murni), meski satu contoh kerja portal me-render keduanya sebagai string berkutip. Pemanggil yang memasukkan string Go biasa harus mengutipnya dulu — mis. json.RawMessage(`"1000000"`), bukan json.RawMessage(limitStr), dan json.RawMessage(`"`+cardDataBase64+`"`), bukan json.RawMessage(cardDataBase64) — agar cocok dengan bentuk wire contoh kerjanya. Kesalahan ini TIDAK selalu tertangkap oleh json.Marshal: jika nilai tanpa kutip itu kebetulan sudah merupakan nilai JSON yang lengkap dan valid (mis. Limit diisi digit murni "1000000", tanpa nol di depan — angka JSON melarang nol di depan, jadi "01000000" akan gagal), ia ter-marshal dengan baik sebagai tipe JSON itu dan terkirim sebagai angka/objek/string murni — secara diam-diam menyimpang dari bentuk string-berkutip pada contoh kerja, tanpa error. Hanya nilai yang bukan nilai JSON valid dengan sendirinya (desimal berformat koma, blob base64 yang diawali huruf, string digit dengan nol di depan) yang menggagalkan json.Marshal dan mengembalikan error "encode request" sebelum request terkirim — ini jaring pengaman yang lebih sempit dan kurang andal dari kelihatannya, bukan jaminan. Dua bentuk lain: json.RawMessage kosong dihilangkan oleh omitempty (field absen dari wire body, tidak dikirim kosong), sedangkan json.RawMessage("null") TIDAK dihilangkan — ia dikirim sebagai "limit":null / "cardData":null eksplisit, karena omitempty hanya melewati slice berpanjang nol.
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Opsional |
+| `accountName` | `string` | Opsional |
+| `cardData` | `json.RawMessage` | Opsional |
+| `bankAccountNo` | `string` | Opsional |
+| `bankCardNo` | `string` | Wajib |
+| `bankCardType` | `string` | Opsional |
+| `dateOfBirth` | `string` | Opsional |
+| `email` | `string` | Opsional |
+| `expiredDatetime` | `string` | Opsional |
+| `expiryDate` | `string` | Opsional |
+| `identificationNo` | `string` | Opsional |
+| `identificationType` | `string` | Opsional |
+| `custIdMerchant` | `string` | Wajib |
+| `isBindAndPay` | `string` | Opsional |
+| `merchantId` | `string` | Opsional |
+| `terminalId` | `string` | Opsional |
+| `journeyId` | `string` | Opsional |
+| `subMerchantId` | `string` | Opsional |
+| `externalStoreId` | `string` | Opsional |
+| `limit` | `json.RawMessage` | Opsional |
+| `merchantLogoUrl` | `string` | Opsional |
+| `phoneNo` | `string` | Opsional |
+| `sendOtpFlag` | `string` | Opsional |
+| `type` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+**Response &mdash; `CardRegistrationResponse`**
+
+CardRegistrationResponse adalah response body untuk API Card Registration.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `referenceNo` | `string` | Opsional |
+| `partnerReferenceNo` | `string` | Opsional |
+| `bankCardToken` | `string` | Wajib |
+| `chargeToken` | `string` | Opsional |
+| `randomString` | `string` | Opsional |
+| `tokenExpiryTime` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+
+---
+
+### `CardRegistrationInquiry`
+
+CardRegistrationInquiry memanggil endpoint SNAP Card Registration Inquiry (Service Code 03, path .../\{version\}/registration-card-inquiry/custIdMerchant/\{value\} — parameter path URL, bukan field JSON body). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Method dan Body, yang diisi sendiri oleh CardRegistrationInquiry: Method menjadi GET dan Body menjadi nil, karena ini satu-satunya endpoint read-only GET di package ini dan pemanggil seharusnya tidak perlu mengatur detail protokol khusus untuknya. hb.EndpointURL harus berupa URL http(s) dengan host, tanpa userinfo, dan tanpa query string atau fragment — CardRegistrationInquiry menolak URL yang tidak memenuhi itu, alih-alih diam-diam salah menanganinya (mis. fragment tidak pernah dikirim net/http sama sekali, jadi menambahkan sesuatu setelahnya akan diam-diam membuang custIDMerchant dari request sebenarnya tanpa error).
+
+custIDMerchant divalidasi terhadap custIDMerchantPattern (lihat doc comment-nya), lalu digabungkan ke path hb.EndpointURL lewat url.URL.JoinPath — ini input pemanggil pertama di package ini yang mencapai path URL alih-alih JSON body, dan tempat pertama package ini mem-parsing URL alih-alih membangunnya lewat penggabungan string. JoinPath TIDAK "membiarkan RawPath apa adanya": ia membangun ulang path gabungan dari u.EscapedPath() lalu menurunkan ulang Path maupun RawPath dari string yang sudah di-escape itu (setPath milik net/url). Encoding yang sudah ada di EndpointURL tetap bertahan karena diteruskan lewat EscapedPath(), bukan karena RawPath dibiarkan utuh — RawPath justru selalu ditimpa. Perbedaan ini penting persis di sini: versi fungsi sebelumnya mengatur u.Path langsung (bentuk yang sudah di-decode) dan mengosongkan u.RawPath untuk memaksa penurunan ulang DARI PATH YANG SUDAH DI-DECODE, yang diam-diam mengubah "%2F"/"%2E%2E" yang sudah ter-encode di EndpointURL milik pemanggil menjadi batas path sungguhan sebelum request pernah terkirim. JoinPath menghindari ini karena ia mulai dari EscapedPath(), bukan Path.
+
+```go
+func CardRegistrationInquiry(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, custIDMerchant string) (CardRegistrationInquiryResponse, error)
+```
+
+Endpoint ini tidak menerima request body bertipe selain parameter panggilan yang ditunjukkan di atas.
+
+**Response &mdash; `CardRegistrationInquiryResponse`**
+
+CardRegistrationInquiryResponse adalah response body untuk API Card Registration Inquiry (Service Code 03).
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `accountList` | `[]CardRegistrationInquiryAccount` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+<Accordion title="Field CardRegistrationInquiryAccount">
+CardRegistrationInquiryAccount adalah satu entri dalam AccountList milik CardRegistrationInquiryResponse. Ia membungkus AccountData alih-alih meratakannya, mencerminkan persis level nesting ekstra pada wire shape-nya (\{"accountList":[\{"accountData":\{...\}\}]\}).
+
+| Field | Type | Presence |
+|---|---|---|
+| `accountData` | `CardRegistrationInquiryAccountData` | Wajib |
+
+</Accordion>
+
+<Accordion title="Field CardRegistrationInquiryAccountData">
+CardRegistrationInquiryAccountData adalah objek "accountData" yang nested di dalam setiap entri accountList milik API Card Registration Inquiry. MaxLimit dan CredentialNo bertipe string: keduanya adalah nilai tampilan yang di-mask/diformat pada wire (mis. "800000", "************0750"), bukan limit numerik mentah yang diatur CardRegistrationSetLimitRequest.Limit — tidak ambigu menurut Guides tab, berbeda dari limit/cardData di Phase 7.
+
+| Field | Type | Presence |
+|---|---|---|
+| `accountId` | `string` | Opsional |
+| `createdDate` | `string` | Opsional |
+| `credentialNo` | `string` | Opsional |
+| `credentialType` | `string` | Opsional |
+| `maxLimit` | `string` | Opsional |
+| `status` | `string` | Opsional |
+
+</Accordion>
+
+
+---
+
+### `CardRegistrationSetLimit`
+
+CardRegistrationSetLimit memanggil endpoint SNAP Card Registration – Set Limit (Service Code 02). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh CardRegistrationSetLimit agar byte hasil marshal yang sama dipakai untuk signing maupun wire body.
+
+```go
+func CardRegistrationSetLimit(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req CardRegistrationSetLimitRequest) (CardRegistrationSetLimitResponse, error)
+```
+
+**Request &mdash; `CardRegistrationSetLimitRequest`**
+
+CardRegistrationSetLimitRequest adalah request body untuk API Card Registration – Set Limit (Service Code 02, path .../\{version\}/registration/card-bind-limit — perhatikan "/" di mana endpoint sejenis memakai "-"; ini path milik standar itu sendiri). BankCardToken adalah satu-satunya field wajib menurut Guides tab.
+
+Limit bertipe json.RawMessage dengan alasan yang sama seperti CardRegistrationRequest.Limit: Guides tab melabelinya "decimal", yang mengizinkan representasi JSON bukan-string meski satu contoh kerja portal me-render-nya sebagai string berkutip. Pemanggil yang memasukkan string Go biasa harus mengutipnya dulu — mis. json.RawMessage(`"1000000"`), bukan json.RawMessage(limitStr) — agar cocok dengan bentuk wire contoh kerjanya. Kesalahan ini TIDAK selalu tertangkap oleh json.Marshal: nilai digit murni tanpa kutip (mis. 1000000 pada contoh kerjanya sendiri) sudah merupakan JSON valid dengan sendirinya, jadi ter-marshal dengan baik dan terkirim sebagai angka murni — secara diam-diam menyimpang dari bentuk string-berkutip pada contoh kerja, tanpa error. Hanya nilai yang bukan JSON valid dengan sendirinya (desimal berformat koma seperti "1,000,000") yang menggagalkan json.Marshal dan mengembalikan error "encode request" sebelum request terkirim. Dua bentuk lain: json.RawMessage kosong dihilangkan oleh omitempty (field absen dari wire body, tidak dikirim kosong), sedangkan json.RawMessage("null") TIDAK dihilangkan — ia dikirim sebagai "limit":null eksplisit, karena omitempty hanya melewati slice berpanjang nol.
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Opsional |
+| `bankAccountNo` | `string` | Opsional |
+| `bankCardNo` | `string` | Opsional |
+| `limit` | `json.RawMessage` | Opsional |
+| `bankCardToken` | `string` | Wajib |
+| `otp` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+**Response &mdash; `CardRegistrationSetLimitResponse`**
+
+CardRegistrationSetLimitResponse adalah response body untuk API Card Registration – Set Limit.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `referenceNo` | `string` | Opsional |
+| `partnerReferenceNo` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+
+---
+
+### `CardRegistrationUnbinding`
+
+CardRegistrationUnbinding memanggil endpoint SNAP Card Registration Unbinding (Service Code 05). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh CardRegistrationUnbinding agar byte hasil marshal yang sama dipakai untuk signing maupun wire body.
+
+Operasi ini tidak idempotent dan package ini tidak melakukan retry. Pemanggil yang me-retry panggilan yang gagal atau timeout harus memakai ulang X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server bergantung pada header itu — sejalan dengan sikap AccountUnbinding, yang membawa catatan sama meski juga tidak menerbitkan apa pun: catatan ini soal deteksi duplikat di sisi server pada panggilan yang mengubah state, bukan spesifik soal menerbitkan resource baru.
+
+```go
+func CardRegistrationUnbinding(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req CardRegistrationUnbindingRequest) (CardRegistrationUnbindingResponse, error)
+```
+
+**Request &mdash; `CardRegistrationUnbindingRequest`**
+
+CardRegistrationUnbindingRequest adalah request body untuk API Card Registration Unbinding (Service Code 05, path .../\{version\}/registration-card-unbind). Token adalah satu-satunya field wajib menurut Guides tab.
+
+Part adalah artefak dari sumbernya, tidak direkonsiliasi: teks deskripsi Part di Guides tab identik dengan deskripsi MerchantID di portal, dan contoh kerjanya mengatur kedua field ke nilai yang sama. Tetap dipertahankan sebagai field tersendiri karena Guides tab mencantumkannya sebagai nama field yang berbeda.
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Opsional |
+| `token` | `string` | Wajib |
+| `bankCardNo` | `string` | Opsional |
+| `type` | `string` | Opsional |
+| `part` | `string` | Opsional |
+| `merchantId` | `string` | Opsional |
+| `subMerchantId` | `string` | Opsional |
+| `terminalId` | `string` | Opsional |
+| `tokenRequestorId` | `string` | Opsional |
+| `journeyId` | `string` | Opsional |
+| `transactionDate` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+**Response &mdash; `CardRegistrationUnbindingResponse`**
+
+CardRegistrationUnbindingResponse adalah response body untuk API Card Registration Unbinding. UnsubscribeDate bertipe string meski menjadi satu-satunya field di grup Registrasi yang diriset yang dilabeli "Datetime" (setiap field mirip-tanggal lainnya dilabeli "String"): JSON tidak punya primitif datetime, dan contoh kerjanya adalah string ISO-8601 berkutip biasa, jadi string tidak ambigu terlepas dari label uniknya.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `referenceNo` | `string` | Opsional |
+| `partnerReferenceNo` | `string` | Opsional |
+| `message` | `string` | Opsional |
+| `customerId` | `string` | Opsional |
+| `unsubscribeDate` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |

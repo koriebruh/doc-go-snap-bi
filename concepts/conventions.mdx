@@ -1,0 +1,96 @@
+---
+title: "Core Conventions"
+description: "The shape every package, endpoint, and type in go-snap-bi follows"
+---
+
+Every domain package (`registration`, `balanceinfo`, `transactionhistory`,
+`transfercredit`, `transferdebit`) is built against the same small set of
+rules. Once you know these, every endpoint's shape is predictable — you're
+reading a specific field table, not learning a new pattern.
+
+## One package per ASPI portal category
+
+Each domain package maps 1:1 onto one of the [ASPI SNAP Developer
+Site](https://apidevportal.aspi-indonesia.or.id/api-services)'s top-level
+"API Services" categories, so "which package does this endpoint belong in"
+is never a judgment call. The root `snap` package holds only what every
+domain package needs: signing, the token lifecycle, inbound-request
+verification, header assembly, response-code parsing, and `Money`.
+
+## One shape per endpoint
+
+Every calling function has the same signature:
+
+```go
+func Endpoint(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req XRequest) (XResponse, error)
+```
+
+and does the same four things, in order:
+
+1. Marshal `req` into JSON.
+2. Set `hb.Body` to those exact bytes, then sign and send via `t.Do(ctx, hb)` — the same bytes are used for both the signature and the wire body, so nothing can drift between them.
+3. Check the response with `snap.CheckResponseStatus` — **HTTP status is authoritative over the SNAP `responseCode` body, never the other way around.** A non-2xx HTTP status is never treated as success even if an embedded `responseCode` claims otherwise.
+4. Unmarshal into `XResponse` and return it.
+
+A handful of read-only, GET, or URL-path-parameter endpoints (`GetOAuthURL`,
+`CardRegistrationInquiry`) deviate from the JSON-body shape because the
+standard itself defines them as a query string or path parameter — each is
+called out explicitly in its reference page.
+
+## Field presence: Mandatory / Optional / Conditional
+
+The SNAP standard marks every field **M**andatory, **O**ptional, or
+**C**onditional (optional, but required together with some other
+condition). This package expresses that as Go's `omitempty`:
+
+- A field the standard marks **Mandatory** has no `omitempty` — it always
+  appears on the wire, even as a zero value.
+- Every other field carries `omitempty`.
+
+<Note>
+  The reference pages' "Presence" column collapses Optional and Conditional
+  into a single **Optional** bucket, because both compile to the same
+  `omitempty` tag — there's no way to tell them apart from the Go struct
+  alone. Where a field is Conditional, its endpoint's request-type doc
+  paragraph (reproduced above the field table) says so explicitly, e.g.
+  *"OriginatorInfos is Conditional"* — read that paragraph, not just the
+  table, before treating an Optional field as "safe to always omit."
+</Note>
+
+This package validates wire shape only, never the standard's business
+rules (e.g. "exactly one of A or B must be set") — the server does that.
+
+## `json.RawMessage` means "ambiguous or unspecified shape"
+
+Most fields are `string`, `bool`, a nested struct, or `*snap.Money`. A
+field is typed `json.RawMessage` instead when the Guides tab documents its
+shape ambiguously (e.g. a value shown as a bare JSON number in one worked
+example and a quoted string in another) — decoding it as a concrete Go type
+would either reject a legitimate server response or silently coerce data
+that wasn't actually a string. `additionalInfo` is the most common case:
+the standard leaves it fully open-ended per integration.
+
+## The shared `Money` type
+
+```go
+type Money struct {
+	Value    string `json:"value"`
+	Currency string `json:"currency"`
+}
+```
+
+`Money` is the `{value, currency}` shape used across every request or
+response that carries a monetary amount. `Value` is a decimal string (e.g.
+`"200000.00"`, always two decimal places) — never a float, to avoid binary
+floating-point rounding on money. `Currency` is ISO 4217 (e.g. `"IDR"`).
+
+## Next
+
+<CardGroup cols={2}>
+  <Card title="Headers & Signing" icon="key" href="/concepts/headers">
+    How `HeaderBuilder` assembles and signs a request.
+  </Card>
+  <Card title="Errors" icon="triangle-exclamation" href="/concepts/errors">
+    Response codes, sentinel errors, and the HTTP-status-wins rule in detail.
+  </Card>
+</CardGroup>

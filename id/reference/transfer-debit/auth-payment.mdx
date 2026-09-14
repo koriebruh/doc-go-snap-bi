@@ -1,0 +1,335 @@
+---
+title: "Auth Payment"
+description: "Alur otorisasi/capture/void/refund bergaya kartu: tahan dana dengan AuthPayment, lalu capture, void, atau refund; setiap operasi tulis punya panggilan query pasangannya."
+---
+
+## Auth Payment
+
+Alur otorisasi/capture/void/refund bergaya kartu: tahan dana dengan AuthPayment, lalu capture, void, atau refund; setiap operasi tulis punya panggilan query pasangannya.
+
+<CodeGroup>
+```go example.go
+resp, err := transferdebit.AuthPayment(ctx, transport, hb, transferdebit.AuthPaymentRequest{
+	PartnerReferenceNo: "2020102900000000000001",
+	MerchantID: "...",
+	Title: "...",
+})
+if err != nil {
+	// errors.Is(err, snap.ErrBadRequest), snap.ErrUnauthorized, etc.
+}
+```
+</CodeGroup>
+
+### `AuthPayment`
+
+AuthPayment memanggil endpoint SNAP Auth Payment (Service Code 63, HTTP POST — tanpa override method; tab Overview pada riset menandainya GET, tetapi setiap contoh kerja di ketujuh endpoint Auth Payment berbentuk POST dengan body JSON wajib, dan jalur signing package ini tidak punya representasi untuk GET yang membawa body). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh AuthPayment agar byte hasil marshal yang persis sama dipakai baik untuk signing maupun body di jalur kirim.
+
+Operasi ini tidak idempotent dan package ini tidak melakukan retry. Caller yang me-retry panggilan yang gagal atau timeout sebaiknya memakai ulang X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server berpatokan pada header tersebut.
+
+```go
+func AuthPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req AuthPaymentRequest) (AuthPaymentResponse, error)
+```
+
+**Request &mdash; `AuthPaymentRequest`**
+
+AuthPaymentRequest adalah body request untuk API Auth Payment (Service Code 63, path .../\{version\}/auth/payment). Panggilan ini menahan dana; Capture (65) nantinya menagih sebagian atau seluruh jumlah yang ditahan, Void (67) melepaskan dana yang ditahan namun belum di-capture.
+
+Items didokumentasikan sebagai daftar barang yang dibeli tanpa skema level-item yang lengkap di mana pun selain goodsId/price/category/unit/quantity pada contoh kerja — dimodelkan sebagai json.RawMessage, mengikuti perlakuan package ini yang sudah baku untuk field yang benar-benar tidak bertipe (alasan yang sama dengan AdditionalInfo; juga sudah dipakai untuk AccountBindingRequest.AdditionalData, VerifyOTPResponse.QParams, dan CPMPaymentRequest.Items, yang terakhir ini persis nama field dan bentuk yang sama).
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Wajib |
+| `merchantId` | `string` | Wajib |
+| `subMerchantId` | `string` | Opsional |
+| `amount` | `*snap.Money` | Opsional |
+| `feeType` | `string` | Opsional |
+| `mcc` | `string` | Opsional |
+| `productCode` | `string` | Opsional |
+| `title` | `string` | Wajib |
+| `items` | `json.RawMessage` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+**Response &mdash; `AuthPaymentResponse`**
+
+AuthPaymentResponse adalah body response untuk API Auth Payment. ReferenceNo bersifat Kondisional (hanya saat sukses). Riset tidak menandai container Amount di sisi ini, sama seperti sisi request, tetapi menandai kedua anggota value/currency-nya Wajib; Amount dimodelkan sebagai snap.Money biasa (bukan pointer) — berbeda dari sisi request yang *snap.Money — karena ini adalah response sukses untuk sebuah hold yang baru saja dipasang, dan sebuah amount diharapkan selalu ada di dalamnya. Ini adalah keputusan yang lebih sempit dibanding kasus container-Opsional yang ditandai di tempat lain dalam package (bandingkan AuthPaymentQueryResponse.Amount, yang secara eksplisit ditandai riset sebagai amount O dan dimodelkan sebagai *snap.Money).
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `referenceNo` | `string` | Opsional |
+| `partnerReferenceNo` | `string` | Opsional |
+| `amount` | `snap.Money` | Wajib |
+| `paidTime` | `string` | Wajib |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+
+---
+
+### `AuthPaymentQuery`
+
+AuthPaymentQuery memanggil endpoint SNAP Payment Query (Service Code 64, HTTP POST — tanpa override method, resolusi GET/POST yang sama seperti AuthPayment). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh AuthPaymentQuery agar byte hasil marshal yang persis sama dipakai baik untuk signing maupun body di jalur kirim.
+
+```go
+func AuthPaymentQuery(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req AuthPaymentQueryRequest) (AuthPaymentQueryResponse, error)
+```
+
+**Request &mdash; `AuthPaymentQueryRequest`**
+
+AuthPaymentQueryRequest adalah body request untuk API Payment Query (Service Code 64, path .../\{version\}/auth/query). Tidak ada field yang Wajib.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originalPartnerReferenceNo` | `string` | Opsional |
+| `originalReferenceNo` | `string` | Opsional |
+| `merchantId` | `string` | Opsional |
+| `subMerchantId` | `string` | Opsional |
+| `externalStoreId` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+**Response &mdash; `AuthPaymentQueryResponse`**
+
+AuthPaymentQueryResponse adalah body response untuk API Payment Query. PaidTime dan LatestTransactionStatus bersifat Wajib. Amount dimodelkan sebagai *snap.Money karena riset secara eksplisit menandai container-nya Opsional (amount O, anggotanya M) — aturan baku package ini untuk sebuah container Opsional adalah *snap.Money apa pun penanda anggotanya sendiri (lihat misalnya TransactionStatusInquiryBankResponse.Amount).
+
+Contoh kerja response pada riset menuliskan huruf originalpartnerReferenceNo (p huruf kecil) berbeda dengan penamaan pada tabel field originalPartnerReferenceNo (riset §6 butir 2). Field ini bersifat Opsional di sisi request dan hanya digemakan kembali di response ini, dan encoding/json milik Go bersifat tidak peka huruf besar/kecil saat unmarshal, sehingga penulisan huruf mana pun di wire tetap mengisi OriginalPartnerReferenceNo dengan benar — penulisan huruf pada tabel field dipakai untuk tag Go, konsisten dengan setiap kemunculan lain nama field ini di seluruh package.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `originalPartnerReferenceNo` | `string` | Opsional |
+| `originalReferenceNo` | `string` | Opsional |
+| `amount` | `*snap.Money` | Opsional |
+| `paidTime` | `string` | Wajib |
+| `latestTransactionStatus` | `string` | Wajib |
+| `transactionStatusDesc` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+
+---
+
+### `AuthCapture`
+
+AuthCapture memanggil endpoint SNAP Capture (Service Code 65, HTTP POST — tanpa override method, resolusi GET/POST yang sama seperti AuthPayment, Fase 31). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh AuthCapture agar byte hasil marshal yang persis sama dipakai baik untuk signing maupun body di jalur kirim.
+
+Operasi ini tidak idempotent dan package ini tidak melakukan retry. Caller yang me-retry panggilan yang gagal atau timeout sebaiknya memakai ulang X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server berpatokan pada header tersebut.
+
+```go
+func AuthCapture(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req AuthCaptureRequest) (AuthCaptureResponse, error)
+```
+
+**Request &mdash; `AuthCaptureRequest`**
+
+AuthCaptureRequest adalah body request untuk API Capture (Service Code 65, path .../\{version\}/auth/capture). Menagih sebagian atau seluruh jumlah yang sebelumnya ditahan oleh Auth Payment (63); bisa dipanggil berkali-kali untuk capture parsial.
+
+LastCapture didokumentasikan sebagai String(8) tetapi membawa nilai contoh kerja "TRUE" — sebuah nilai berbentuk boolean di dalam field string. Riset menyatakan bentuk di wire (string yang di-quote) tidak ambigu di sini (§6 butir 6), sehingga dimodelkan sebagai string biasa, bukan json.RawMessage.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originalReferenceNo` | `string` | Wajib |
+| `originalPartnerReferenceNo` | `string` | Wajib |
+| `merchantId` | `string` | Wajib |
+| `subMerchantId` | `string` | Opsional |
+| `partnerCaptureNo` | `string` | Wajib |
+| `captureAmount` | `*snap.Money` | Opsional |
+| `title` | `string` | Wajib |
+| `lastCapture` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+**Response &mdash; `AuthCaptureResponse`**
+
+AuthCaptureResponse adalah body response untuk API Capture. CaptureNo dan CaptureTime bersifat Kondisional (hanya saat sukses). Container CaptureAmount dibiarkan tanpa penanda di riset berdampingan dengan anggota yang Wajib — ambiguitas yang sama seperti AuthPaymentResponse.Amount (Fase 31) — dan dimodelkan dengan cara yang sama, sebagai snap.Money biasa (bukan pointer), karena ini adalah field pada response sukses.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `originalReferenceNo` | `string` | Opsional |
+| `originalPartnerReferenceNo` | `string` | Opsional |
+| `partnerCaptureNo` | `string` | Opsional |
+| `captureNo` | `string` | Opsional |
+| `captureAmount` | `snap.Money` | Wajib |
+| `captureTime` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+
+---
+
+### `AuthCaptureQuery`
+
+AuthCaptureQuery memanggil endpoint SNAP Capture Query (Service Code 66, HTTP POST — tanpa override method; tab Overview pada riset menandainya GET, tetapi setiap contoh kerja di ketujuh endpoint Auth Payment berbentuk POST dengan body JSON wajib, dan jalur signing package ini tidak punya representasi untuk GET yang membawa body — lihat komentar dokumentasi AuthPayment untuk penjelasan lengkapnya). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh AuthCaptureQuery agar byte hasil marshal yang persis sama dipakai baik untuk signing maupun body di jalur kirim.
+
+```go
+func AuthCaptureQuery(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req AuthCaptureQueryRequest) (AuthCaptureQueryResponse, error)
+```
+
+**Request &mdash; `AuthCaptureQueryRequest`**
+
+AuthCaptureQueryRequest adalah body request untuk API Capture Query (Service Code 66, path .../\{version\}/auth/capture-query). OriginalReferenceNo, MerchantID, dan PartnerCaptureNo bersifat Wajib.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originalReferenceNo` | `string` | Wajib |
+| `originalPartnerReferenceNo` | `string` | Opsional |
+| `merchantId` | `string` | Wajib |
+| `subMerchantId` | `string` | Opsional |
+| `captureNo` | `string` | Opsional |
+| `partnerCaptureNo` | `string` | Wajib |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+**Response &mdash; `AuthCaptureQueryResponse`**
+
+AuthCaptureQueryResponse adalah body response untuk API Capture Query. CaptureAmount dan PartnerCaptureNo bersifat Wajib di sini — berbeda dari AuthCaptureResponse, tempat PartnerCaptureNo bersifat Opsional. LatestCaptureStatus adalah enum 3-nilai yang dipakai bersama (riset §3: INIT/SUCCESS/FAILED).
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `originalReferenceNo` | `string` | Opsional |
+| `originalPartnerReferenceNo` | `string` | Opsional |
+| `captureNo` | `string` | Opsional |
+| `captureAmount` | `snap.Money` | Wajib |
+| `captureTime` | `string` | Opsional |
+| `latestCaptureStatus` | `string` | Opsional |
+| `partnerCaptureNo` | `string` | Wajib |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+
+---
+
+### `AuthVoid`
+
+AuthVoid memanggil endpoint SNAP Void (Service Code 67, HTTP POST — tanpa override method; tab Overview pada riset menandainya GET, tetapi setiap contoh kerja di ketujuh endpoint Auth Payment berbentuk POST dengan body JSON wajib, dan jalur signing package ini tidak punya representasi untuk GET yang membawa body — lihat komentar dokumentasi AuthPayment untuk penjelasan lengkapnya). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh AuthVoid agar byte hasil marshal yang persis sama dipakai baik untuk signing maupun body di jalur kirim.
+
+Operasi ini tidak idempotent dan package ini tidak melakukan retry. Caller yang me-retry panggilan yang gagal atau timeout sebaiknya memakai ulang X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server berpatokan pada header tersebut.
+
+```go
+func AuthVoid(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req AuthVoidRequest) (AuthVoidResponse, error)
+```
+
+**Request &mdash; `AuthVoidRequest`**
+
+AuthVoidRequest adalah body request untuk API Void (Service Code 67, path .../\{version\}/auth/void). Melepaskan dana yang ditahan namun belum di-capture dari sebuah hold yang sebelumnya dipasang oleh Auth Payment (63).
+
+VoidRemainingAmount didokumentasikan sebagai String(8) tetapi membawa nilai contoh kerja "TRUE", konvensi yang sama dengan AuthCaptureRequest.LastCapture (riset §6 butir 6) — dimodelkan sebagai string biasa.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originalReferenceNo` | `string` | Wajib |
+| `originalPartnerReferenceNo` | `string` | Wajib |
+| `merchantId` | `string` | Wajib |
+| `subMerchantId` | `string` | Opsional |
+| `voidAmount` | `*snap.Money` | Opsional |
+| `partnerVoidNo` | `string` | Wajib |
+| `voidRemainingAmount` | `string` | Opsional |
+| `reason` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+**Response &mdash; `AuthVoidResponse`**
+
+AuthVoidResponse adalah body response untuk API Void. VoidNo dan VoidTime bersifat Kondisional (hanya saat sukses). PartnerVoidNo dan VoidAmount bersifat Wajib di sini — riset menyatakan keduanya secara gamblang, tanpa ambiguitas container tak bertanda (berbeda dengan AuthCaptureResponse.CaptureAmount).
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `originalReferenceNo` | `string` | Opsional |
+| `originalPartnerReferenceNo` | `string` | Opsional |
+| `voidNo` | `string` | Opsional |
+| `partnerVoidNo` | `string` | Wajib |
+| `voidAmount` | `snap.Money` | Wajib |
+| `voidTime` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+
+---
+
+### `AuthVoidQuery`
+
+AuthVoidQuery memanggil endpoint SNAP Void Query (Service Code 68, HTTP POST — tanpa override method; tab Overview pada riset menandainya GET, tetapi setiap contoh kerja di ketujuh endpoint Auth Payment berbentuk POST dengan body JSON wajib, dan jalur signing package ini tidak punya representasi untuk GET yang membawa body — lihat komentar dokumentasi AuthPayment untuk penjelasan lengkapnya). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh AuthVoidQuery agar byte hasil marshal yang persis sama dipakai baik untuk signing maupun body di jalur kirim.
+
+```go
+func AuthVoidQuery(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req AuthVoidQueryRequest) (AuthVoidQueryResponse, error)
+```
+
+**Request &mdash; `AuthVoidQueryRequest`**
+
+AuthVoidQueryRequest adalah body request untuk API Void Query (Service Code 68, path .../\{version\}/auth/void-query). OriginalReferenceNo, MerchantID, dan PartnerVoidNo bersifat Wajib.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originalReferenceNo` | `string` | Wajib |
+| `originalPartnerReferenceNo` | `string` | Opsional |
+| `merchantId` | `string` | Wajib |
+| `subMerchantId` | `string` | Opsional |
+| `voidNo` | `string` | Opsional |
+| `partnerVoidNo` | `string` | Wajib |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+**Response &mdash; `AuthVoidQueryResponse`**
+
+AuthVoidQueryResponse adalah body response untuk API Void Query. VoidAmount bersifat Wajib; PartnerVoidNo bersifat Opsional di sini — berbeda dari AuthVoidResponse, tempat PartnerVoidNo bersifat Wajib. LatestVoidStatus adalah enum 3-nilai yang dipakai bersama (riset §3: INIT/SUCCESS/FAILED).
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `originalReferenceNo` | `string` | Opsional |
+| `originalPartnerReferenceNo` | `string` | Opsional |
+| `voidNo` | `string` | Opsional |
+| `voidAmount` | `snap.Money` | Wajib |
+| `voidTime` | `string` | Opsional |
+| `latestVoidStatus` | `string` | Opsional |
+| `partnerVoidNo` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+
+---
+
+### `AuthRefund`
+
+AuthRefund memanggil endpoint SNAP Refund (Service Code 69, HTTP POST — tanpa override method, resolusi GET/POST yang sama seperti AuthPayment, Fase 31). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh AuthRefund agar byte hasil marshal yang persis sama dipakai baik untuk signing maupun body di jalur kirim.
+
+Operasi ini tidak idempotent dan package ini tidak melakukan retry. Caller yang me-retry panggilan yang gagal atau timeout sebaiknya memakai ulang X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server berpatokan pada header tersebut.
+
+```go
+func AuthRefund(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req AuthRefundRequest) (AuthRefundResponse, error)
+```
+
+**Request &mdash; `AuthRefundRequest`**
+
+AuthRefundRequest adalah body request untuk API Refund (Service Code 69, path .../\{version\}/auth/refund). Membalikkan jumlah yang sudah di-capture oleh Auth Capture (65).
+
+OriginalCaptureNo bersifat Kondisional, "harus diisi saat transaksi tidak berhasil" — kebalikan dari arah kondisi kebanyakan field Kondisional di package ini, yang biasanya diisi saat sukses (riset §5.3). Dicatat di sini apa adanya, tidak disesuaikan; package ini tidak menerapkan validasi aturan-bisnis pada level field, sehingga arah pemicunya tidak berkonsekuensi pada kode selain catatan ini.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originalPartnerReferenceNo` | `string` | Wajib |
+| `originalReferenceNo` | `string` | Opsional |
+| `partnerRefundNo` | `string` | Wajib |
+| `merchantId` | `string` | Opsional |
+| `subMerchantId` | `string` | Opsional |
+| `originalCaptureNo` | `string` | Opsional |
+| `refundAmount` | `*snap.Money` | Opsional |
+| `externalStoreId` | `string` | Opsional |
+| `reason` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+**Response &mdash; `AuthRefundResponse`**
+
+AuthRefundResponse adalah body response untuk API Refund. RefundNo dan RefundTime bersifat Wajib. PartnerRefundNo bersifat Opsional di sini — berbeda dari response Direct Debit Payment Refund sendiri, tempat PartnerRefundNo bersifat Wajib (Fase 27) — dicatat per kemunculan, tidak diseragamkan.
+
+OriginalCaptureNo dan OriginalReferenceNo sama-sama Kondisional, tetapi dengan pemicu sukses/gagal yang berlawanan satu sama lain: OriginalCaptureNo diisi saat transaksi tidak berhasil (kondisi yang sama dengan field request bernama sama), sedangkan OriginalReferenceNo diisi saat berhasil. Riset §6 butir 3 menandai ini sebagai belum diverifikasi secara independen — ini terbaca sebagai perbedaan yang genuine, bukan duplikat salin-tempel dari catatan yang sama, tetapi riset sendiri membiarkannya terbuka menunggu konfirmasi. Package ini memodelkan bentuk di wire sesuai yang didokumentasikan pada kedua arah (kedua field Kondisional → omitempty), karena tidak menerapkan validasi aturan-bisnis pada level field terlepas dari arah pemicu yang sebenarnya berjalan.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `originalCaptureNo` | `string` | Opsional |
+| `originalReferenceNo` | `string` | Opsional |
+| `originalPartnerReferenceNo` | `string` | Opsional |
+| `partnerRefundNo` | `string` | Opsional |
+| `refundNo` | `string` | Wajib |
+| `refundAmount` | `*snap.Money` | Opsional |
+| `refundTime` | `string` | Wajib |
+| `additionalInfo` | `json.RawMessage` | Opsional |

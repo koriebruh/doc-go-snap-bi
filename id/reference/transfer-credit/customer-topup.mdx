@@ -1,0 +1,151 @@
+---
+title: "Customer Top Up"
+description: "Top-up akun e-money/e-wallet: inquiry, top-up, dan pengecekan status."
+---
+
+## Customer Top Up
+
+Top-up akun e-money/e-wallet: inquiry, top-up, dan pengecekan status.
+
+<CodeGroup>
+```go example.go
+resp, err := transfercredit.CustomerTopUp(ctx, transport, hb, transfercredit.CustomerTopUpRequest{
+	PartnerReferenceNo: "2020102900000000000001",
+})
+if err != nil {
+	// errors.Is(err, snap.ErrBadRequest), snap.ErrUnauthorized, etc.
+}
+```
+</CodeGroup>
+
+### `AccountInquiryCustomerTopUp`
+
+AccountInquiryCustomerTopUp memanggil endpoint SNAP Account Inquiry - Customer Top Up (Service Code 37, path .../\{version\}/emoney/account-inquiry, HTTP POST). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh AccountInquiryCustomerTopUp agar byte hasil marshal yang persis sama dipakai untuk signing maupun wire body.
+
+```go
+func AccountInquiryCustomerTopUp(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req AccountInquiryCustomerTopUpRequest) (AccountInquiryCustomerTopUpResponse, error)
+```
+
+**Request &mdash; `AccountInquiryCustomerTopUpRequest`**
+
+AccountInquiryCustomerTopUpRequest adalah request body untuk API Account Inquiry - Customer Top Up (Service Code 37). Amount adalah satu-satunya field wajib menurut tab Guides. CustomerNumber bersifat Kondisional ("wajib jika token B2B2C null" — kondisi bergantung-data yang tidak bisa dinyatakan package ini dalam sistem tipe), sehingga di sini dibuat Opsional.
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Opsional |
+| `customerNumber` | `string` | Opsional |
+| `amount` | `snap.Money` | Wajib |
+| `transactionDate` | `string` | Opsional |
+
+**Response &mdash; `AccountInquiryCustomerTopUpResponse`**
+
+AccountInquiryCustomerTopUpResponse adalah response body untuk API Account Inquiry - Customer Top Up. CustomerNumber di sini terdokumentasi String(64) (tersamar, mis. "XXXXXXXXX1857") berbeda dari String(32) pada request — keduanya tetap string biasa, karena string Go tidak punya batas panjang. CustomerMonthlyInLimit terdokumentasi Numeric tetapi ditampilkan berkutip di wire; sesuai aturan tipe-ambigu package ini, field tersebut diberi tipe json.RawMessage, bukan string, karena satu contoh saja bukan bukti kuat tentang bentuk wire dari semua penerbit.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `referenceNo` | `string` | Opsional |
+| `partnerReferenceNo` | `string` | Opsional |
+| `sessionId` | `string` | Opsional |
+| `customerNumber` | `string` | Opsional |
+| `customerName` | `string` | Wajib |
+| `customerMonthlyInLimit` | `json.RawMessage` | Opsional |
+| `minAmount` | `*snap.Money` | Opsional |
+| `maxAmount` | `*snap.Money` | Opsional |
+| `amount` | `*snap.Money` | Opsional |
+| `feeAmount` | `*snap.Money` | Opsional |
+| `feeType` | `string` | Opsional |
+
+
+---
+
+### `CustomerTopUp`
+
+CustomerTopUp memanggil endpoint SNAP Customer Top Up (Service Code 38, path .../\{version\}/emoney/topup, HTTP POST). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh CustomerTopUp agar byte hasil marshal yang persis sama dipakai untuk signing maupun wire body.
+
+Operasi ini tidak idempotent dan package ini tidak melakukan retry. Pemanggil yang mengulang panggilan yang gagal atau timeout harus memakai X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server berpatokan pada header itu.
+
+```go
+func CustomerTopUp(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req CustomerTopUpRequest) (CustomerTopUpResponse, error)
+```
+
+**Request &mdash; `CustomerTopUpRequest`**
+
+CustomerTopUpRequest adalah request body untuk API Customer Top Up (Service Code 38). PartnerReferenceNo adalah satu-satunya field wajib menurut tab Guides. CategoryID terdokumentasi Numeric tetapi ditampilkan berkutip di wire; sesuai aturan tipe-ambigu package ini, field tersebut diberi tipe json.RawMessage, bukan string, mengikuti pola yang sama dengan CustomerMonthlyInLimit pada endpoint Account Inquiry - Customer Top Up (37).
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Wajib |
+| `customerNumber` | `string` | Opsional |
+| `customerName` | `string` | Opsional |
+| `amount` | `*snap.Money` | Opsional |
+| `feeAmount` | `*snap.Money` | Opsional |
+| `transactionDate` | `string` | Opsional |
+| `sessionId` | `string` | Opsional |
+| `categoryId` | `json.RawMessage` | Opsional |
+| `notes` | `string` | Opsional |
+
+**Response &mdash; `CustomerTopUpResponse`**
+
+CustomerTopUpResponse adalah response body untuk API Customer Top Up. ReferenceNumber tidak tercantum pada tabel field tab Guides untuk endpoint ini, tetapi muncul pada contohnya sendiri ("REF993883") — field yang ditemukan lewat pengamatan langsung, bukan tebakan, sesuai kebiasaan package ini mempercayai contoh worked-example dibanding tabel yang tidak lengkap.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `referenceNo` | `string` | Opsional |
+| `partnerReferenceNo` | `string` | Opsional |
+| `sessionId` | `string` | Opsional |
+| `customerNumber` | `string` | Opsional |
+| `amount` | `*snap.Money` | Opsional |
+| `referenceNumber` | `string` | Opsional |
+
+
+---
+
+### `CustomerTopUpInquiryStatus`
+
+CustomerTopUpInquiryStatus memanggil endpoint SNAP Customer Top Up Inquiry Status (Service Code 39, path .../\{version\}/emoney/topup-status, HTTP POST). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh CustomerTopUpInquiryStatus agar byte hasil marshal yang persis sama dipakai untuk signing maupun wire body.
+
+```go
+func CustomerTopUpInquiryStatus(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req CustomerTopUpInquiryStatusRequest) (CustomerTopUpInquiryStatusResponse, error)
+```
+
+**Request &mdash; `CustomerTopUpInquiryStatusRequest`**
+
+CustomerTopUpInquiryStatusRequest adalah request body untuk API Customer Top Up Inquiry Status (Service Code 39). Endpoint ini punya bentuk originalX/serviceCode/status yang sama dengan Transaction Status Inquiry Bank — tipe ini identik field demi field dengan TransactionStatusInquiryBankRequest tetapi dengan namanya sendiri, mengikuti konvensi package ini "tipe berbeda untuk setiap service code walau bentuknya identik". ServiceCode adalah satu-satunya field wajib menurut tab Guides.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originalPartnerReferenceNo` | `string` | Opsional |
+| `originalReferenceNo` | `string` | Opsional |
+| `originalExternalId` | `string` | Opsional |
+| `serviceCode` | `string` | Wajib |
+| `transactionDate` | `string` | Opsional |
+| `amount` | `*snap.Money` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+**Response &mdash; `CustomerTopUpInquiryStatusResponse`**
+
+CustomerTopUpInquiryStatusResponse adalah response body untuk API Customer Top Up Inquiry Status — identik field demi field dengan TransactionStatusInquiryBankResponse tetapi dengan namanya sendiri; customer_topup_inquiry_status_test.go menjaga keduanya lewat pengujian kesetaraan penuh (reflection) agar tidak melenceng.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `originalPartnerReferenceNo` | `string` | Opsional |
+| `originalReferenceNo` | `string` | Opsional |
+| `originalExternalId` | `string` | Opsional |
+| `serviceCode` | `string` | Opsional |
+| `transactionDate` | `string` | Opsional |
+| `amount` | `*snap.Money` | Opsional |
+| `beneficiaryAccountNo` | `string` | Wajib |
+| `beneficiaryBankCode` | `string` | Opsional |
+| `previousResponseCode` | `string` | Opsional |
+| `referenceNumber` | `string` | Wajib |
+| `sourceAccountNo` | `string` | Wajib |
+| `transactionId` | `string` | Opsional |
+| `latestTransactionStatus` | `string` | Wajib |
+| `transactionStatusDesc` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |

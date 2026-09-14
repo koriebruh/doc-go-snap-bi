@@ -1,0 +1,142 @@
+---
+title: "Transfer to OTC"
+description: "Membuat, membatalkan, dan mengecek status transfer over-the-counter (pengambilan tunai di loket)."
+---
+
+## Transfer to OTC
+
+Membuat, membatalkan, dan mengecek status transfer over-the-counter (pengambilan tunai di loket).
+
+<CodeGroup>
+```go example.go
+resp, err := transfercredit.TransferToOTCCreatePayment(ctx, transport, hb, transfercredit.TransferToOTCCreatePaymentRequest{
+	PartnerReferenceNo: "2020102900000000000001",
+	CustomerNumber: "2020102900000000000001",
+	OTP: "...",
+	Amount: snap.Money{Value: "500000.00", Currency: "IDR"},
+})
+if err != nil {
+	// errors.Is(err, snap.ErrBadRequest), snap.ErrUnauthorized, etc.
+}
+```
+</CodeGroup>
+
+### `TransferToOTCCreatePayment`
+
+TransferToOTCCreatePayment memanggil endpoint SNAP Transfer To OTC - Create Payment (Service Code 44, path .../\{version\}/emoney/otc-cashout, HTTP POST — tanpa override method). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh TransferToOTCCreatePayment sehingga byte hasil marshal yang persis sama dipakai baik untuk signing maupun wire body.
+
+Operasi ini tidak idempotent dan package ini tidak melakukan retry. Caller yang melakukan retry atas call yang gagal atau timeout sebaiknya memakai ulang X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server mengacu pada header tersebut.
+
+```go
+func TransferToOTCCreatePayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req TransferToOTCCreatePaymentRequest) (TransferToOTCCreatePaymentResponse, error)
+```
+
+**Request &mdash; `TransferToOTCCreatePaymentRequest`**
+
+TransferToOTCCreatePaymentRequest adalah request body untuk API Transfer To OTC - Create Payment (Service Code 44). PartnerReferenceNo, CustomerNumber, OTP, dan Amount wajib menurut tab Guides.
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Wajib |
+| `customerNumber` | `string` | Wajib |
+| `otp` | `string` | Wajib |
+| `amount` | `snap.Money` | Wajib |
+| `feeType` | `string` | Opsional |
+
+**Response &mdash; `TransferToOTCCreatePaymentResponse`**
+
+TransferToOTCCreatePaymentResponse adalah response body untuk API Transfer To OTC - Create Payment.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `referenceNo` | `string` | Opsional |
+| `transactionDate` | `string` | Opsional |
+
+
+---
+
+### `TransferToOTCCancelPayment`
+
+TransferToOTCCancelPayment memanggil endpoint SNAP Transfer To OTC - Cancel Payment (Service Code 46, HTTP POST — tanpa override method). Path-nya terdokumentasi dengan dua cara yang saling bertentangan: tab Overview pada portal menyebut .../\{version\}/emoney/otc-cancel, tetapi baris request pada tab Code Snippet menyebut POST .../v1.0/otc/cashout/cancel — research secara eksplisit menandai ini sebagai belum terselesaikan, perlu verifikasi sandbox/Postman sebelum menetapkan salah satunya secara hardcode (research §6 item 5). Package ini memakai bacaan Overview pada komentar ini, konsisten dengan penamaan emoney/otc-* pada dua endpoint lain di sub-group ini, tetapi tidak membuat asumsi runtime ke arah manapun: hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder, termasuk EndpointURL, yang selalu dipasok oleh caller. TransferToOTCCancelPayment mengisi Body sendiri sehingga byte hasil marshal yang persis sama dipakai baik untuk signing maupun wire body.
+
+Operasi ini tidak idempotent dan package ini tidak melakukan retry. Caller yang melakukan retry atas call yang gagal atau timeout sebaiknya memakai ulang X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server mengacu pada header tersebut.
+
+```go
+func TransferToOTCCancelPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req TransferToOTCCancelPaymentRequest) (TransferToOTCCancelPaymentResponse, error)
+```
+
+**Request &mdash; `TransferToOTCCancelPaymentRequest`**
+
+TransferToOTCCancelPaymentRequest adalah request body untuk API Transfer To OTC - Cancel Payment (Service Code 46). OriginalPartnerReferenceNo, CustomerNumber, dan Reason wajib menurut tab Guides; OriginalReferenceNo bersifat Kondisional di sini (berubah menjadi Wajib pada response — lihat komentar dokumentasi TransferToOTCCancelPaymentResponse).
+
+| Field | Type | Presence |
+|---|---|---|
+| `originalReferenceNo` | `string` | Opsional |
+| `originalPartnerReferenceNo` | `string` | Wajib |
+| `originalExternalId` | `string` | Opsional |
+| `customerNumber` | `string` | Wajib |
+| `reason` | `string` | Wajib |
+
+**Response &mdash; `TransferToOTCCancelPaymentResponse`**
+
+TransferToOTCCancelPaymentResponse adalah response body untuk API Transfer To OTC - Cancel Payment. OriginalReferenceNo bersifat Wajib di sini, berbeda dari Kondisional pada request — research §5.8 secara eksplisit mencatat perubahan ini. CancelTime bersifat Kondisional ("harus diisi jika transaksi yang dibatalkan berhasil" — kondisi bergantung data yang tidak bisa dinyatakan package ini dalam sistem tipe), sehingga di sini dimodelkan sebagai Opsional.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `originalReferenceNo` | `string` | Wajib |
+| `cancelTime` | `string` | Opsional |
+| `transactionDate` | `string` | Opsional |
+
+
+---
+
+### `TransferToOTCTransferStatus`
+
+TransferToOTCTransferStatus memanggil endpoint SNAP Transfer To OTC - Transfer Status (Service Code 45, path .../\{version\}/emoney/otc-status, HTTP POST — tanpa override method). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh TransferToOTCTransferStatus sehingga byte hasil marshal yang persis sama dipakai baik untuk signing maupun wire body.
+
+```go
+func TransferToOTCTransferStatus(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req TransferToOTCTransferStatusRequest) (TransferToOTCTransferStatusResponse, error)
+```
+
+**Request &mdash; `TransferToOTCTransferStatusRequest`**
+
+TransferToOTCTransferStatusRequest adalah request body untuk API Transfer To OTC - Transfer Status (Service Code 45). Menurut research §5.8, endpoint ini memakai pola originalX/serviceCode/status yang sama seperti TransactionStatusInquiryBank (Phase 16) tetapi "menambahkan customerNumber M, amount M pada request" — CustomerNumber dan Amount adalah tambahan di luar pola dasar tersebut, dan Amount bersifat Wajib di sini (nilai snap.Money biasa, bukan *snap.Money, sesuai aturan yang sudah baku), berbeda dari *snap.Money Opsional pada pola dasar. AdditionalInfo tetap dipertahankan dari pola dasar (research §5.8 hanya menyebut dua tambahan di atas, bukan pengurangan, dan request dasar pada §5.4 mendokumentasikan additionalInfo — go-review ronde 1 menemukan kelalaian awal, tidak terdokumentasi, atas field ini). ServiceCode dan CustomerNumber wajib menurut tab Guides.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originalPartnerReferenceNo` | `string` | Opsional |
+| `originalReferenceNo` | `string` | Opsional |
+| `originalExternalId` | `string` | Opsional |
+| `serviceCode` | `string` | Wajib |
+| `transactionDate` | `string` | Opsional |
+| `customerNumber` | `string` | Wajib |
+| `amount` | `snap.Money` | Wajib |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+**Response &mdash; `TransferToOTCTransferStatusResponse`**
+
+TransferToOTCTransferStatusResponse adalah response body untuk API Transfer To OTC - Transfer Status — bentuknya identik dengan TransactionStatusInquiryBankResponse tetapi memakai nama tipe sendiri, sesuai konvensi package ini "tipe berbeda per service code meski bentuknya identik": research membatasi tambahan pada endpoint ini hanya "pada request", sehingga response-nya mencerminkan pola dasar persis sama. transfer_to_otc_status_test.go menjaga keduanya agar tidak melenceng lewat uji kesetaraan penuh berbasis reflection.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `originalPartnerReferenceNo` | `string` | Opsional |
+| `originalReferenceNo` | `string` | Opsional |
+| `originalExternalId` | `string` | Opsional |
+| `serviceCode` | `string` | Opsional |
+| `transactionDate` | `string` | Opsional |
+| `amount` | `*snap.Money` | Opsional |
+| `beneficiaryAccountNo` | `string` | Wajib |
+| `beneficiaryBankCode` | `string` | Opsional |
+| `previousResponseCode` | `string` | Opsional |
+| `referenceNumber` | `string` | Wajib |
+| `sourceAccountNo` | `string` | Wajib |
+| `transactionId` | `string` | Opsional |
+| `latestTransactionStatus` | `string` | Wajib |
+| `transactionStatusDesc` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |

@@ -1,0 +1,110 @@
+---
+title: "Authentication"
+description: "Mengambil dan menyimpan cache access token SNAP B2B/B2B2C dengan TokenManager"
+---
+
+Setiap transaction request membawa header `Authorization: Bearer <token>`.
+`TokenManager` mengambil dan, untuk B2B, meng-cache token tersebut — request
+access selalu ditandatangani secara asymmetric terlepas dari mode signing
+transaksi Anda (lihat [Signing](/id/concepts/signing)).
+
+## `TokenManager`
+
+```go
+type TokenManager struct {
+	BaseURL    string
+	ClientKey  string
+	Signer     crypto.Signer
+	HTTPClient *http.Client
+	Profile    Profile
+	Now        func() time.Time // opsional; nil berarti time.Now
+}
+```
+
+`HTTPClient` default ke klien internal dengan timeout yang wajar saat
+dibiarkan nil. `Profile` default ke `DefaultProfile{}`. `Now` hanya untuk
+testing.
+
+## B2B: `client_credentials`
+
+```go
+func (m *TokenManager) AccessTokenB2B(ctx context.Context) (string, error)
+```
+
+Mengembalikan access token `client_credentials` yang di-cache, mengambil
+(dan meng-cache) yang baru jika belum ada cache atau cache yang ada sudah
+mencapai atau melewati waktu kedaluwarsa yang dihitung.
+
+```go
+tm := &snap.TokenManager{
+	BaseURL:   "https://partner.example.com",
+	ClientKey: clientKey,
+	Signer:    rsaPrivateKey,
+}
+token, err := tm.AccessTokenB2B(ctx)
+```
+
+Pemanggil yang bersamaan (concurrent) saat refresh berbagi satu HTTP
+request yang sedang berjalan, alih-alih masing-masing mengirim request
+sendiri — single-flight yang dijaga mutex. Refresh itu sendiri berjalan
+pada context yang terpisah dari pemanggil manapun, sehingga pembatalan satu
+pemanggil tidak bisa meracuni hasil yang diterima pemanggil concurrent
+lainnya.
+
+Caching memakai `expiresIn` yang dilaporkan server dikurangi margin
+keamanan kecil (refetch sedikit sebelum benar-benar kedaluwarsa), dengan
+batas bawah setengah dari `expiresIn` agar nilai `expiresIn` yang kecil
+atau tidak biasa tidak membuat margin keamanan menelan seluruh jendela
+cache.
+
+## B2B2C: authorization code / refresh token
+
+```go
+func (m *TokenManager) AccessTokenB2B2C(ctx context.Context, grantType GrantType, code string) (Token, error)
+```
+
+Token B2B2C **tidak di-cache** — setiap panggilan adalah pertukaran baru,
+karena grant terikat pada satu customer/code spesifik, bukan integrasi
+secara keseluruhan.
+
+```go
+type GrantType string
+
+const (
+	GrantTypeClientCredentials GrantType = "client_credentials"
+	GrantTypeAuthorizationCode GrantType = "AUTHORIZATION_CODE"
+	GrantTypeRefreshToken      GrantType = "REFRESH_TOKEN"
+)
+```
+
+<Note>
+  Penulisan huruf di atas adalah format wire dari standar sendiri, bukan
+  typo — `client_credentials` huruf kecil bersambung garis bawah, sementara
+  grant B2B2C huruf besar bersambung garis bawah. Nilai dikirim persis
+  seperti yang dideklarasikan.
+</Note>
+
+```go
+type Token struct {
+	AccessToken  string
+	TokenType    string
+	ExpiresIn    time.Duration
+	RefreshToken string // diisi hanya untuk B2B2C
+}
+```
+
+Isi `code` dengan salah satu dari authorization code OAuth (untuk
+`GrantTypeAuthorizationCode`, biasanya didapat lewat flow yang dimulai
+`registration.GetOAuthURL`) atau refresh token yang sebelumnya diterbitkan
+(untuk `GrantTypeRefreshToken`).
+
+## Selanjutnya
+
+<CardGroup cols={2}>
+  <Card title="Header & Signing" icon="key" href="/id/concepts/headers">
+    Menggunakan token yang Anda dapat di sini untuk membangun signed transaction request.
+  </Card>
+  <Card title="Registration" icon="id-card" href="/id/reference/registration">
+    `GetOAuthURL` dan `AccountBinding` — flow onboarding B2B2C.
+  </Card>
+</CardGroup>

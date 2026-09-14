@@ -1,0 +1,152 @@
+---
+title: "Direct Debit BI-FAST"
+description: "BI-FAST e-mandate registration and payment, with its inbound notification type."
+---
+
+## Direct Debit BI-FAST
+
+BI-FAST e-mandate registration and payment, with its inbound notification type.
+
+<CodeGroup>
+```go example.go
+resp, err := transferdebit.DirectDebitBIFASTPayment(ctx, transport, hb, transferdebit.DirectDebitBIFASTPaymentRequest{
+	PartnerReferenceNo: "2020102900000000000001",
+	CustomerReference: "...",
+	BeneficiaryAccountNo: "1234567890",
+	BeneficiaryAccountName: "Jane Doe",
+	TransactionDate: "2026-09-14T10:00:00+07:00",
+	BankCode: "...",
+	SourceAccountNo: "1234567890",
+	SourceAccountName: "Jane Doe",
+	EMandateReffID: "2026-09-14T10:00:00+07:00",
+})
+if err != nil {
+	// errors.Is(err, snap.ErrBadRequest), snap.ErrUnauthorized, etc.
+}
+```
+</CodeGroup>
+
+### `DirectDebitBIFASTEMandateRegistration`
+
+DirectDebitBIFASTEMandateRegistration calls the SNAP Registrasi e-Mandate endpoint (Service Code 70, path .../\{version\}/debit/fast-emandate, HTTP POST — no method override). hb must already carry every field snap.HeaderBuilder needs except Body, which DirectDebitBIFASTEMandateRegistration sets itself so the exact marshaled bytes are used for both signing and the wire body.
+
+This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it.
+
+```go
+func DirectDebitBIFASTEMandateRegistration(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req DirectDebitBIFASTEMandateRegistrationRequest) (DirectDebitBIFASTEMandateRegistrationResponse, error)
+```
+
+**Request &mdash; `DirectDebitBIFASTEMandateRegistrationRequest`**
+
+DirectDebitBIFASTEMandateRegistrationRequest is the request body for API Registrasi e-Mandate (Service Code 70). BankCode, SourceAccountNo, SourceAccountName, BillerID, BillerName, CustomerID, and ExpiredDatetime are Mandatory per research §5.4.
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Optional |
+| `bankCode` | `string` | Mandatory |
+| `sourceAccountNo` | `string` | Mandatory |
+| `sourceAccountName` | `string` | Mandatory |
+| `maxAmount` | `*snap.Money` | Optional |
+| `billerId` | `string` | Mandatory |
+| `billerName` | `string` | Mandatory |
+| `customerId` | `string` | Mandatory |
+| `expiredDatetime` | `string` | Mandatory |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+**Response &mdash; `DirectDebitBIFASTEMandateRegistrationResponse`**
+
+DirectDebitBIFASTEMandateRegistrationResponse is the response body for API Registrasi e-Mandate. ReferenceNo is Conditional (success only). EMandateReffID is Mandatory per research §5.4.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Mandatory |
+| `responseMessage` | `string` | Mandatory |
+| `referenceNo` | `string` | Optional |
+| `partnerReferenceNo` | `string` | Optional |
+| `eMandateReffId` | `string` | Mandatory |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+
+---
+
+### `DirectDebitBIFASTPayment`
+
+DirectDebitBIFASTPayment calls the SNAP Trigger Direct Debit Transfer / Payment endpoint (Service Code 71, path .../\{version\}/debit/fast-payment, HTTP POST — no method override). hb must already carry every field snap.HeaderBuilder needs except Body, which DirectDebitBIFASTPayment sets itself so the exact marshaled bytes are used for both signing and the wire body.
+
+This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it.
+
+```go
+func DirectDebitBIFASTPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req DirectDebitBIFASTPaymentRequest) (DirectDebitBIFASTPaymentResponse, error)
+```
+
+**Request &mdash; `DirectDebitBIFASTPaymentRequest`**
+
+DirectDebitBIFASTPaymentRequest is the request body for API Trigger Direct Debit Transfer / Payment (Service Code 71). SourceAccountNo is documented String(34) in this endpoint's own field table, unlike Registrasi e-Mandate's String(19) for what is presumably the same logical field (research §6 item 4) — this package enforces no field-length validation anywhere, so the discrepancy has no code consequence.
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Mandatory |
+| `currency` | `string` | Optional |
+| `customerReference` | `string` | Mandatory |
+| `feeType` | `string` | Optional |
+| `remark` | `string` | Optional |
+| `beneficiaryAccountNo` | `string` | Mandatory |
+| `beneficiaryAccountName` | `string` | Mandatory |
+| `transactionDate` | `string` | Mandatory |
+| `bankCode` | `string` | Mandatory |
+| `sourceAccountNo` | `string` | Mandatory |
+| `sourceAccountName` | `string` | Mandatory |
+| `amount` | `*snap.Money` | Optional |
+| `eMandateReffId` | `string` | Mandatory |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+**Response &mdash; `DirectDebitBIFASTPaymentResponse`**
+
+DirectDebitBIFASTPaymentResponse is the response body for API Trigger Direct Debit Transfer / Payment. ReferenceNo is Conditional (success only). No field is Mandatory beyond the envelope.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Mandatory |
+| `responseMessage` | `string` | Mandatory |
+| `referenceNo` | `string` | Optional |
+| `partnerReferenceNo` | `string` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+
+---
+
+### `Direct Debit BI-FAST Notification`
+
+<Info>Inbound only &mdash; this package does not call an endpoint for this. A partner/switcher POSTs it to **your** callback URL; unmarshal the body into `DirectDebitBIFASTNotificationRequest` after verifying it with `snap.ServerVerifier` (see [Verifying inbound requests](/concepts/webhooks)), then reply with the shape below.</Info>
+
+**Received &mdash; `DirectDebitBIFASTNotificationRequest`**
+
+DirectDebitBIFASTNotificationRequest is the request body for API Notify (Service Code 72, path .../\{version\}/debit/fast-notify). This is a settlement callback the PJP receives, not a call this package makes — no calling function is provided, matching the package's established convention for inbound notification endpoints (QRMPMPaymentNotificationRequest, Phase 23; DirectDebitPaymentNotificationRequest, Phase 27; CPMPaymentNotificationRequest, Phase 29): a caller wires their own HTTP handler for this path, authenticates the inbound call with ServerVerifier.VerifyTransactionRequest, and json.Unmarshals the body into this type.
+
+OriginalReferenceNo, TransactionStatus, EMandateReffID, SourceAccountNo, and SourceAccountName are Mandatory per research §5.4; every other field is Optional.
+
+The status field is named TransactionStatus, not LatestTransactionStatus as used everywhere else in both Transfer Kredit and the rest of Transfer Debit — research §6 item 5 records this as an unexplained naming inconsistency in the portal itself and explicitly instructs recording it "as shown, not silently normalized." This type follows that instruction literally rather than renaming the field to match the rest of the package.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originalReferenceNo` | `string` | Mandatory |
+| `originalPartnerReferenceNo` | `string` | Optional |
+| `originalExternalId` | `string` | Optional |
+| `transactionStatus` | `string` | Mandatory |
+| `transactionStatusDesc` | `string` | Optional |
+| `eMandateReffId` | `string` | Mandatory |
+| `sourceAccountNo` | `string` | Mandatory |
+| `sourceAccountName` | `string` | Mandatory |
+| `amount` | `*snap.Money` | Optional |
+| `traceNo` | `string` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+**Your handler replies with &mdash; `DirectDebitBIFASTNotificationResponse`**
+
+DirectDebitBIFASTNotificationResponse is the response body a caller sends back for API Notify. Research documents this response as envelope-only — no fields beyond the standard responseCode/responseMessage envelope.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Mandatory |
+| `responseMessage` | `string` | Mandatory |
+

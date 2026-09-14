@@ -1,0 +1,217 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "go-snap-bi",
+  "description": "A Go implementation of Bank Indonesia's SNAP payment standard.",
+  "colors": {
+    "primary": "#145B91",
+    "light": "#3B82F6",
+    "dark": "#0A3A63"
+  },
+  "appearance": {
+    "default": "system",
+    "strict": false
+  },
+  "fonts": {
+    "family": "Inter"
+  },
+  "favicon": "/images/snap-favicon.png",
+  "logo": {
+    "light": "/images/snap-logo.png",
+    "dark": "/images/snap-logo.png"
+  },
+  "contextual": {
+    "options": [
+      "copy",
+      "view",
+      "assistant",
+      "chatgpt",
+      "claude",
+      "cursor"
+    ]
+  },
+  "styling": {
+    "eyebrows": "breadcrumbs",
+    "codeblocks": "system"
+  },
+  "navigation": {
+    "languages": [
+      {
+        "language": "en",
+        "default": true,
+        "tabs": [
+          {
+            "tab": "Guides",
+            "icon": "book-open",
+            "groups": [
+              {
+                "group": "Getting Started",
+                "pages": [
+                  "introduction",
+                  "quickstart"
+                ]
+              },
+              {
+                "group": "Concepts",
+                "pages": [
+                  "concepts/conventions",
+                  "concepts/headers",
+                  "concepts/signing",
+                  "concepts/authentication",
+                  "concepts/transport",
+                  "concepts/errors",
+                  "concepts/webhooks",
+                  "concepts/glossary",
+                  "concepts/faq"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "API Reference",
+            "icon": "square-terminal",
+            "groups": [
+              {
+                "group": "Registrasi",
+                "pages": [
+                  "reference/registration"
+                ]
+              },
+              {
+                "group": "Informasi Saldo",
+                "pages": [
+                  "reference/balance-info"
+                ]
+              },
+              {
+                "group": "Riwayat Transaksi",
+                "pages": [
+                  "reference/transaction-history"
+                ]
+              },
+              {
+                "group": "Transfer Kredit",
+                "pages": [
+                  "reference/transfer-credit/account-inquiry",
+                  "reference/transfer-credit/trigger-transfer",
+                  "reference/transfer-credit/virtual-account",
+                  "reference/transfer-credit/customer-topup",
+                  "reference/transfer-credit/bulk-cashin",
+                  "reference/transfer-credit/transfer-to-bank",
+                  "reference/transfer-credit/transfer-to-otc",
+                  "reference/transfer-credit/qr-mpm",
+                  "reference/transfer-credit/transaction-status"
+                ]
+              },
+              {
+                "group": "Transfer Debit",
+                "pages": [
+                  "reference/transfer-debit/auth-payment",
+                  "reference/transfer-debit/cpm",
+                  "reference/transfer-debit/direct-debit",
+                  "reference/transfer-debit/bifast"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "language": "id",
+        "tabs": [
+          {
+            "tab": "Guides",
+            "icon": "book-open",
+            "groups": [
+              {
+                "group": "Getting Started",
+                "pages": [
+                  "id/introduction",
+                  "id/quickstart"
+                ]
+              },
+              {
+                "group": "Concepts",
+                "pages": [
+                  "id/concepts/conventions",
+                  "id/concepts/headers",
+                  "id/concepts/signing",
+                  "id/concepts/authentication",
+                  "id/concepts/transport",
+                  "id/concepts/errors",
+                  "id/concepts/webhooks",
+                  "id/concepts/glossary",
+                  "id/concepts/faq"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "API Reference",
+            "icon": "square-terminal",
+            "groups": [
+              {
+                "group": "Registrasi",
+                "pages": [
+                  "id/reference/registration"
+                ]
+              },
+              {
+                "group": "Informasi Saldo",
+                "pages": [
+                  "id/reference/balance-info"
+                ]
+              },
+              {
+                "group": "Riwayat Transaksi",
+                "pages": [
+                  "id/reference/transaction-history"
+                ]
+              },
+              {
+                "group": "Transfer Kredit",
+                "pages": [
+                  "id/reference/transfer-credit/account-inquiry",
+                  "id/reference/transfer-credit/trigger-transfer",
+                  "id/reference/transfer-credit/virtual-account",
+                  "id/reference/transfer-credit/customer-topup",
+                  "id/reference/transfer-credit/bulk-cashin",
+                  "id/reference/transfer-credit/transfer-to-bank",
+                  "id/reference/transfer-credit/transfer-to-otc",
+                  "id/reference/transfer-credit/qr-mpm",
+                  "id/reference/transfer-credit/transaction-status"
+                ]
+              },
+              {
+                "group": "Transfer Debit",
+                "pages": [
+                  "id/reference/transfer-debit/auth-payment",
+                  "id/reference/transfer-debit/cpm",
+                  "id/reference/transfer-debit/direct-debit",
+                  "id/reference/transfer-debit/bifast"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "SNAP v1.0.2 (Sep 2024)",
+        "href": "/introduction"
+      },
+      {
+        "label": "GitHub",
+        "href": "https://github.com/koriebruh/go-snap-bi"
+      }
+    ]
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/koriebruh/go-snap-bi"
+    }
+  }
+}

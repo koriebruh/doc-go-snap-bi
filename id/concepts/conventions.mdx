@@ -1,0 +1,100 @@
+---
+title: "Konvensi Inti"
+description: "Bentuk yang diikuti setiap package, endpoint, dan type di go-snap-bi"
+---
+
+Setiap domain package (`registration`, `balanceinfo`, `transactionhistory`,
+`transfercredit`, `transferdebit`) dibangun mengikuti aturan-aturan kecil
+yang sama. Setelah memahami ini, bentuk setiap endpoint jadi mudah ditebak —
+Anda hanya membaca tabel field tertentu, bukan mempelajari pola baru.
+
+## Satu package per kategori portal ASPI
+
+Setiap domain package memetakan 1:1 ke salah satu kategori "API Services"
+tingkat atas di [ASPI SNAP Developer
+Site](https://apidevportal.aspi-indonesia.or.id/api-services), sehingga
+"endpoint ini masuk package mana" tidak pernah jadi keputusan subjektif.
+Root package `snap` hanya menyimpan hal yang dibutuhkan setiap domain
+package: signing, siklus hidup token, verifikasi inbound-request,
+penyusunan header, parsing response-code, dan `Money`.
+
+## Satu bentuk per endpoint
+
+Setiap calling function punya signature yang sama:
+
+```go
+func Endpoint(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req XRequest) (XResponse, error)
+```
+
+dan melakukan empat hal yang sama, secara berurutan:
+
+1. Marshal `req` menjadi JSON.
+2. Set `hb.Body` ke bytes hasil marshal tersebut, lalu sign dan kirim lewat `t.Do(ctx, hb)` — bytes yang sama dipakai untuk signature maupun wire body, jadi tidak mungkin ada perbedaan di antara keduanya.
+3. Periksa response dengan `snap.CheckResponseStatus` — **HTTP status selalu jadi acuan utama dibanding body `responseCode` SNAP, tidak pernah sebaliknya.** HTTP status non-2xx tidak pernah dianggap sukses meski `responseCode` yang disematkan mengklaim sebaliknya.
+4. Unmarshal ke `XResponse` dan kembalikan.
+
+Beberapa endpoint read-only, GET, atau berbasis URL-path-parameter
+(`GetOAuthURL`, `CardRegistrationInquiry`) menyimpang dari bentuk JSON-body
+ini karena standar sendiri mendefinisikannya sebagai query string atau path
+parameter — masing-masing dijelaskan eksplisit di halaman referensinya.
+
+## Presensi field: Mandatory / Optional / Conditional
+
+Standar SNAP menandai setiap field sebagai **M**andatory, **O**ptional,
+atau **C**onditional (opsional, tapi wajib diisi jika kondisi lain
+terpenuhi). Package ini merepresentasikannya lewat `omitempty` milik Go:
+
+- Field yang ditandai **Mandatory** oleh standar tidak memiliki `omitempty` — selalu muncul di wire, bahkan sebagai zero value.
+- Setiap field lainnya membawa `omitempty`.
+
+<Note>
+  Kolom "Presence" di halaman referensi menggabungkan Optional dan
+  Conditional menjadi satu kategori **Optional**, karena keduanya
+  ter-compile menjadi tag `omitempty` yang sama — tidak ada cara membedakan
+  keduanya hanya dari struct Go. Ketika sebuah field bersifat Conditional,
+  paragraf dokumentasi request-type endpoint tersebut (direproduksi di atas
+  tabel field) menyebutkannya secara eksplisit, misalnya *"OriginatorInfos
+  is Conditional"* — baca paragraf itu, bukan hanya tabelnya, sebelum
+  menganggap field Optional "aman untuk selalu dikosongkan."
+</Note>
+
+Package ini hanya memvalidasi bentuk wire, bukan aturan bisnis standar
+(misalnya "harus tepat salah satu dari A atau B yang diisi") — itu tugas
+server.
+
+## `json.RawMessage` berarti "bentuk ambigu atau tidak spesifik"
+
+Sebagian besar field bertipe `string`, `bool`, struct nested, atau
+`*snap.Money`. Sebuah field diberi tipe `json.RawMessage` ketika Guides tab
+mendokumentasikan bentuknya secara ambigu (misalnya nilai yang ditampilkan
+sebagai angka JSON polos di satu contoh dan sebagai string berkutip di
+contoh lain) — men-decode-nya sebagai tipe Go yang konkret akan menolak
+response server yang sah atau diam-diam memaksakan data yang sebenarnya
+bukan string. `additionalInfo` adalah kasus paling umum: standar
+membiarkannya sepenuhnya terbuka per integrasi.
+
+## Type `Money` bersama
+
+```go
+type Money struct {
+	Value    string `json:"value"`
+	Currency string `json:"currency"`
+}
+```
+
+`Money` adalah bentuk `{value, currency}` yang dipakai di setiap request
+atau response yang membawa nilai moneter. `Value` adalah string desimal
+(misalnya `"200000.00"`, selalu dua angka di belakang koma) — tidak pernah
+float, untuk menghindari pembulatan floating-point biner pada nilai uang.
+`Currency` mengikuti ISO 4217 (misalnya `"IDR"`).
+
+## Selanjutnya
+
+<CardGroup cols={2}>
+  <Card title="Header & Signing" icon="key" href="/id/concepts/headers">
+    Bagaimana `HeaderBuilder` menyusun dan menandatangani sebuah request.
+  </Card>
+  <Card title="Error" icon="triangle-exclamation" href="/id/concepts/errors">
+    Response code, sentinel error, dan aturan HTTP-status-menang secara detail.
+  </Card>
+</CardGroup>

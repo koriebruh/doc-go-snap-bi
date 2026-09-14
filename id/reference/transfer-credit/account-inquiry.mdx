@@ -1,0 +1,92 @@
+---
+title: "Cek Rekening"
+description: "Mengecek nama/status rekening penerima sebelum melakukan transfer."
+---
+
+## Cek Rekening
+
+Mengecek nama/status rekening penerima sebelum melakukan transfer.
+
+<CodeGroup>
+```go example.go
+resp, err := transfercredit.AccountInquiryInternal(ctx, transport, hb, transfercredit.AccountInquiryInternalRequest{
+	BeneficiaryAccountNo: "1234567890",
+})
+if err != nil {
+	// errors.Is(err, snap.ErrBadRequest), snap.ErrUnauthorized, etc.
+}
+```
+</CodeGroup>
+
+### `AccountInquiryInternal`
+
+AccountInquiryInternal memanggil endpoint SNAP Internal Account Inquiry (Service Code 15, path .../\{version\}/account-inquiry-internal). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh AccountInquiryInternal agar byte hasil marshal yang persis sama dipakai untuk signing maupun wire body.
+
+```go
+func AccountInquiryInternal(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req AccountInquiryInternalRequest) (AccountInquiryInternalResponse, error)
+```
+
+**Request &mdash; `AccountInquiryInternalRequest`**
+
+AccountInquiryInternalRequest adalah request body untuk API Internal Account Inquiry (Service Code 15). BeneficiaryAccountNo adalah satu-satunya field wajib menurut tab Guides.
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Opsional |
+| `beneficiaryAccountNo` | `string` | Wajib |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+**Response &mdash; `AccountInquiryInternalResponse`**
+
+AccountInquiryInternalResponse adalah response body untuk API Internal Account Inquiry.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `referenceNo` | `string` | Opsional |
+| `partnerReferenceNo` | `string` | Opsional |
+| `beneficiaryAccountName` | `string` | Wajib |
+| `beneficiaryAccountNo` | `string` | Wajib |
+| `beneficiaryAccountStatus` | `string` | Opsional |
+| `beneficiaryAccountType` | `string` | Opsional |
+| `currency` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+
+---
+
+### `AccountInquiryExternal`
+
+AccountInquiryExternal memanggil endpoint SNAP External Account Inquiry (Service Code 16, path .../\{version\}/account-inquiry-external). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh AccountInquiryExternal agar byte hasil marshal yang persis sama dipakai untuk signing maupun wire body.
+
+```go
+func AccountInquiryExternal(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req AccountInquiryExternalRequest) (AccountInquiryExternalResponse, error)
+```
+
+**Request &mdash; `AccountInquiryExternalRequest`**
+
+AccountInquiryExternalRequest adalah request body untuk API External Account Inquiry (Service Code 16). BeneficiaryAccountNo dan BeneficiaryBankCode wajib menurut tab Guides.
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Opsional |
+| `beneficiaryAccountNo` | `string` | Wajib |
+| `beneficiaryBankCode` | `string` | Wajib |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+**Response &mdash; `AccountInquiryExternalResponse`**
+
+AccountInquiryExternalResponse adalah response body untuk API External Account Inquiry.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `referenceNo` | `string` | Opsional |
+| `partnerReferenceNo` | `string` | Opsional |
+| `beneficiaryAccountName` | `string` | Wajib |
+| `beneficiaryAccountNo` | `string` | Wajib |
+| `beneficiaryBankName` | `string` | Opsional |
+| `currency` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |

@@ -1,0 +1,139 @@
+---
+title: "Verifikasi Request Inbound"
+description: "ServerVerifier dan KeyStore — memvalidasi signature sebelum mempercayai request SNAP inbound"
+---
+
+Untuk endpoint di mana **pemanggil package ini adalah server** — notifikasi
+pembayaran dan callback (lihat bagian "Inbound only" di masing-masing
+halaman referensi) — gunakan `ServerVerifier` untuk memvalidasi signature
+pada request masuk sebelum mempercayai body-nya. Ini adalah kebalikan dari
+signing sisi klien di [`HeaderBuilder`](/id/concepts/headers) dan
+[`TokenManager`](/id/concepts/authentication).
+
+## `KeyStore` — Anda yang mengimplementasikan ini
+
+```go
+type KeyStore interface {
+	PublicKey(clientKey string) (crypto.PublicKey, error)
+	ClientSecret(clientKey string) (string, error)
+}
+```
+
+Penyimpanan key/secret adalah urusan aplikasi (database, vault, dll.) —
+package ini tidak memilikinya. Untuk `clientKey` yang tidak dikenali,
+implementasi Anda **harus** mengembalikan error non-nil, bukan zero value
+dengan error nil: package ini memperlakukan error nil sebagai "lookup
+berhasil," jadi respons zero-value-dengan-error-nil untuk key yang tidak
+diketahui tidak bisa dibedakan dari store yang salah konfigurasi, dan akan
+muncul sebagai `ErrSignatureMismatch`/`ErrEmptyClientSecret` yang
+membingungkan alih-alih kegagalan "client tidak dikenal" yang jelas.
+
+## `SignatureMode`
+
+```go
+type SignatureMode int
+
+const (
+	SignatureModeAsymmetric SignatureMode = iota // zero value default; cocok dengan default HeaderBuilder{} (Symmetric: false)
+	SignatureModeSymmetric                       // cocok dengan HeaderBuilder{Symmetric: true}
+)
+```
+
+Mode signing level-transaksi yang disepakati dengan partner saat
+registrasi — ini konfigurasi, bukan pilihan runtime per-request. Zero
+value-nya adalah `SignatureModeAsymmetric`, mencerminkan zero value
+`HeaderBuilder.Symmetric` sendiri (`false`) untuk konfigurasi partner yang
+sama di sisi klien.
+
+## `IncomingRequest`
+
+```go
+type IncomingRequest struct {
+	Method      string // metode HTTP, mis. "POST"
+	EndpointURL string // full endpoint URL persis seperti dipakai dalam formula signing
+	Body        []byte // bytes request body persis seperti diterima
+	Timestamp   string // nilai header X-TIMESTAMP
+	ClientKey   string // nilai header X-CLIENT-KEY
+	Signature   string // nilai header X-SIGNATURE
+	AccessToken string // token dari header Authorization, tanpa prefix "Bearer "; wajib untuk verifikasi symmetric, diabaikan selainnya
+	ExternalID  string // nilai header X-EXTERNAL-ID; diteruskan untuk pertahanan replay Anda sendiri, tidak diperiksa package ini
+}
+```
+
+Anda mengambil field-field ini sendiri dari HTTP framework apapun yang
+Anda pakai — package ini tidak mem-parsing `*http.Request` secara
+langsung, agar tetap framework-agnostic.
+
+## `ServerVerifier`
+
+```go
+type ServerVerifier struct {
+	KeyStore        KeyStore
+	Mode            SignatureMode // request access-token selalu asymmetric terlepas dari ini
+	TimestampWindow time.Duration // toleransi kesegaran; zero berarti DefaultTimestampWindow
+	Profile         Profile       // opsional; nil berarti DefaultProfile{}
+	Now             func() time.Time
+}
+```
+
+```go
+func (v *ServerVerifier) VerifyAccessTokenRequest(req IncomingRequest) error
+func (v *ServerVerifier) VerifyTransactionRequest(req IncomingRequest) error
+```
+
+```go
+verifier := &snap.ServerVerifier{
+	KeyStore: myKeyStore,
+	Mode:     snap.SignatureModeSymmetric,
+}
+
+if err := verifier.VerifyTransactionRequest(snap.IncomingRequest{
+	Method:      r.Method,
+	EndpointURL: fullURL,
+	Body:        bodyBytes,
+	Timestamp:   r.Header.Get("X-TIMESTAMP"),
+	ClientKey:   r.Header.Get("X-CLIENT-KEY"),
+	Signature:   r.Header.Get("X-SIGNATURE"),
+	ExternalID:  r.Header.Get("X-EXTERNAL-ID"),
+}); err != nil {
+	// tolak request — jangan unmarshal Body dulu
+	return
+}
+
+var notif transfercredit.NotifyBulkCashInRequest
+json.Unmarshal(bodyBytes, &notif)
+```
+
+Standar mewajibkan pemeriksaan kesegaran timestamp, jadi `ServerVerifier`
+yang dibiarkan pada `TimestampWindow` zero-value gagal secara aman (fail
+closed) dengan `DefaultTimestampWindow` (5 menit) alih-alih diam-diam
+melewati pemeriksaan — aturan "kosong berarti default aman, tidak pernah
+nonaktif" yang sama yang diikuti setiap field opsional lain di type ini.
+Untuk menonaktifkan pemeriksaan kesegaran secara eksplisit, set
+`TimestampWindow` ke nilai sentinel khusus `DisableTimestampFreshnessCheck`,
+jangan pernah ke zero value — perbedaan ini menjaga agar "saya lupa
+men-set ini" dan "saya sengaja tidak menginginkan ini" tidak tertukar.
+
+## Sentinel error
+
+| Sentinel | Arti |
+|---|---|
+| `ErrNoKeyStore` | `ServerVerifier.KeyStore` bernilai nil |
+| `ErrEmptyClientSecret` | `KeyStore.ClientSecret` berhasil tapi mengembalikan `""` — bug konfigurasi, bukan request palsu |
+| `ErrSignatureMismatch` | signature gagal terverifikasi meski lookup key berhasil, untuk kedua mode signing |
+
+`ErrEmptyClientSecret` dan `ErrSignatureMismatch` sengaja dibedakan
+sehingga Anda bisa memberi alert berbeda antara "`KeyStore` Anda ada bug"
+versus "request ini dimanipulasi atau dipalsukan," lewat pemeriksaan
+`errors.Is` yang terpisah.
+
+## Selanjutnya
+
+<CardGroup cols={2}>
+  <Card title="Signing" icon="signature" href="/id/concepts/signing">
+    Primitif `VerifySymmetric`/`VerifyAsymmetric` yang mendasarinya.
+  </Card>
+  <Card title="Bulk Cash In" icon="money-bill-transfer" href="/id/reference/transfer-credit/bulk-cashin">
+    Contoh nyata type notifikasi inbound untuk diverifikasi dan di-unmarshal.
+  </Card>
+</CardGroup>

@@ -1,0 +1,27 @@
+---
+title: "Glossary"
+description: "SNAP and payments-domain terms used throughout this documentation"
+---
+
+Terms from the SNAP standard and the Indonesian payments ecosystem, as used
+consistently across this SDK's naming and documentation.
+
+| Term | Meaning |
+|---|---|
+| **SNAP** | Standar Nasional Open API Pembayaran — Bank Indonesia's national standard for open payment APIs, the standard this package implements. |
+| **ASPI** | Asosiasi Sistem Pembayaran Indonesia — the industry association that publishes and maintains the SNAP Developer Portal this package's endpoint bindings are built against. |
+| **PJP** | Penyedia Jasa Pembayaran — Payment Service Provider. The bank, e-wallet, or other regulated entity on either side of a SNAP transaction. |
+| **Penyedia Layanan** | The server side of a SNAP integration — the PJP receiving and answering a request. `ServerVerifier` is built for this role (see [Verifying inbound requests](/concepts/webhooks)). |
+| **Service Code** | A 2-digit code identifying one specific SNAP endpoint within the standard (e.g. `11` for Balance Inquiry). The [Status table](/introduction) maps each domain package to its Service Code range. |
+| **responseCode** | The SNAP standard's own 7-digit outcome code, embedded in every response body: `HTTPStatus(3) + ServiceCode(2) + CaseCode(2)`. See [`ParseResponseCode`](/concepts/errors). |
+| **Envelope** | This package's decoded generic response shape (`snap.Envelope`): the transport-level HTTP status plus whatever SNAP envelope fields the body carried. See [Transport](/concepts/transport). |
+| **B2B** | Business-to-Business — a `client_credentials` access-token grant identifying the integration itself, not an individual end customer. Cached by [`TokenManager.AccessTokenB2B`](/concepts/authentication). |
+| **B2B2C** | Business-to-Business-to-Consumer — an `authorization_code`/`refresh_token` grant tied to one specific end customer, obtained via an OAuth-style flow (see [`GetOAuthURL`](/reference/registration)). Never cached, since each token belongs to one customer. |
+| **Symmetric / Asymmetric signing** | The two SNAP signature modes agreed with a partner at registration: symmetric (HMAC-SHA512, a shared `ClientSecret`) or asymmetric (SHA256withRSA, a `crypto.Signer` keypair). See [Signing](/concepts/signing). |
+| **Mandatory / Optional / Conditional** | The standard's three field-presence classes. This package expresses them as Go's `omitempty` — see the [Core Conventions](/concepts/conventions) caveat on how Optional and Conditional collapse into one `omitempty` tag. |
+| **Idempotency / X-EXTERNAL-ID** | Most write endpoints are **not** idempotent — retrying with a fresh `X-EXTERNAL-ID` risks a duplicate transaction, since the server's own duplicate-detection keys on that header. Each endpoint's reference page states this explicitly. |
+| **Virtual Account (VA)** | A temporary or persistent account number a PJP issues so a payer can pay into it; see the [Virtual Account](/reference/transfer-credit/virtual-account) reference group. |
+| **MPM / CPM** | Merchant-Presented Mode and Customer-Presented Mode — the two SNAP QRIS payment flows, distinguished by which party displays the QR code. See [QR / MPM](/reference/transfer-credit/qr-mpm) (credit side) and [CPM](/reference/transfer-debit/cpm) (debit side). |
+| **OTT** | One-Time Token — a short-lived token [`ApplyOTT`](/reference/transfer-credit/qr-mpm) issues to authorize a single QR MPM payment. |
+| **RTGS / SKNBI / BI-FAST** | Bank Indonesia's three interbank settlement rails: Real-Time Gross Settlement (high-value, immediate), Sistem Kliring Nasional Bank Indonesia (batch clearing), and BI-FAST (real-time retail transfer). Each has its own Trigger Transfer or Direct Debit endpoint and inbound notification type. |
+| **`Money`** | This package's shared `{value, currency}` amount type (`snap.Money`) — `value` is a decimal string, never a float, to avoid binary floating-point rounding on money. See [Core Conventions](/concepts/conventions). |

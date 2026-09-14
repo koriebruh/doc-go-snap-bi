@@ -1,0 +1,75 @@
+---
+title: "Balance Info"
+description: "Informasi Saldo — Service Code 11 — 1 endpoint"
+---
+
+## Balance Info
+
+The portal's smallest category: one endpoint, one file, one package, in `balanceinfo`.
+
+<CodeGroup>
+```go example.go
+resp, err := balanceinfo.BalanceInquiry(ctx, transport, hb, balanceinfo.BalanceInquiryRequest{
+	PartnerReferenceNo: "2020102900000000000001",
+	BankCardToken: "...",
+	AccountNo: "1234567890",
+})
+if err != nil {
+	// errors.Is(err, snap.ErrBadRequest), snap.ErrUnauthorized, etc.
+}
+```
+</CodeGroup>
+
+### `BalanceInquiry`
+
+BalanceInquiry calls the SNAP Balance Inquiry endpoint (Service Code 11, path .../\{version\}/balance-inquiry). hb must already carry every field snap.HeaderBuilder needs except Body, which BalanceInquiry sets itself so the exact marshaled bytes are used for both signing and the wire body.
+
+```go
+func BalanceInquiry(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req BalanceInquiryRequest) (BalanceInquiryResponse, error)
+```
+
+**Request &mdash; `BalanceInquiryRequest`**
+
+BalanceInquiryRequest is the request body for API Balance Inquiry (Service Code 11). Per the standard, exactly one of BankCardToken or AccountNo is expected to be set (unless a B2B2C customer token supplies the account context instead) — this type does not enforce that itself, the server validates and rejects an inquiry that omits both.
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Optional |
+| `bankCardToken` | `string` | Optional |
+| `accountNo` | `string` | Optional |
+| `balanceTypes` | `[]string` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+**Response &mdash; `BalanceInquiryResponse`**
+
+BalanceInquiryResponse is the response body for API Balance Inquiry.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Mandatory |
+| `responseMessage` | `string` | Mandatory |
+| `referenceNo` | `string` | Optional |
+| `partnerReferenceNo` | `string` | Optional |
+| `accountNo` | `string` | Optional |
+| `name` | `string` | Optional |
+| `accountInfos` | `[]AccountInfo` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+<Accordion title="AccountInfo fields">
+AccountInfo is one entry in a BalanceInquiryResponse's accountInfos array.
+
+| Field | Type | Presence |
+|---|---|---|
+| `balanceType` | `string` | Optional |
+| `amount` | `*snap.Money` | Optional |
+| `floatAmount` | `*snap.Money` | Optional |
+| `holdAmount` | `*snap.Money` | Optional |
+| `availableBalance` | `*snap.Money` | Optional |
+| `ledgerBalance` | `*snap.Money` | Optional |
+| `currentMultilateralLimit` | `*snap.Money` | Optional |
+| `registrationStatusCode` | `string` | Optional |
+| `status` | `string` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+</Accordion>
+

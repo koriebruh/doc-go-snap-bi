@@ -1,0 +1,123 @@
+---
+title: "Transaction Status Inquiry"
+description: "Check a previously submitted transfer's status against a bank or non-bank counterparty."
+---
+
+## Transaction Status Inquiry
+
+Check a previously submitted transfer's status against a bank or non-bank counterparty.
+
+<CodeGroup>
+```go example.go
+resp, err := transfercredit.TransactionStatusInquiryBank(ctx, transport, hb, transfercredit.TransactionStatusInquiryBankRequest{
+	ServiceCode: "...",
+})
+if err != nil {
+	// errors.Is(err, snap.ErrBadRequest), snap.ErrUnauthorized, etc.
+}
+```
+</CodeGroup>
+
+### `TransactionStatusInquiryBank`
+
+TransactionStatusInquiryBank calls the SNAP Transaction Status Inquiry Bank endpoint (Service Code 36, path .../\{version\}/transfer/status — the path was previously misstated here as transaction-status-inquiry-bank with no recorded justification, corrected against research §1's own path table, HTTP POST — no method override). hb must already carry every field snap.HeaderBuilder needs except Body, which TransactionStatusInquiryBank sets itself so the exact marshaled bytes are used for both signing and the wire body.
+
+```go
+func TransactionStatusInquiryBank(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req TransactionStatusInquiryBankRequest) (TransactionStatusInquiryBankResponse, error)
+```
+
+**Request &mdash; `TransactionStatusInquiryBankRequest`**
+
+TransactionStatusInquiryBankRequest is the request body for API Transaction Status Inquiry Bank (Service Code 36). ServiceCode is the only mandatory field per the Guides tab — it points at the original transaction's service code (e.g. "17" for Intrabank).
+
+| Field | Type | Presence |
+|---|---|---|
+| `originalPartnerReferenceNo` | `string` | Optional |
+| `originalReferenceNo` | `string` | Optional |
+| `originalExternalId` | `string` | Optional |
+| `serviceCode` | `string` | Mandatory |
+| `transactionDate` | `string` | Optional |
+| `amount` | `*snap.Money` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+**Response &mdash; `TransactionStatusInquiryBankResponse`**
+
+TransactionStatusInquiryBankResponse is the response body for API Transaction Status Inquiry Bank. Unlike the Virtual Account sub-group, this response has no nested data object — fields sit directly on the response, matching the flat-response precedent already used by AccountInquiryInternalResponse. The original request fields are echoed back (Optional here, regardless of their request cardinality), matching AccountInquiryInternalResponse's PartnerReferenceNo echo. LatestTransactionStatus is the shared transactionStatus 2-digit enum (research §3: 00 Success, 01 Initiated, 02 Paying, 03 Pending, 04 Refunded, 05 Canceled, 06 Failed, 07 Not found).
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Mandatory |
+| `responseMessage` | `string` | Mandatory |
+| `originalPartnerReferenceNo` | `string` | Optional |
+| `originalReferenceNo` | `string` | Optional |
+| `originalExternalId` | `string` | Optional |
+| `serviceCode` | `string` | Optional |
+| `transactionDate` | `string` | Optional |
+| `amount` | `*snap.Money` | Optional |
+| `beneficiaryAccountNo` | `string` | Mandatory |
+| `beneficiaryBankCode` | `string` | Optional |
+| `previousResponseCode` | `string` | Optional |
+| `referenceNumber` | `string` | Mandatory |
+| `sourceAccountNo` | `string` | Mandatory |
+| `transactionId` | `string` | Optional |
+| `latestTransactionStatus` | `string` | Mandatory |
+| `transactionStatusDesc` | `string` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+
+---
+
+### `TransactionStatusInquiryNonBank`
+
+TransactionStatusInquiryNonBank calls the SNAP Transaction Status Inquiry (non-bank) endpoint (Service Code 53, path .../\{version\}/qr/qr-mpm-status, HTTP POST — no method override). The shared qr/ path prefix does not mean this belongs to the MPM/QR sub-group: research §5.10 is its own sub-group, distinct from §5.9 MPM/QR, and the path naming is the portal's own inconsistency, not a signal to prefix this type QRMPM*. hb must already carry every field snap.HeaderBuilder needs except Body, which TransactionStatusInquiryNonBank sets itself so the exact marshaled bytes are used for both signing and the wire body.
+
+This is a read-only status query and carries no non-idempotency note, matching TransactionStatusInquiryBank's precedent.
+
+```go
+func TransactionStatusInquiryNonBank(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req TransactionStatusInquiryNonBankRequest) (TransactionStatusInquiryNonBankResponse, error)
+```
+
+**Request &mdash; `TransactionStatusInquiryNonBankRequest`**
+
+TransactionStatusInquiryNonBankRequest is the request body for API Transaction Status Inquiry (non-bank, Service Code 53). It is a superset of TransactionStatusInquiryBankRequest (Phase 16) — same 7 base fields verbatim — plus OriginalResponseCode, OriginalResponseMessage, SessionID, and RequestID.
+
+Research §5.10 line 210 says only "same shape... plus [these four fields]" with no Resp: segment naming a response addition, unlike every §5.9 row that adds response fields explicitly. Placement on the request is inferred from that absence, not stated outright — see the Phase 25 design doc.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originalPartnerReferenceNo` | `string` | Optional |
+| `originalReferenceNo` | `string` | Optional |
+| `originalExternalId` | `string` | Optional |
+| `serviceCode` | `string` | Mandatory |
+| `transactionDate` | `string` | Optional |
+| `amount` | `*snap.Money` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+| `originalResponseCode` | `string` | Optional |
+| `originalResponseMessage` | `string` | Optional |
+| `sessionId` | `string` | Optional |
+| `requestId` | `string` | Optional |
+
+**Response &mdash; `TransactionStatusInquiryNonBankResponse`**
+
+TransactionStatusInquiryNonBankResponse is the response body for API Transaction Status Inquiry (non-bank) — field-identical to TransactionStatusInquiryBankResponse under its own name, per the package's "distinct types per service code even for identical shapes" convention. Research names no response-side additions for this endpoint (see the request doc comment). Guarded against drift by a full-equality reflection test in this package's test file.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Mandatory |
+| `responseMessage` | `string` | Mandatory |
+| `originalPartnerReferenceNo` | `string` | Optional |
+| `originalReferenceNo` | `string` | Optional |
+| `originalExternalId` | `string` | Optional |
+| `serviceCode` | `string` | Optional |
+| `transactionDate` | `string` | Optional |
+| `amount` | `*snap.Money` | Optional |
+| `beneficiaryAccountNo` | `string` | Mandatory |
+| `beneficiaryBankCode` | `string` | Optional |
+| `previousResponseCode` | `string` | Optional |
+| `referenceNumber` | `string` | Mandatory |
+| `sourceAccountNo` | `string` | Mandatory |
+| `transactionId` | `string` | Optional |
+| `latestTransactionStatus` | `string` | Mandatory |
+| `transactionStatusDesc` | `string` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+

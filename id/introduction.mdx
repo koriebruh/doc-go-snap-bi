@@ -1,0 +1,94 @@
+---
+title: "Pendahuluan"
+description: "Implementasi Go untuk standar pembayaran SNAP milik Bank Indonesia"
+---
+
+<div style={{ textAlign: "center", padding: "1.5rem 0 0.5rem" }}>
+  <img src="/images/snap-logo.png" alt="SNAP — terstandar, terintegrasi" style={{ height: "72px" }} />
+  <div style={{ height: "3px", width: "120px", margin: "1.25rem auto 0", borderRadius: "2px", background: "linear-gradient(90deg, #145B91 0%, #145B91 45%, #FFFFFF 45%, #FFFFFF 55%, #DC2626 55%, #DC2626 100%)" }} />
+</div>
+
+**go-snap-bi** adalah implementasi Go untuk standar **SNAP** (Standar
+Nasional Open API Pembayaran) milik Bank Indonesia — **versi dokumen 1.0.2
+(September 2024)** — mencakup seluruh kategori API Service yang
+dipublikasikan di
+[ASPI SNAP Developer Site](https://apidevportal.aspi-indonesia.or.id/api-services).
+
+<Info>
+  SDK ini menargetkan **standar SNAP versi 1.0.2**, dipublikasikan
+  September 2024. Jika ASPI/Bank Indonesia merilis versi dokumen yang lebih
+  baru, cek [repository GitHub](https://github.com/koriebruh/go-snap-bi)
+  sebelum mengasumsikan sebuah field atau endpoint di sini masih sesuai
+  dengan spesifikasi terbaru.
+</Info>
+
+<p style={{ textAlign: "center", fontSize: "0.8rem", color: "var(--gray-500, #6B7280)" }}>
+  Implementasi independen dan tidak resmi dari standar yang dipublikasikan
+  oleh Bank Indonesia dan [ASPI](https://apidevportal.aspi-indonesia.or.id/api-services) —
+  tidak berafiliasi dengan atau didukung oleh keduanya.
+</p>
+
+```bash
+go get github.com/koriebruh/go-snap-bi
+```
+
+## Status
+
+Seluruh 7 kategori API Service pada portal sudah tercakup — **79 binding
+endpoint bertipe** di 5 package domain, ditambah inti
+signing/token/transport yang dipakai bersama.
+
+| Kategori portal | Package | Service Code | Endpoint |
+|---|---|---|---|
+| Registrasi | [`registration`](/id/reference/registration) | 01–10, 81 | 11 |
+| Informasi Saldo | [`balanceinfo`](/id/reference/balance-info) | 11 | 1 |
+| Riwayat Transaksi | [`transactionhistory`](/id/reference/transaction-history) | 12–14 | 3 |
+| Transfer Kredit | [`transfercredit`](/id/reference/transfer-credit/account-inquiry) | 15–53, 75–78 | 43 |
+| Transfer Debit | [`transferdebit`](/id/reference/transfer-debit/auth-payment) | 54–72, 79–80 | 21 |
+| Keamanan | package `snap` di root ([Authentication](/id/concepts/authentication)) | 73–74 | — |
+| Administrasi | *(tidak ada endpoint API di portal — hanya dokumen onboarding)* | — | — |
+
+Endpoint Access Token B2B/B2B2C milik Keamanan berada di package root
+karena setiap package lain bergantung padanya untuk mendapatkan token
+terlebih dahulu — itu adalah infrastruktur autentikasi, bukan endpoint
+domain yang setara.
+
+## Desain
+
+<CardGroup cols={2}>
+  <Card title="Satu core, lima package domain" icon="layer-group">
+    Package `snap` di root hanya menyimpan apa yang dibutuhkan setiap
+    package domain: signing request, siklus hidup access-token, verifikasi
+    request masuk, penyusunan header, parsing kode respons, dan tipe
+    `Money` yang dipakai bersama. Setiap package domain memetakan 1:1 ke
+    satu kategori portal ASPI.
+  </Card>
+  <Card title="Satu bentuk per endpoint" icon="shapes">
+    Setiap fungsi pemanggil mengikuti pola yang sama: marshal request
+    bertipe, sign lalu kirim, cek status respons (status HTTP bersifat
+    otoritatif dibanding body `responseCode` SNAP, tidak pernah
+    sebaliknya), lalu unmarshal ke response bertipe.
+  </Card>
+  <Card title="Kesetiaan pada bentuk wire dibanding kenyamanan" icon="file-signature">
+    Penanda field Mandatory/Optional/Conditional dari standar
+    dipertahankan persis sebagai presence `omitempty`; field yang
+    bentuknya ambigu atau tidak dispesifikasikan dimodelkan sebagai
+    `json.RawMessage`, bukan ditebak.
+  </Card>
+  <Card title="Nol dependensi pihak ketiga" icon="cube">
+    Semuanya standard library Go — `net/http`, `crypto/rsa`,
+    `crypto/hmac`, `encoding/json`.
+  </Card>
+</CardGroup>
+
+## Langkah selanjutnya
+
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="rocket" href="/id/quickstart">
+    Install module dan buat signed request pertama Anda.
+  </Card>
+  <Card title="Konvensi inti" icon="book" href="/id/concepts/conventions">
+    Pola satu-bentuk-per-endpoint, presence field, dan aturan penanganan
+    error yang dipakai bersama di setiap package.
+  </Card>
+</CardGroup>

@@ -1,0 +1,299 @@
+---
+title: "CPM"
+description: "Customer-Presented-Mode QR (pelanggan menampilkan QR, merchant yang memindai): generate, bayar, query, batal, refund; hasil pembayaran juga datang sebagai notifikasi masuk."
+---
+
+## CPM
+
+Customer-Presented-Mode QR (pelanggan menampilkan QR, merchant yang memindai): generate, bayar, query, batal, refund; hasil pembayaran juga datang sebagai notifikasi masuk.
+
+<CodeGroup>
+```go example.go
+resp, err := transferdebit.CPMPayment(ctx, transport, hb, transferdebit.CPMPaymentRequest{
+	PartnerReferenceNo: "2020102900000000000001",
+	QRContent: "...",
+	MerchantID: "...",
+})
+if err != nil {
+	// errors.Is(err, snap.ErrBadRequest), snap.ErrUnauthorized, etc.
+}
+```
+</CodeGroup>
+
+### `CPMGenerateQR`
+
+CPMGenerateQR memanggil endpoint SNAP Generate QR CPM (Service Code 59, path .../\{version\}/qr/qr-cpm-generate, HTTP POST — tanpa override method). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh CPMGenerateQR agar byte hasil marshal yang persis sama dipakai baik untuk signing maupun body di jalur kirim.
+
+Operasi ini tidak idempotent dan package ini tidak melakukan retry. Caller yang me-retry panggilan yang gagal atau timeout sebaiknya memakai ulang X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server berpatokan pada header tersebut.
+
+```go
+func CPMGenerateQR(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req CPMGenerateQRRequest) (CPMGenerateQRResponse, error)
+```
+
+**Request &mdash; `CPMGenerateQRRequest`**
+
+CPMGenerateQRRequest adalah body request untuk API Generate QR CPM (Service Code 59). PartnerTrxDate adalah satu-satunya field Wajib menurut riset §5.2.
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Opsional |
+| `userAccessToken` | `string` | Opsional |
+| `merchantId` | `string` | Opsional |
+| `subMerchantId` | `string` | Opsional |
+| `partnerTrxDate` | `string` | Wajib |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+**Response &mdash; `CPMGenerateQRResponse`**
+
+CPMGenerateQRResponse adalah body response untuk API Generate QR CPM. ExpiryTime adalah satu-satunya field Wajib di luar envelope. Berbeda dari GenerateQRMPMResponse (Transfer Kredit, Service 47), QRContent/QRURL di sini tidak membawa aturan kondisional salah-satu-dari-tiga — keduanya sama-sama Opsional biasa, dan tidak ada field QRImage sama sekali di sub-grup ini; ini diturunkan secara independen dari tabel field endpoint ini sendiri, bukan salinan dari endpoint sejenis tersebut.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `referenceNo` | `string` | Opsional |
+| `partnerReferenceNo` | `string` | Opsional |
+| `qrContent` | `string` | Opsional |
+| `qrUrl` | `string` | Opsional |
+| `expiryTime` | `string` | Wajib |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+
+---
+
+### `CPMPayment`
+
+CPMPayment memanggil endpoint SNAP CPM Payment (Service Code 60, path .../\{version\}/qr/qr-cpm-payment, HTTP POST — tanpa override method). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh CPMPayment agar byte hasil marshal yang persis sama dipakai baik untuk signing maupun body di jalur kirim.
+
+Operasi ini tidak idempotent dan package ini tidak melakukan retry. Caller yang me-retry panggilan yang gagal atau timeout sebaiknya memakai ulang X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server berpatokan pada header tersebut.
+
+```go
+func CPMPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req CPMPaymentRequest) (CPMPaymentResponse, error)
+```
+
+**Request &mdash; `CPMPaymentRequest`**
+
+CPMPaymentRequest adalah body request untuk API CPM Payment (Service Code 60). PartnerReferenceNo, QRContent, dan MerchantID bersifat Wajib menurut riset §5.2.
+
+Items didokumentasikan sebagai "Object" yang tidak terstruktur tanpa tabel field level-item di mana pun dalam riset — dimodelkan sebagai json.RawMessage, mengikuti perlakuan package ini yang sudah ada untuk field yang benar-benar tidak bertipe (alasan yang sama dengan AdditionalInfo; juga sudah dipakai untuk AccountBindingRequest.AdditionalData dan VerifyOTPResponse.QParams, jadi ini sudah ada preseden-nya, bukan konvensi baru).
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Wajib |
+| `qrContent` | `string` | Wajib |
+| `amount` | `*snap.Money` | Opsional |
+| `feeAmount` | `*snap.Money` | Opsional |
+| `merchantId` | `string` | Wajib |
+| `subMerchantId` | `string` | Opsional |
+| `title` | `string` | Opsional |
+| `expiryTime` | `string` | Opsional |
+| `items` | `json.RawMessage` | Opsional |
+| `externalStoreId` | `string` | Opsional |
+| `merchantName` | `string` | Opsional |
+| `merchantLocation` | `string` | Opsional |
+| `acquirerName` | `string` | Opsional |
+| `terminalId` | `string` | Opsional |
+| `scannerInfo` | `*CPMPaymentScannerInfo` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+<Accordion title="CPMPaymentScannerInfo fields">
+CPMPaymentScannerInfo adalah objek bersarang "scannerInfo" yang opsional pada request CPM Payment. Keempat anggotanya Opsional menurut riset §5.2.
+
+| Field | Type | Presence |
+|---|---|---|
+| `deviceId` | `string` | Opsional |
+| `deviceVersion` | `string` | Opsional |
+| `deviceModel` | `string` | Opsional |
+| `deviceIp` | `string` | Opsional |
+
+</Accordion>
+
+**Response &mdash; `CPMPaymentResponse`**
+
+CPMPaymentResponse adalah body response untuk API CPM Payment. ReferenceNo bersifat Kondisional (hanya saat sukses). Tidak ada field yang Wajib di luar envelope.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `referenceNo` | `string` | Opsional |
+| `partnerReferenceNo` | `string` | Opsional |
+| `transactionDate` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+
+---
+
+### `CPM Payment Notification`
+
+<Info>Hanya masuk (inbound) &mdash; package ini tidak memanggil endpoint untuk hal ini. Partner/switcher yang mengirim POST ke callback URL **Anda**; unmarshal body ke `CPMPaymentNotificationRequest` setelah memverifikasinya dengan `snap.ServerVerifier` (lihat [Memverifikasi request masuk](/id/concepts/webhooks)), lalu balas dengan bentuk di bawah.</Info>
+
+**Diterima &mdash; `CPMPaymentNotificationRequest`**
+
+CPMPaymentNotificationRequest adalah body request untuk API Payment Notification (Service Code 79, path .../\{version\}/qr/qr-cpm-notify). Ini adalah callback settlement yang diterima PJP, bukan panggilan yang dibuat package ini — tidak ada fungsi pemanggil yang disediakan, mengikuti konvensi baku package ini untuk endpoint notifikasi masuk (QRMPMPaymentNotificationRequest, Fase 23; DirectDebitPaymentNotificationRequest, Fase 27): caller memasang HTTP handler-nya sendiri untuk path ini, mengautentikasi panggilan masuk dengan ServerVerifier.VerifyTransactionRequest, dan melakukan json.Unmarshal pada body ke tipe ini.
+
+MerchantID dan LatestTransactionStatus bersifat Wajib menurut riset §5.2; setiap field lain Opsional. Riset secara eksplisit mengonfirmasi endpoint ini cocok dengan bentuk dan arah QRMPMPaymentNotification (response hanya-envelope, masuk), berbeda dari klaim "identik secara struktur" pada Cancel Payment (62) yang terbantahkan di bagian yang sama — kutipan ini terbukti benar setelah diverifikasi.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originalPartnerReferenceNo` | `string` | Opsional |
+| `originalReferenceNo` | `string` | Opsional |
+| `merchantId` | `string` | Wajib |
+| `subMerchantId` | `string` | Opsional |
+| `externalStoreId` | `string` | Opsional |
+| `amount` | `*snap.Money` | Opsional |
+| `latestTransactionStatus` | `string` | Wajib |
+| `transactionStatusDesc` | `string` | Opsional |
+| `customerNumber` | `string` | Opsional |
+| `accountType` | `string` | Opsional |
+| `destinationNumber` | `string` | Opsional |
+| `destinationAccountName` | `string` | Opsional |
+| `sessionId` | `string` | Opsional |
+| `bankCode` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+**Handler Anda membalas dengan &mdash; `CPMPaymentNotificationResponse`**
+
+CPMPaymentNotificationResponse adalah body response yang dikirim balik caller untuk API Payment Notification. Riset mendokumentasikan response ini hanya-envelope — tidak ada field selain envelope standar responseCode/responseMessage.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+
+
+---
+
+### `CPMQueryPayment`
+
+CPMQueryPayment memanggil endpoint SNAP Query Payment (Service Code 61, path .../\{version\}/qr/qr-cpm-query, HTTP POST — tanpa override method). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh CPMQueryPayment agar byte hasil marshal yang persis sama dipakai baik untuk signing maupun body di jalur kirim.
+
+Ini adalah query status yang hanya-baca dan tidak membawa catatan non-idempotency, mengikuti preseden TransactionStatusInquiryBank.
+
+```go
+func CPMQueryPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req CPMQueryPaymentRequest) (CPMQueryPaymentResponse, error)
+```
+
+**Request &mdash; `CPMQueryPaymentRequest`**
+
+CPMQueryPaymentRequest adalah body request untuk API Query Payment (Service Code 61). Tidak ada field yang Wajib menurut riset §5.2.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originalReferenceNo` | `string` | Opsional |
+| `originalPartnerReferenceNo` | `string` | Opsional |
+| `originalExternalId` | `string` | Opsional |
+| `merchantId` | `string` | Opsional |
+| `subMerchantId` | `string` | Opsional |
+| `externalStoreId` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+**Response &mdash; `CPMQueryPaymentResponse`**
+
+CPMQueryPaymentResponse adalah body response untuk API Query Payment. LatestTransactionStatus dan PaidTime bersifat Wajib menurut riset §5.2. OriginalReferenceNo bersifat Kondisional (hanya saat sukses).
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `originalReferenceNo` | `string` | Opsional |
+| `originalPartnerReferenceNo` | `string` | Opsional |
+| `originalExternalId` | `string` | Opsional |
+| `title` | `string` | Opsional |
+| `latestTransactionStatus` | `string` | Wajib |
+| `transactionStatusDesc` | `string` | Opsional |
+| `paidTime` | `string` | Wajib |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+
+---
+
+### `CPMCancelPayment`
+
+CPMCancelPayment memanggil endpoint SNAP Cancel Payment (Service Code 62, path .../\{version\}/qr/qr-cpm-cancel, HTTP POST — tanpa override method). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh CPMCancelPayment agar byte hasil marshal yang persis sama dipakai baik untuk signing maupun body di jalur kirim.
+
+Operasi ini tidak idempotent dan package ini tidak melakukan retry. Caller yang me-retry panggilan yang gagal atau timeout sebaiknya memakai ulang X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server berpatokan pada header tersebut.
+
+```go
+func CPMCancelPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req CPMCancelPaymentRequest) (CPMCancelPaymentResponse, error)
+```
+
+**Request &mdash; `CPMCancelPaymentRequest`**
+
+CPMCancelPaymentRequest adalah body request untuk API Cancel Payment (Service Code 62). OriginalPartnerReferenceNo adalah satu-satunya field Wajib menurut tabel field riset §5.2 sendiri.
+
+Prosa ringkasan riset mengklaim endpoint ini "identik secara struktur dengan QRMPMCancelPaymentRequest/Response" (Fase 24) — klaim itu tidak terbukti: field Wajib QRMPMCancelPaymentRequest adalah MerchantID/Reason (ketiga field originalX di sana juga Opsional), sebuah himpunan yang berbeda dari OriginalPartnerReferenceNo yang Wajib di endpoint ini sendiri. Tabel per-field yang jadi acuan di sini, bukan kalimat ringkasannya — lihat dokumen desain untuk perbandingan lengkapnya. Dimodelkan sebagai tipe independen, tanpa reflection-drift-guard terhadap QRMPMCancelPaymentRequest karena keduanya bukan bentuk yang sama.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originalPartnerReferenceNo` | `string` | Wajib |
+| `originalReferenceNo` | `string` | Opsional |
+| `originalExternalId` | `string` | Opsional |
+| `merchantId` | `string` | Opsional |
+| `subMerchantId` | `string` | Opsional |
+| `externalStoreId` | `string` | Opsional |
+| `amount` | `*snap.Money` | Opsional |
+| `reason` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+**Response &mdash; `CPMCancelPaymentResponse`**
+
+CPMCancelPaymentResponse adalah body response untuk API Cancel Payment. OriginalReferenceNo bersifat Kondisional (hanya saat sukses). CancelTime bersifat Kondisional ("diisi jika berhasil"), sama perlakuannya dengan QRMPMCancelPaymentResponse.CancelTime — tetapi response ini juga membawa field originalX yang sama sekali tidak dimiliki QRMPMCancelPaymentResponse, sehingga bentuknya tidak dibagikan/identik dengan endpoint sejenis tersebut juga.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `originalPartnerReferenceNo` | `string` | Opsional |
+| `originalReferenceNo` | `string` | Opsional |
+| `originalExternalId` | `string` | Opsional |
+| `cancelTime` | `string` | Opsional |
+| `transactionDate` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+
+---
+
+### `CPMRefundPayment`
+
+CPMRefundPayment memanggil endpoint SNAP Refund Payment (Service Code 80, path .../\{version\}/qr/qr-cpm-refund, HTTP POST — tanpa override method). hb harus sudah membawa setiap field yang dibutuhkan snap.HeaderBuilder kecuali Body, yang diisi sendiri oleh CPMRefundPayment agar byte hasil marshal yang persis sama dipakai baik untuk signing maupun body di jalur kirim.
+
+Operasi ini tidak idempotent dan package ini tidak melakukan retry. Caller yang me-retry panggilan yang gagal atau timeout sebaiknya memakai ulang X-EXTERNAL-ID yang sama, karena deteksi duplikat di sisi server berpatokan pada header tersebut.
+
+```go
+func CPMRefundPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req CPMRefundPaymentRequest) (CPMRefundPaymentResponse, error)
+```
+
+**Request &mdash; `CPMRefundPaymentRequest`**
+
+CPMRefundPaymentRequest adalah body request untuk API Refund Payment (Service Code 80). OriginalPartnerReferenceNo dan PartnerRefundNo bersifat Wajib menurut riset §5.2.
+
+| Field | Type | Presence |
+|---|---|---|
+| `merchantId` | `string` | Opsional |
+| `subMerchantId` | `string` | Opsional |
+| `externalStoreId` | `string` | Opsional |
+| `originalPartnerReferenceNo` | `string` | Wajib |
+| `originalReferenceNo` | `string` | Opsional |
+| `originalExternalId` | `string` | Opsional |
+| `partnerRefundNo` | `string` | Wajib |
+| `refundAmount` | `*snap.Money` | Opsional |
+| `reason` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+**Response &mdash; `CPMRefundPaymentResponse`**
+
+CPMRefundPaymentResponse adalah body response untuk API Refund Payment. RefundNo dan RefundTime bersifat Wajib menurut riset §5.2. OriginalReferenceNo tidak membawa penanda C/M pada baris riset endpoint ini sendiri (berbeda dari setiap kemunculan lain field ini di package) — dimodelkan Opsional mengikuti perlakuan default-ke-omitempty package ini untuk field yang tak bertanda, dicatat apa adanya, bukan ditebak. PartnerRefundNo bersifat Opsional di sini pada response, berbeda dari PartnerRefundNo yang Wajib pada response Direct Debit Payment Refund miliknya sendiri (Fase 27) — diturunkan secara independen dari tabel field endpoint ini sendiri, bukan disalin.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `originalPartnerReferenceNo` | `string` | Opsional |
+| `originalReferenceNo` | `string` | Opsional |
+| `originalExternalId` | `string` | Opsional |
+| `refundNo` | `string` | Wajib |
+| `partnerRefundNo` | `string` | Opsional |
+| `refundAmount` | `*snap.Money` | Opsional |
+| `refundTime` | `string` | Wajib |
+| `additionalInfo` | `json.RawMessage` | Opsional |

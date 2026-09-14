@@ -1,0 +1,569 @@
+---
+title: "Trigger Transfer"
+description: "The core money-movement calls: intrabank, interbank, bulk, request-for-payment, RTGS and SKNBI — each real-time-gross or bulk rail has its own inbound notification type your service must accept."
+---
+
+## Trigger Transfer
+
+The core money-movement calls: intrabank, interbank, bulk, request-for-payment, RTGS and SKNBI — each real-time-gross or bulk rail has its own inbound notification type your service must accept.
+
+<CodeGroup>
+```go example.go
+resp, err := transfercredit.InterbankTransfer(ctx, transport, hb, transfercredit.InterbankTransferRequest{
+	PartnerReferenceNo: "2020102900000000000001",
+	Amount: snap.Money{Value: "500000.00", Currency: "IDR"},
+	BeneficiaryAccountNo: "1234567890",
+	BeneficiaryAccountName: "Jane Doe",
+	BeneficiaryBankCode: "...",
+	SourceAccountNo: "1234567890",
+	TransactionDate: "2026-09-14T10:00:00+07:00",
+})
+if err != nil {
+	// errors.Is(err, snap.ErrBadRequest), snap.ErrUnauthorized, etc.
+}
+```
+</CodeGroup>
+
+### `IntrabankTransfer`
+
+IntrabankTransfer calls the SNAP Intrabank Transfer endpoint (Service Code 17, path .../\{version\}/transfer-intrabank). hb must already carry every field snap.HeaderBuilder needs except Body, which IntrabankTransfer sets itself so the exact marshaled bytes are used for both signing and the wire body.
+
+This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it — a fresh X-EXTERNAL-ID on retry risks a duplicate transfer.
+
+```go
+func IntrabankTransfer(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req IntrabankTransferRequest) (IntrabankTransferResponse, error)
+```
+
+**Request &mdash; `IntrabankTransferRequest`**
+
+IntrabankTransferRequest is the request body for API Intrabank Transfer (Service Code 17). PartnerReferenceNo, Amount, BeneficiaryAccountNo, SourceAccountNo, and TransactionDate are mandatory per the Guides tab. OriginatorInfos is Conditional.
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Mandatory |
+| `amount` | `snap.Money` | Mandatory |
+| `beneficiaryAccountNo` | `string` | Mandatory |
+| `beneficiaryEmail` | `string` | Optional |
+| `currency` | `string` | Optional |
+| `customerReference` | `string` | Optional |
+| `feeType` | `string` | Optional |
+| `remark` | `string` | Optional |
+| `sourceAccountNo` | `string` | Mandatory |
+| `transactionDate` | `string` | Mandatory |
+| `originatorInfos` | `[]TransferOriginatorInfo` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+<Accordion title="TransferOriginatorInfo fields">
+TransferOriginatorInfo is the shared "originatorInfos[]" entry used by the Trigger Transfer sub-group. All three fields are String per the Guides tab.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originatorCustomerNo` | `string` | Mandatory |
+| `originatorCustomerName` | `string` | Mandatory |
+| `originatorBankCode` | `string` | Mandatory |
+
+</Accordion>
+
+**Response &mdash; `IntrabankTransferResponse`**
+
+IntrabankTransferResponse is the response body for API Intrabank Transfer.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Mandatory |
+| `responseMessage` | `string` | Mandatory |
+| `referenceNo` | `string` | Optional |
+| `partnerReferenceNo` | `string` | Optional |
+| `amount` | `*snap.Money` | Optional |
+| `beneficiaryAccountNo` | `string` | Optional |
+| `currency` | `string` | Optional |
+| `customerReference` | `string` | Optional |
+| `sourceAccountNo` | `string` | Optional |
+| `transactionDate` | `string` | Optional |
+| `originatorInfos` | `[]TransferOriginatorInfo` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+<Accordion title="TransferOriginatorInfo fields">
+TransferOriginatorInfo is the shared "originatorInfos[]" entry used by the Trigger Transfer sub-group. All three fields are String per the Guides tab.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originatorCustomerNo` | `string` | Mandatory |
+| `originatorCustomerName` | `string` | Mandatory |
+| `originatorBankCode` | `string` | Mandatory |
+
+</Accordion>
+
+
+---
+
+### `InterbankTransfer`
+
+InterbankTransfer calls the SNAP Interbank Transfer endpoint (Service Code 18, path .../\{version\}/transfer-interbank). hb must already carry every field snap.HeaderBuilder needs except Body, which InterbankTransfer sets itself so the exact marshaled bytes are used for both signing and the wire body.
+
+This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it — a fresh X-EXTERNAL-ID on retry risks a duplicate transfer.
+
+```go
+func InterbankTransfer(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req InterbankTransferRequest) (InterbankTransferResponse, error)
+```
+
+**Request &mdash; `InterbankTransferRequest`**
+
+InterbankTransferRequest is the request body for API Interbank Transfer (Service Code 18). PartnerReferenceNo, Amount, BeneficiaryAccountNo, BeneficiaryAccountName, BeneficiaryBankCode, SourceAccountNo, and TransactionDate are mandatory per the Guides tab. OriginatorInfos is Conditional.
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Mandatory |
+| `amount` | `snap.Money` | Mandatory |
+| `beneficiaryAccountNo` | `string` | Mandatory |
+| `beneficiaryAccountName` | `string` | Mandatory |
+| `beneficiaryAddress` | `string` | Optional |
+| `beneficiaryBankCode` | `string` | Mandatory |
+| `beneficiaryBankName` | `string` | Optional |
+| `beneficiaryEmail` | `string` | Optional |
+| `currency` | `string` | Optional |
+| `customerReference` | `string` | Optional |
+| `feeType` | `string` | Optional |
+| `remark` | `string` | Optional |
+| `sourceAccountNo` | `string` | Mandatory |
+| `transactionDate` | `string` | Mandatory |
+| `originatorInfos` | `[]TransferOriginatorInfo` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+<Accordion title="TransferOriginatorInfo fields">
+TransferOriginatorInfo is the shared "originatorInfos[]" entry used by the Trigger Transfer sub-group. All three fields are String per the Guides tab.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originatorCustomerNo` | `string` | Mandatory |
+| `originatorCustomerName` | `string` | Mandatory |
+| `originatorBankCode` | `string` | Mandatory |
+
+</Accordion>
+
+**Response &mdash; `InterbankTransferResponse`**
+
+InterbankTransferResponse is the response body for API Interbank Transfer.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Mandatory |
+| `responseMessage` | `string` | Mandatory |
+| `referenceNo` | `string` | Optional |
+| `partnerReferenceNo` | `string` | Optional |
+| `amount` | `*snap.Money` | Optional |
+| `beneficiaryAccountNo` | `string` | Optional |
+| `currency` | `string` | Optional |
+| `customerReference` | `string` | Optional |
+| `sourceAccountNo` | `string` | Optional |
+| `transactionDate` | `string` | Optional |
+| `traceNo` | `string` | Optional |
+| `originatorInfos` | `[]TransferOriginatorInfo` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+<Accordion title="TransferOriginatorInfo fields">
+TransferOriginatorInfo is the shared "originatorInfos[]" entry used by the Trigger Transfer sub-group. All three fields are String per the Guides tab.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originatorCustomerNo` | `string` | Mandatory |
+| `originatorCustomerName` | `string` | Mandatory |
+| `originatorBankCode` | `string` | Mandatory |
+
+</Accordion>
+
+
+---
+
+### `InterbankBulkTransfer`
+
+InterbankBulkTransfer calls the SNAP Interbank Bulk Transfer endpoint (Service Code 20, path .../\{version\}/transfer-interbank-bulk). hb must already carry every field snap.HeaderBuilder needs except Body, which InterbankBulkTransfer sets itself so the exact marshaled bytes are used for both signing and the wire body.
+
+This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it — a fresh X-EXTERNAL-ID on retry risks a duplicate bulk transfer.
+
+```go
+func InterbankBulkTransfer(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req InterbankBulkTransferRequest) (InterbankBulkTransferResponse, error)
+```
+
+**Request &mdash; `InterbankBulkTransferRequest`**
+
+InterbankBulkTransferRequest is the request body for API Interbank Bulk Transfer (Service Code 20). CustomerReference, SourceAccountNo, TransactionDate, and BulkObject are mandatory per the Guides tab.
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerBulkId` | `string` | Optional |
+| `currency` | `string` | Optional |
+| `customerReference` | `string` | Mandatory |
+| `feeType` | `string` | Optional |
+| `remark` | `string` | Optional |
+| `sourceAccountNo` | `string` | Mandatory |
+| `transactionDate` | `string` | Mandatory |
+| `bulkObject` | `[]InterbankBulkTransferItem` | Mandatory |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+<Accordion title="InterbankBulkTransferItem fields">
+InterbankBulkTransferItem is one entry in Interbank Bulk Transfer's request "bulkObject[]" array.
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Mandatory |
+| `bankCode` | `string` | Mandatory |
+| `beneficiaryAccountNo` | `string` | Mandatory |
+| `beneficiaryAccountName` | `string` | Mandatory |
+| `amount` | `snap.Money` | Mandatory |
+| `originatorInfos` | `[]TransferOriginatorInfo` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+</Accordion>
+
+<Accordion title="TransferOriginatorInfo fields">
+TransferOriginatorInfo is the shared "originatorInfos[]" entry used by the Trigger Transfer sub-group. All three fields are String per the Guides tab.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originatorCustomerNo` | `string` | Mandatory |
+| `originatorCustomerName` | `string` | Mandatory |
+| `originatorBankCode` | `string` | Mandatory |
+
+</Accordion>
+
+**Response &mdash; `InterbankBulkTransferResponse`**
+
+InterbankBulkTransferResponse is the response body for API Interbank Bulk Transfer.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Mandatory |
+| `responseMessage` | `string` | Mandatory |
+| `bulkId` | `string` | Optional |
+| `partnerBulkId` | `string` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+
+---
+
+### `Interbank Bulk Transfer Notification`
+
+<Info>Inbound only &mdash; this package does not call an endpoint for this. A partner/switcher POSTs it to **your** callback URL; unmarshal the body into `InterbankBulkTransferNotificationRequest` after verifying it with `snap.ServerVerifier` (see [Verifying inbound requests](/concepts/webhooks)), then reply with the shape below.</Info>
+
+**Received &mdash; `InterbankBulkTransferNotificationRequest`**
+
+InterbankBulkTransferNotificationRequest is the request body for API Interbank Bulk Transfer - Notification (Service Code 21, path .../\{version\}/transfer-interbank-bulk/notify). This is a settlement callback the PJP receives, not a call this package makes — no calling function is provided. A caller wires their own HTTP handler for this path, authenticates the inbound call with ServerVerifier.VerifyTransactionRequest, and json.Unmarshals the body into this type. BulkID, PartnerBulkID, and BulkObject are mandatory per the Guides tab.
+
+| Field | Type | Presence |
+|---|---|---|
+| `bulkId` | `string` | Mandatory |
+| `partnerBulkId` | `string` | Mandatory |
+| `bulkObject` | `[]InterbankBulkTransferNotificationItem` | Mandatory |
+
+<Accordion title="InterbankBulkTransferNotificationItem fields">
+InterbankBulkTransferNotificationItem is one entry in Interbank Bulk Transfer - Notification's request "bulkObject[]" array — a settlement-result callback shape, distinct from InterbankBulkTransferItem's transfer-instruction shape.
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Mandatory |
+| `responseCode` | `string` | Mandatory |
+| `responseMessage` | `string` | Mandatory |
+
+</Accordion>
+
+**Your handler replies with &mdash; `InterbankBulkTransferNotificationResponse`**
+
+InterbankBulkTransferNotificationResponse is the response body a caller sends back for API Interbank Bulk Transfer - Notification.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Mandatory |
+| `responseMessage` | `string` | Mandatory |
+| `bulkId` | `string` | Optional |
+| `partnerBulkId` | `string` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+
+---
+
+### `RequestForPayment`
+
+RequestForPayment calls the SNAP Request for Payment endpoint (Service Code 19, path .../\{version\}/transfer-request-for-payment). hb must already carry every field snap.HeaderBuilder needs except Body, which RequestForPayment sets itself so the exact marshaled bytes are used for both signing and the wire body.
+
+This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it — a fresh X-EXTERNAL-ID on retry risks a duplicate payment request.
+
+```go
+func RequestForPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req RequestForPaymentRequest) (RequestForPaymentResponse, error)
+```
+
+**Request &mdash; `RequestForPaymentRequest`**
+
+RequestForPaymentRequest is the request body for API Request for Payment (Service Code 19). PartnerReferenceNo, BankCode, BeneficiaryAccountNo, BeneficiaryAccountName, ExpiredDatetime, SourceAccountNo, and SourceAccountName are mandatory per the Guides tab.
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Mandatory |
+| `bankCode` | `string` | Mandatory |
+| `beneficiaryAccountNo` | `string` | Mandatory |
+| `beneficiaryAccountName` | `string` | Mandatory |
+| `remark` | `string` | Optional |
+| `expiredDatetime` | `string` | Mandatory |
+| `sourceAccountNo` | `string` | Mandatory |
+| `sourceAccountName` | `string` | Mandatory |
+| `currency` | `string` | Optional |
+| `amount` | `*snap.Money` | Optional |
+| `feeType` | `string` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+**Response &mdash; `RequestForPaymentResponse`**
+
+RequestForPaymentResponse is the response body for API Request for Payment.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Mandatory |
+| `responseMessage` | `string` | Mandatory |
+| `referenceNo` | `string` | Optional |
+| `partnerReferenceNo` | `string` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+
+---
+
+### `RTGSTransfer`
+
+RTGSTransfer calls the SNAP Transfer RTGS endpoint (Service Code 22, path .../\{version\}/transfer-rtgs). hb must already carry every field snap.HeaderBuilder needs except Body, which RTGSTransfer sets itself so the exact marshaled bytes are used for both signing and the wire body.
+
+This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it — a fresh X-EXTERNAL-ID on retry risks a duplicate transfer.
+
+```go
+func RTGSTransfer(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req RTGSTransferRequest) (RTGSTransferResponse, error)
+```
+
+**Request &mdash; `RTGSTransferRequest`**
+
+RTGSTransferRequest is the request body for API Transfer RTGS (Service Code 22). PartnerReferenceNo, Amount, BeneficiaryAccountNo, BeneficiaryAccountName, BeneficiaryBankCode, SourceAccountNo, TransactionDate, BeneficiaryCustomerResidence, and BeneficiaryCustomerType are mandatory per the Guides tab. OriginatorInfos is Conditional.
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Mandatory |
+| `amount` | `snap.Money` | Mandatory |
+| `beneficiaryAccountNo` | `string` | Mandatory |
+| `beneficiaryAccountName` | `string` | Mandatory |
+| `beneficiaryAddress` | `string` | Optional |
+| `beneficiaryBankCode` | `string` | Mandatory |
+| `beneficiaryBankName` | `string` | Optional |
+| `beneficiaryEmail` | `string` | Optional |
+| `currency` | `string` | Optional |
+| `customerReference` | `string` | Optional |
+| `feeType` | `string` | Optional |
+| `remark` | `string` | Optional |
+| `sourceAccountNo` | `string` | Mandatory |
+| `transactionDate` | `string` | Mandatory |
+| `beneficiaryCustomerResidence` | `string` | Mandatory |
+| `beneficiaryCustomerType` | `string` | Mandatory |
+| `kodepos` | `string` | Optional |
+| `receiverPhone` | `string` | Optional |
+| `senderCustomerResidence` | `string` | Optional |
+| `senderCustomerType` | `string` | Optional |
+| `senderPhone` | `string` | Optional |
+| `originatorInfos` | `[]TransferOriginatorInfo` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+<Accordion title="TransferOriginatorInfo fields">
+TransferOriginatorInfo is the shared "originatorInfos[]" entry used by the Trigger Transfer sub-group. All three fields are String per the Guides tab.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originatorCustomerNo` | `string` | Mandatory |
+| `originatorCustomerName` | `string` | Mandatory |
+| `originatorBankCode` | `string` | Mandatory |
+
+</Accordion>
+
+**Response &mdash; `RTGSTransferResponse`**
+
+RTGSTransferResponse is the response body for API Transfer RTGS.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Mandatory |
+| `responseMessage` | `string` | Mandatory |
+| `referenceNo` | `string` | Optional |
+| `partnerReferenceNo` | `string` | Optional |
+| `amount` | `*snap.Money` | Optional |
+| `beneficiaryAccountNo` | `string` | Optional |
+| `currency` | `string` | Optional |
+| `customerReference` | `string` | Optional |
+| `sourceAccountNo` | `string` | Optional |
+| `transactionDate` | `string` | Optional |
+| `traceNo` | `string` | Optional |
+| `transactionStatus` | `string` | Optional |
+| `transactionStatusDesc` | `string` | Optional |
+| `beneficiaryAccountType` | `string` | Optional |
+| `originatorInfos` | `[]TransferOriginatorInfo` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+<Accordion title="TransferOriginatorInfo fields">
+TransferOriginatorInfo is the shared "originatorInfos[]" entry used by the Trigger Transfer sub-group. All three fields are String per the Guides tab.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originatorCustomerNo` | `string` | Mandatory |
+| `originatorCustomerName` | `string` | Mandatory |
+| `originatorBankCode` | `string` | Mandatory |
+
+</Accordion>
+
+
+---
+
+### `RTGS Notification`
+
+<Info>Inbound only &mdash; this package does not call an endpoint for this. A partner/switcher POSTs it to **your** callback URL; unmarshal the body into `RTGSNotificationRequest` after verifying it with `snap.ServerVerifier` (see [Verifying inbound requests](/concepts/webhooks)), then reply with the shape below.</Info>
+
+**Received &mdash; `RTGSNotificationRequest`**
+
+RTGSNotificationRequest is the request body for API RTGS - Notification (Service Code 76, path .../\{version\}/transfer-rtgs/notify). This is a settlement callback the PJP receives, not a call this package makes — no calling function is provided. A caller wires their own HTTP handler for this path, authenticates the inbound call with ServerVerifier.VerifyTransactionRequest, and json.Unmarshals the body into this type. LatestTransactionStatus, BeneficiaryAccountName, BeneficiaryAccountNo, BeneficiaryBankCode, SourceAccountNo, and TransactionDate are mandatory per the Guides tab.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originalPartnerReferenceNo` | `string` | Optional |
+| `originalReferenceNo` | `string` | Optional |
+| `originalExternalId` | `string` | Optional |
+| `latestTransactionStatus` | `string` | Mandatory |
+| `amount` | `*snap.Money` | Optional |
+| `beneficiaryAccountName` | `string` | Mandatory |
+| `beneficiaryAccountNo` | `string` | Mandatory |
+| `beneficiaryBankCode` | `string` | Mandatory |
+| `sourceAccountNo` | `string` | Mandatory |
+| `transactionDate` | `string` | Mandatory |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+**Your handler replies with &mdash; `RTGSNotificationResponse`**
+
+RTGSNotificationResponse is the response body a caller sends back for API RTGS - Notification. Envelope-only per the Guides tab — no other fields.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Mandatory |
+| `responseMessage` | `string` | Mandatory |
+
+
+---
+
+### `SKNBITransfer`
+
+SKNBITransfer calls the SNAP Transfer SKNBI endpoint (Service Code 23, path .../\{version\}/transfer-skn). hb must already carry every field snap.HeaderBuilder needs except Body, which SKNBITransfer sets itself so the exact marshaled bytes are used for both signing and the wire body.
+
+This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it — a fresh X-EXTERNAL-ID on retry risks a duplicate transfer.
+
+```go
+func SKNBITransfer(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req SKNBITransferRequest) (SKNBITransferResponse, error)
+```
+
+**Request &mdash; `SKNBITransferRequest`**
+
+SKNBITransferRequest is the request body for API Transfer SKNBI (Service Code 23) — field-for-field identical shape to RTGSTransferRequest, with its own service code and path. PartnerReferenceNo, Amount, BeneficiaryAccountNo, BeneficiaryAccountName, BeneficiaryBankCode, SourceAccountNo, TransactionDate, BeneficiaryCustomerResidence, and BeneficiaryCustomerType are mandatory per the Guides tab. OriginatorInfos is Conditional.
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Mandatory |
+| `amount` | `snap.Money` | Mandatory |
+| `beneficiaryAccountNo` | `string` | Mandatory |
+| `beneficiaryAccountName` | `string` | Mandatory |
+| `beneficiaryAddress` | `string` | Optional |
+| `beneficiaryBankCode` | `string` | Mandatory |
+| `beneficiaryBankName` | `string` | Optional |
+| `beneficiaryEmail` | `string` | Optional |
+| `currency` | `string` | Optional |
+| `customerReference` | `string` | Optional |
+| `feeType` | `string` | Optional |
+| `remark` | `string` | Optional |
+| `sourceAccountNo` | `string` | Mandatory |
+| `transactionDate` | `string` | Mandatory |
+| `beneficiaryCustomerResidence` | `string` | Mandatory |
+| `beneficiaryCustomerType` | `string` | Mandatory |
+| `kodepos` | `string` | Optional |
+| `receiverPhone` | `string` | Optional |
+| `senderCustomerResidence` | `string` | Optional |
+| `senderCustomerType` | `string` | Optional |
+| `senderPhone` | `string` | Optional |
+| `originatorInfos` | `[]TransferOriginatorInfo` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+<Accordion title="TransferOriginatorInfo fields">
+TransferOriginatorInfo is the shared "originatorInfos[]" entry used by the Trigger Transfer sub-group. All three fields are String per the Guides tab.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originatorCustomerNo` | `string` | Mandatory |
+| `originatorCustomerName` | `string` | Mandatory |
+| `originatorBankCode` | `string` | Mandatory |
+
+</Accordion>
+
+**Response &mdash; `SKNBITransferResponse`**
+
+SKNBITransferResponse is the response body for API Transfer SKNBI — field-for-field identical shape to RTGSTransferResponse.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Mandatory |
+| `responseMessage` | `string` | Mandatory |
+| `referenceNo` | `string` | Optional |
+| `partnerReferenceNo` | `string` | Optional |
+| `amount` | `*snap.Money` | Optional |
+| `beneficiaryAccountNo` | `string` | Optional |
+| `currency` | `string` | Optional |
+| `customerReference` | `string` | Optional |
+| `sourceAccountNo` | `string` | Optional |
+| `transactionDate` | `string` | Optional |
+| `traceNo` | `string` | Optional |
+| `transactionStatus` | `string` | Optional |
+| `transactionStatusDesc` | `string` | Optional |
+| `beneficiaryAccountType` | `string` | Optional |
+| `originatorInfos` | `[]TransferOriginatorInfo` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+<Accordion title="TransferOriginatorInfo fields">
+TransferOriginatorInfo is the shared "originatorInfos[]" entry used by the Trigger Transfer sub-group. All three fields are String per the Guides tab.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originatorCustomerNo` | `string` | Mandatory |
+| `originatorCustomerName` | `string` | Mandatory |
+| `originatorBankCode` | `string` | Mandatory |
+
+</Accordion>
+
+
+---
+
+### `SKNBI Notification`
+
+<Info>Inbound only &mdash; this package does not call an endpoint for this. A partner/switcher POSTs it to **your** callback URL; unmarshal the body into `SKNBINotificationRequest` after verifying it with `snap.ServerVerifier` (see [Verifying inbound requests](/concepts/webhooks)), then reply with the shape below.</Info>
+
+**Received &mdash; `SKNBINotificationRequest`**
+
+SKNBINotificationRequest is the request body for API SKNBI - Notification (Service Code 75, path .../\{version\}/transfer-skn/notify) — field-for-field identical shape to RTGSNotificationRequest. This is a settlement callback the PJP receives, not a call this package makes — no calling function is provided. A caller wires their own HTTP handler for this path, authenticates the inbound call with ServerVerifier.VerifyTransactionRequest, and json.Unmarshals the body into this type. LatestTransactionStatus, BeneficiaryAccountName, BeneficiaryAccountNo, BeneficiaryBankCode, SourceAccountNo, and TransactionDate are mandatory per the Guides tab.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originalPartnerReferenceNo` | `string` | Optional |
+| `originalReferenceNo` | `string` | Optional |
+| `originalExternalId` | `string` | Optional |
+| `latestTransactionStatus` | `string` | Mandatory |
+| `amount` | `*snap.Money` | Optional |
+| `beneficiaryAccountName` | `string` | Mandatory |
+| `beneficiaryAccountNo` | `string` | Mandatory |
+| `beneficiaryBankCode` | `string` | Mandatory |
+| `sourceAccountNo` | `string` | Mandatory |
+| `transactionDate` | `string` | Mandatory |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+**Your handler replies with &mdash; `SKNBINotificationResponse`**
+
+SKNBINotificationResponse is the response body a caller sends back for API SKNBI - Notification — field-for-field identical shape to RTGSNotificationResponse. Envelope-only per the Guides tab — no other fields.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Mandatory |
+| `responseMessage` | `string` | Mandatory |
+
