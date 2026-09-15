@@ -33,18 +33,18 @@ Unlike every other endpoint here, this isn't JSON — `GetOAuthURL` builds a URL
 
 | Query parameter | Type | Presence |
 |---|---|---|
-| `RedirectURL` | `string` | Mandatory |
-| `Scopes` | `[]string` (joined with `,`) | Mandatory |
-| `State` | `string` | Mandatory |
-| `MerchantID` | `string` | Optional |
-| `SubMerchantID` | `string` | Optional |
-| `Lang` | `string` (ISO 639-1) | Optional |
-| `AllowRegistration` | `*bool` | Optional |
-| `SeamlessData` | `string` | Optional |
-| `MobileNumber` | `string` | Optional |
-| `VerifiedTime` | `string` | Optional |
-| `ExternalUID` | `string` | Optional |
-| `DeviceID` | `string` | Optional |
+| `RedirectURL` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `Scopes` | `[]string` (joined with `,`) | <span class="badge-mandatory">Mandatory</span> |
+| `State` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `MerchantID` | `string` | <span class="badge-optional">Optional</span> |
+| `SubMerchantID` | `string` | <span class="badge-optional">Optional</span> |
+| `Lang` | `string` (ISO 639-1) | <span class="badge-optional">Optional</span> |
+| `AllowRegistration` | `*bool` | <span class="badge-optional">Optional</span> |
+| `SeamlessData` | `string` | <span class="badge-optional">Optional</span> |
+| `MobileNumber` | `string` | <span class="badge-optional">Optional</span> |
+| `VerifiedTime` | `string` | <span class="badge-optional">Optional</span> |
+| `ExternalUID` | `string` | <span class="badge-optional">Optional</span> |
+| `DeviceID` | `string` | <span class="badge-optional">Optional</span> |
 | `SeamlessSign` | `string` | Conditional — required if `SeamlessData` is set |
 
 **Response &mdash; `GetOAuthURLResponse`**
@@ -53,10 +53,10 @@ Every field is Mandatory.
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `authCode` | `string` | Mandatory |
-| `state` | `string` | Mandatory |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `authCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `state` | `string` | <span class="badge-mandatory">Mandatory</span> |
 
 
 ---
@@ -77,35 +77,35 @@ Every field is Optional — this endpoint covers several onboarding flows (seaml
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Optional |
-| `countryCode` | `string` | Optional |
-| `customerId` | `string` | Optional |
-| `deviceInfo` | `*DeviceInfo` | Optional |
-| `email` | `string` | Optional |
-| `lang` | `string` | Optional |
-| `locale` | `string` | Optional |
-| `name` | `string` | Optional |
-| `onboardingPartner` | `string` | Optional |
-| `phoneNo` | `string` | Optional |
-| `redirectUrl` | `string` | Optional |
-| `scopes` | `string` | Optional |
-| `seamlessData` | `string` | Optional |
-| `seamlessSign` | `string` | Optional |
-| `state` | `string` | Optional |
-| `merchantId` | `string` | Optional |
-| `subMerchantId` | `string` | Optional |
-| `terminalType` | `json.RawMessage` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `countryCode` | `string` | <span class="badge-optional">Optional</span> |
+| `customerId` | `string` | <span class="badge-optional">Optional</span> |
+| `deviceInfo` | `*DeviceInfo` | <span class="badge-optional">Optional</span> |
+| `email` | `string` | <span class="badge-optional">Optional</span> |
+| `lang` | `string` | <span class="badge-optional">Optional</span> |
+| `locale` | `string` | <span class="badge-optional">Optional</span> |
+| `name` | `string` | <span class="badge-optional">Optional</span> |
+| `onboardingPartner` | `string` | <span class="badge-optional">Optional</span> |
+| `phoneNo` | `string` | <span class="badge-optional">Optional</span> |
+| `redirectUrl` | `string` | <span class="badge-optional">Optional</span> |
+| `scopes` | `string` | <span class="badge-optional">Optional</span> |
+| `seamlessData` | `string` | <span class="badge-optional">Optional</span> |
+| `seamlessSign` | `string` | <span class="badge-optional">Optional</span> |
+| `state` | `string` | <span class="badge-optional">Optional</span> |
+| `merchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `terminalType` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 {{< details title="DeviceInfo fields" >}}
 DeviceInfo describes the device initiating a registration request.
 
 | Field | Type | Presence |
 |---|---|---|
-| `os` | `string` | Optional |
-| `osVersion` | `string` | Optional |
-| `model` | `string` | Optional |
-| `manufacturer` | `string` | Optional |
+| `os` | `string` | <span class="badge-optional">Optional</span> |
+| `osVersion` | `string` | <span class="badge-optional">Optional</span> |
+| `model` | `string` | <span class="badge-optional">Optional</span> |
+| `manufacturer` | `string` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 **Response &mdash; `AccountCreationResponse`**
@@ -114,15 +114,15 @@ DeviceInfo describes the device initiating a registration request.
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `referenceNo` | `string` | Optional |
-| `partnerReferenceNo` | `string` | Optional |
-| `authCode` | `string` | Optional |
-| `apiKey` | `json.RawMessage` | Optional |
-| `accountId` | `string` | Optional |
-| `state` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `authCode` | `string` | <span class="badge-optional">Optional</span> |
+| `apiKey` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `accountId` | `string` | <span class="badge-optional">Optional</span> |
+| `state` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -143,69 +143,69 @@ func AccountBinding(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilde
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Optional |
-| `action` | `string` | Optional |
-| `additionalData` | `json.RawMessage` | Optional |
-| `userId` | `string` | Optional |
-| `email` | `string` | Optional |
-| `postalAddress` | `string` | Optional |
-| `authCode` | `string` | Optional |
-| `grantType` | `string` | Optional |
-| `isBindAndPay` | `string` | Optional |
-| `lang` | `string` | Optional |
-| `locale` | `string` | Optional |
-| `merchantId` | `string` | Mandatory |
-| `subMerchantId` | `string` | Optional |
-| `msisdn` | `string` | Optional |
-| `otp` | `string` | Optional |
-| `phoneNo` | `string` | Optional |
-| `platformType` | `string` | Optional |
-| `redirectUrl` | `string` | Optional |
-| `referenceId` | `string` | Optional |
-| `refreshToken` | `string` | Optional |
-| `successParams` | `*BindingSuccessParams` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `action` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalData` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `userId` | `string` | <span class="badge-optional">Optional</span> |
+| `email` | `string` | <span class="badge-optional">Optional</span> |
+| `postalAddress` | `string` | <span class="badge-optional">Optional</span> |
+| `authCode` | `string` | <span class="badge-optional">Optional</span> |
+| `grantType` | `string` | <span class="badge-optional">Optional</span> |
+| `isBindAndPay` | `string` | <span class="badge-optional">Optional</span> |
+| `lang` | `string` | <span class="badge-optional">Optional</span> |
+| `locale` | `string` | <span class="badge-optional">Optional</span> |
+| `merchantId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `msisdn` | `string` | <span class="badge-optional">Optional</span> |
+| `otp` | `string` | <span class="badge-optional">Optional</span> |
+| `phoneNo` | `string` | <span class="badge-optional">Optional</span> |
+| `platformType` | `string` | <span class="badge-optional">Optional</span> |
+| `redirectUrl` | `string` | <span class="badge-optional">Optional</span> |
+| `referenceId` | `string` | <span class="badge-optional">Optional</span> |
+| `refreshToken` | `string` | <span class="badge-optional">Optional</span> |
+| `successParams` | `*BindingSuccessParams` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 {{< details title="BindingSuccessParams fields" >}}
 The request-side `successParams` object.
 
 | Field | Type | Presence |
 |---|---|---|
-| `accountId` | `string` | Optional |
-| `terminalId` | `string` | Optional |
-| `tokenRequestorId` | `string` | Optional |
+| `accountId` | `string` | <span class="badge-optional">Optional</span> |
+| `terminalId` | `string` | <span class="badge-optional">Optional</span> |
+| `tokenRequestorId` | `string` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 **Response &mdash; `AccountBindingResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `referenceNo` | `string` | Optional |
-| `partnerReferenceNo` | `string` | Optional |
-| `accountToken` | `string` | Optional |
-| `accessTokenInfo` | `*BindingAccessTokenInfo` | Optional |
-| `linkId` | `string` | Optional |
-| `nextAction` | `string` | Optional |
-| `linkageToken` | `string` | Optional |
-| `params` | `json.RawMessage` | Optional |
-| `pinWebViewUrl` | `string` | Optional |
-| `redirectToDeeplink` | `string` | Optional |
-| `redirectUrl` | `string` | Optional |
-| `userInfo` | `*BindingUserInfo` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `accountToken` | `string` | <span class="badge-optional">Optional</span> |
+| `accessTokenInfo` | `*BindingAccessTokenInfo` | <span class="badge-optional">Optional</span> |
+| `linkId` | `string` | <span class="badge-optional">Optional</span> |
+| `nextAction` | `string` | <span class="badge-optional">Optional</span> |
+| `linkageToken` | `string` | <span class="badge-optional">Optional</span> |
+| `params` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `pinWebViewUrl` | `string` | <span class="badge-optional">Optional</span> |
+| `redirectToDeeplink` | `string` | <span class="badge-optional">Optional</span> |
+| `redirectUrl` | `string` | <span class="badge-optional">Optional</span> |
+| `userInfo` | `*BindingUserInfo` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 {{< details title="BindingAccessTokenInfo fields" >}}
 The response-side `accessTokenInfo` object. `expiresIn`/`reExpiresIn` here are ISO 8601 datetime strings — a different shape from the B2B/B2B2C access-token endpoints' `Token.ExpiresIn` (a duration parsed from a seconds count). Same field name, different endpoint, different meaning.
 
 | Field | Type | Presence |
 |---|---|---|
-| `accessToken` | `string` | Optional |
-| `expiresIn` | `string` | Optional |
-| `refreshToken` | `string` | Optional |
-| `reExpiresIn` | `string` | Optional |
-| `tokenStatus` | `string` | Optional |
+| `accessToken` | `string` | <span class="badge-optional">Optional</span> |
+| `expiresIn` | `string` | <span class="badge-optional">Optional</span> |
+| `refreshToken` | `string` | <span class="badge-optional">Optional</span> |
+| `reExpiresIn` | `string` | <span class="badge-optional">Optional</span> |
+| `tokenStatus` | `string` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 {{< details title="BindingUserInfo fields" >}}
@@ -213,7 +213,7 @@ The response-side `userInfo` object.
 
 | Field | Type | Presence |
 |---|---|---|
-| `publicUserId` | `string` | Optional |
+| `publicUserId` | `string` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 
@@ -233,8 +233,8 @@ The standard doesn't define an account-identifier field for this call; if your P
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `AccountBindingInquiryResponse`**
 
@@ -242,17 +242,17 @@ Flatter than `AccountBindingResponse` — no `accessTokenInfo`/`userInfo` nestin
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `referenceNo` | `string` | Optional |
-| `partnerReferenceNo` | `string` | Optional |
-| `accountCurrency` | `string` | Optional |
-| `accountName` | `string` | Optional |
-| `accountNo` | `string` | Optional |
-| `accountTransactionLimit` | `json.RawMessage` | Optional |
-| `endDatePeriod` | `string` | Optional |
-| `startDatePeriod` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `accountCurrency` | `string` | <span class="badge-optional">Optional</span> |
+| `accountName` | `string` | <span class="badge-optional">Optional</span> |
+| `accountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `accountTransactionLimit` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `endDatePeriod` | `string` | <span class="badge-optional">Optional</span> |
+| `startDatePeriod` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -273,26 +273,26 @@ func AccountUnbinding(ctx context.Context, t *snap.Transport, hb snap.HeaderBuil
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Optional |
-| `linkId` | `string` | Optional |
-| `merchantId` | `string` | Mandatory |
-| `subMerchantId` | `string` | Optional |
-| `tokenId` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `linkId` | `string` | <span class="badge-optional">Optional</span> |
+| `merchantId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `tokenId` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `AccountUnbindingResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `referenceNo` | `string` | Optional |
-| `partnerReferenceNo` | `string` | Optional |
-| `merchantId` | `string` | Optional |
-| `subMerchantId` | `string` | Optional |
-| `linkId` | `string` | Optional |
-| `unlinkResult` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `merchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `linkId` | `string` | <span class="badge-optional">Optional</span> |
+| `unlinkResult` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -313,17 +313,17 @@ func OTP(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req OTPR
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Optional |
-| `journeyId` | `string` | Mandatory |
-| `merchantId` | `string` | Optional |
-| `subMerchant` | `string` | Optional |
-| `externalStoreId` | `string` | Optional |
-| `trxDateTime` | `string` | Optional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `journeyId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `merchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `subMerchant` | `string` | <span class="badge-optional">Optional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Optional</span> |
+| `trxDateTime` | `string` | <span class="badge-optional">Optional</span> |
 | `bankCardToken` | `string` | Conditional |
-| `otpTrxCode` | `string` | Optional |
-| `otpReasonCode` | `string` | Optional |
-| `otpReasonMessage` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `otpTrxCode` | `string` | <span class="badge-optional">Optional</span> |
+| `otpReasonCode` | `string` | <span class="badge-optional">Optional</span> |
+| `otpReasonMessage` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `OTPResponse`**
 
@@ -331,12 +331,12 @@ func OTP(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req OTPR
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `referenceNo` | `string` | Optional |
-| `partnerReferenceNo` | `string` | Optional |
-| `chargeToken` | `string` | Mandatory |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `chargeToken` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -357,40 +357,40 @@ Every field is Optional.
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `originalReferenceNo` | `string` | Optional |
-| `action` | `string` | Optional |
-| `merchantId` | `string` | Optional |
-| `otp` | `string` | Optional |
-| `chargeToken` | `string` | Optional |
-| `type` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `action` | `string` | <span class="badge-optional">Optional</span> |
+| `merchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `otp` | `string` | <span class="badge-optional">Optional</span> |
+| `chargeToken` | `string` | <span class="badge-optional">Optional</span> |
+| `type` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `VerifyOTPResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `originalReferenceNo` | `string` | Optional |
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `accountNo` | `string` | Optional |
-| `bankCardToken` | `string` | Optional |
-| `cardPan` | `string` | Optional |
-| `customerId` | `string` | Optional |
-| `email` | `string` | Optional |
-| `expiredDatetime` | `string` | Optional |
-| `expiryDate` | `string` | Optional |
-| `identificationNo` | `string` | Optional |
-| `linkageToken` | `string` | Optional |
-| `phoneNo` | `string` | Optional |
-| `qParamsURL` | `string` | Optional |
-| `qParams` | `json.RawMessage` | Optional |
-| `sendOtpFlag` | `string` | Optional |
-| `subscribeDatetime` | `string` | Optional |
-| `tokenExpiryTime` | `string` | Optional |
-| `transactionTimestamp` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `accountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `bankCardToken` | `string` | <span class="badge-optional">Optional</span> |
+| `cardPan` | `string` | <span class="badge-optional">Optional</span> |
+| `customerId` | `string` | <span class="badge-optional">Optional</span> |
+| `email` | `string` | <span class="badge-optional">Optional</span> |
+| `expiredDatetime` | `string` | <span class="badge-optional">Optional</span> |
+| `expiryDate` | `string` | <span class="badge-optional">Optional</span> |
+| `identificationNo` | `string` | <span class="badge-optional">Optional</span> |
+| `linkageToken` | `string` | <span class="badge-optional">Optional</span> |
+| `phoneNo` | `string` | <span class="badge-optional">Optional</span> |
+| `qParamsURL` | `string` | <span class="badge-optional">Optional</span> |
+| `qParams` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `sendOtpFlag` | `string` | <span class="badge-optional">Optional</span> |
+| `subscribeDatetime` | `string` | <span class="badge-optional">Optional</span> |
+| `tokenExpiryTime` | `string` | <span class="badge-optional">Optional</span> |
+| `transactionTimestamp` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -411,45 +411,45 @@ func CardRegistration(ctx context.Context, t *snap.Transport, hb snap.HeaderBuil
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Optional |
-| `accountName` | `string` | Optional |
-| `cardData` | `json.RawMessage` | Optional |
-| `bankAccountNo` | `string` | Optional |
-| `bankCardNo` | `string` | Mandatory |
-| `bankCardType` | `string` | Optional |
-| `dateOfBirth` | `string` | Optional |
-| `email` | `string` | Optional |
-| `expiredDatetime` | `string` | Optional |
-| `expiryDate` | `string` | Optional |
-| `identificationNo` | `string` | Optional |
-| `identificationType` | `string` | Optional |
-| `custIdMerchant` | `string` | Mandatory |
-| `isBindAndPay` | `string` | Optional |
-| `merchantId` | `string` | Optional |
-| `terminalId` | `string` | Optional |
-| `journeyId` | `string` | Optional |
-| `subMerchantId` | `string` | Optional |
-| `externalStoreId` | `string` | Optional |
-| `limit` | `json.RawMessage` | Optional |
-| `merchantLogoUrl` | `string` | Optional |
-| `phoneNo` | `string` | Optional |
-| `sendOtpFlag` | `string` | Optional |
-| `type` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `accountName` | `string` | <span class="badge-optional">Optional</span> |
+| `cardData` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `bankAccountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `bankCardNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `bankCardType` | `string` | <span class="badge-optional">Optional</span> |
+| `dateOfBirth` | `string` | <span class="badge-optional">Optional</span> |
+| `email` | `string` | <span class="badge-optional">Optional</span> |
+| `expiredDatetime` | `string` | <span class="badge-optional">Optional</span> |
+| `expiryDate` | `string` | <span class="badge-optional">Optional</span> |
+| `identificationNo` | `string` | <span class="badge-optional">Optional</span> |
+| `identificationType` | `string` | <span class="badge-optional">Optional</span> |
+| `custIdMerchant` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `isBindAndPay` | `string` | <span class="badge-optional">Optional</span> |
+| `merchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `terminalId` | `string` | <span class="badge-optional">Optional</span> |
+| `journeyId` | `string` | <span class="badge-optional">Optional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Optional</span> |
+| `limit` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `merchantLogoUrl` | `string` | <span class="badge-optional">Optional</span> |
+| `phoneNo` | `string` | <span class="badge-optional">Optional</span> |
+| `sendOtpFlag` | `string` | <span class="badge-optional">Optional</span> |
+| `type` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `CardRegistrationResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `referenceNo` | `string` | Optional |
-| `partnerReferenceNo` | `string` | Optional |
-| `bankCardToken` | `string` | Mandatory |
-| `chargeToken` | `string` | Optional |
-| `randomString` | `string` | Optional |
-| `tokenExpiryTime` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `bankCardToken` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `chargeToken` | `string` | <span class="badge-optional">Optional</span> |
+| `randomString` | `string` | <span class="badge-optional">Optional</span> |
+| `tokenExpiryTime` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -468,17 +468,17 @@ This endpoint takes no typed request body beyond the call parameters shown above
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `accountList` | `[]CardRegistrationInquiryAccount` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `accountList` | `[]CardRegistrationInquiryAccount` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 {{< details title="CardRegistrationInquiryAccount fields" >}}
 One entry in `accountList`, wrapping the nested `accountData` object.
 
 | Field | Type | Presence |
 |---|---|---|
-| `accountData` | `CardRegistrationInquiryAccountData` | Mandatory |
+| `accountData` | `CardRegistrationInquiryAccountData` | <span class="badge-mandatory">Mandatory</span> |
 {{< /details >}}
 
 {{< details title="CardRegistrationInquiryAccountData fields" >}}
@@ -486,12 +486,12 @@ The nested `accountData` object. `maxLimit` and `credentialNo` are masked/format
 
 | Field | Type | Presence |
 |---|---|---|
-| `accountId` | `string` | Optional |
-| `createdDate` | `string` | Optional |
-| `credentialNo` | `string` | Optional |
-| `credentialType` | `string` | Optional |
-| `maxLimit` | `string` | Optional |
-| `status` | `string` | Optional |
+| `accountId` | `string` | <span class="badge-optional">Optional</span> |
+| `createdDate` | `string` | <span class="badge-optional">Optional</span> |
+| `credentialNo` | `string` | <span class="badge-optional">Optional</span> |
+| `credentialType` | `string` | <span class="badge-optional">Optional</span> |
+| `maxLimit` | `string` | <span class="badge-optional">Optional</span> |
+| `status` | `string` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 
@@ -511,23 +511,23 @@ func CardRegistrationSetLimit(ctx context.Context, t *snap.Transport, hb snap.He
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Optional |
-| `bankAccountNo` | `string` | Optional |
-| `bankCardNo` | `string` | Optional |
-| `limit` | `json.RawMessage` | Optional |
-| `bankCardToken` | `string` | Mandatory |
-| `otp` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `bankAccountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `bankCardNo` | `string` | <span class="badge-optional">Optional</span> |
+| `limit` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `bankCardToken` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `otp` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `CardRegistrationSetLimitResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `referenceNo` | `string` | Optional |
-| `partnerReferenceNo` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -548,28 +548,28 @@ func CardRegistrationUnbinding(ctx context.Context, t *snap.Transport, hb snap.H
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Optional |
-| `token` | `string` | Mandatory |
-| `bankCardNo` | `string` | Optional |
-| `type` | `string` | Optional |
-| `part` | `string` | Optional |
-| `merchantId` | `string` | Optional |
-| `subMerchantId` | `string` | Optional |
-| `terminalId` | `string` | Optional |
-| `tokenRequestorId` | `string` | Optional |
-| `journeyId` | `string` | Optional |
-| `transactionDate` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `token` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `bankCardNo` | `string` | <span class="badge-optional">Optional</span> |
+| `type` | `string` | <span class="badge-optional">Optional</span> |
+| `part` | `string` | <span class="badge-optional">Optional</span> |
+| `merchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `terminalId` | `string` | <span class="badge-optional">Optional</span> |
+| `tokenRequestorId` | `string` | <span class="badge-optional">Optional</span> |
+| `journeyId` | `string` | <span class="badge-optional">Optional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `CardRegistrationUnbindingResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `referenceNo` | `string` | Optional |
-| `partnerReferenceNo` | `string` | Optional |
-| `message` | `string` | Optional |
-| `customerId` | `string` | Optional |
-| `unsubscribeDate` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `message` | `string` | <span class="badge-optional">Optional</span> |
+| `customerId` | `string` | <span class="badge-optional">Optional</span> |
+| `unsubscribeDate` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |

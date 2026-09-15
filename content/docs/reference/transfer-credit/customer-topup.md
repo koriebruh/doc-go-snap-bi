@@ -31,10 +31,10 @@ AccountInquiryCustomerTopUpRequest is the request body for Account Inquiry - Cus
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Optional |
-| `customerNumber` | `string` | Optional |
-| `amount` | `snap.Money` | Mandatory |
-| `transactionDate` | `string` | Optional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `customerNumber` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `snap.Money` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `AccountInquiryCustomerTopUpResponse`**
 
@@ -42,19 +42,19 @@ AccountInquiryCustomerTopUpResponse is the response body for Account Inquiry - C
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `referenceNo` | `string` | Optional |
-| `partnerReferenceNo` | `string` | Optional |
-| `sessionId` | `string` | Optional |
-| `customerNumber` | `string` | Optional |
-| `customerName` | `string` | Mandatory |
-| `customerMonthlyInLimit` | `json.RawMessage` | Optional |
-| `minAmount` | `*snap.Money` | Optional |
-| `maxAmount` | `*snap.Money` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `feeAmount` | `*snap.Money` | Optional |
-| `feeType` | `string` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `sessionId` | `string` | <span class="badge-optional">Optional</span> |
+| `customerNumber` | `string` | <span class="badge-optional">Optional</span> |
+| `customerName` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `customerMonthlyInLimit` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `minAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `maxAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `feeAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `feeType` | `string` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -75,15 +75,15 @@ CustomerTopUpRequest is the request body for Customer Top Up (Service Code 38). 
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Mandatory |
-| `customerNumber` | `string` | Optional |
-| `customerName` | `string` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `feeAmount` | `*snap.Money` | Optional |
-| `transactionDate` | `string` | Optional |
-| `sessionId` | `string` | Optional |
-| `categoryId` | `json.RawMessage` | Optional |
-| `notes` | `string` | Optional |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `customerNumber` | `string` | <span class="badge-optional">Optional</span> |
+| `customerName` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `feeAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Optional</span> |
+| `sessionId` | `string` | <span class="badge-optional">Optional</span> |
+| `categoryId` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `notes` | `string` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `CustomerTopUpResponse`**
 
@@ -91,14 +91,14 @@ CustomerTopUpResponse is the response body for Customer Top Up. `referenceNumber
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `referenceNo` | `string` | Optional |
-| `partnerReferenceNo` | `string` | Optional |
-| `sessionId` | `string` | Optional |
-| `customerNumber` | `string` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `referenceNumber` | `string` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `sessionId` | `string` | <span class="badge-optional">Optional</span> |
+| `customerNumber` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `referenceNumber` | `string` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -117,13 +117,13 @@ CustomerTopUpInquiryStatusRequest is the request body for Customer Top Up Inquir
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `originalReferenceNo` | `string` | Optional |
-| `originalExternalId` | `string` | Optional |
-| `serviceCode` | `string` | Mandatory |
-| `transactionDate` | `string` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Optional</span> |
+| `serviceCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `CustomerTopUpInquiryStatusResponse`**
 
@@ -131,21 +131,21 @@ CustomerTopUpInquiryStatusResponse is the response body for Customer Top Up Inqu
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `originalReferenceNo` | `string` | Optional |
-| `originalExternalId` | `string` | Optional |
-| `serviceCode` | `string` | Optional |
-| `transactionDate` | `string` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `beneficiaryAccountNo` | `string` | Mandatory |
-| `beneficiaryBankCode` | `string` | Optional |
-| `previousResponseCode` | `string` | Optional |
-| `referenceNumber` | `string` | Mandatory |
-| `sourceAccountNo` | `string` | Mandatory |
-| `transactionId` | `string` | Optional |
-| `latestTransactionStatus` | `string` | Mandatory |
-| `transactionStatusDesc` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Optional</span> |
+| `serviceCode` | `string` | <span class="badge-optional">Optional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryBankCode` | `string` | <span class="badge-optional">Optional</span> |
+| `previousResponseCode` | `string` | <span class="badge-optional">Optional</span> |
+| `referenceNumber` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `sourceAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionId` | `string` | <span class="badge-optional">Optional</span> |
+| `latestTransactionStatus` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionStatusDesc` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 

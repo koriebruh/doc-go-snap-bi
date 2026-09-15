@@ -36,11 +36,11 @@ TransferToOTCCreatePaymentRequest is the request body for API Transfer To OTC - 
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Mandatory |
-| `customerNumber` | `string` | Mandatory |
-| `otp` | `string` | Mandatory |
-| `amount` | `snap.Money` | Mandatory |
-| `feeType` | `string` | Optional |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `customerNumber` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `otp` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `amount` | `snap.Money` | <span class="badge-mandatory">Mandatory</span> |
+| `feeType` | `string` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `TransferToOTCCreatePaymentResponse`**
 
@@ -48,10 +48,10 @@ TransferToOTCCreatePaymentResponse is the response body for API Transfer To OTC 
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `referenceNo` | `string` | Optional |
-| `transactionDate` | `string` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -72,11 +72,11 @@ TransferToOTCCancelPaymentRequest is the request body for API Transfer To OTC - 
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalReferenceNo` | `string` | Optional |
-| `originalPartnerReferenceNo` | `string` | Mandatory |
-| `originalExternalId` | `string` | Optional |
-| `customerNumber` | `string` | Mandatory |
-| `reason` | `string` | Mandatory |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Optional</span> |
+| `customerNumber` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `reason` | `string` | <span class="badge-mandatory">Mandatory</span> |
 
 **Response &mdash; `TransferToOTCCancelPaymentResponse`**
 
@@ -84,11 +84,11 @@ TransferToOTCCancelPaymentResponse is the response body for API Transfer To OTC 
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `originalReferenceNo` | `string` | Mandatory |
-| `cancelTime` | `string` | Optional |
-| `transactionDate` | `string` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `cancelTime` | `string` | <span class="badge-optional">Optional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -107,14 +107,14 @@ TransferToOTCTransferStatusRequest is the request body for API Transfer To OTC -
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `originalReferenceNo` | `string` | Optional |
-| `originalExternalId` | `string` | Optional |
-| `serviceCode` | `string` | Mandatory |
-| `transactionDate` | `string` | Optional |
-| `customerNumber` | `string` | Mandatory |
-| `amount` | `snap.Money` | Mandatory |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Optional</span> |
+| `serviceCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Optional</span> |
+| `customerNumber` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `amount` | `snap.Money` | <span class="badge-mandatory">Mandatory</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `TransferToOTCTransferStatusResponse`**
 
@@ -122,21 +122,21 @@ TransferToOTCTransferStatusResponse is the response body for API Transfer To OTC
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `originalReferenceNo` | `string` | Optional |
-| `originalExternalId` | `string` | Optional |
-| `serviceCode` | `string` | Optional |
-| `transactionDate` | `string` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `beneficiaryAccountNo` | `string` | Mandatory |
-| `beneficiaryBankCode` | `string` | Optional |
-| `previousResponseCode` | `string` | Optional |
-| `referenceNumber` | `string` | Mandatory |
-| `sourceAccountNo` | `string` | Mandatory |
-| `transactionId` | `string` | Optional |
-| `latestTransactionStatus` | `string` | Mandatory |
-| `transactionStatusDesc` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Optional</span> |
+| `serviceCode` | `string` | <span class="badge-optional">Optional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryBankCode` | `string` | <span class="badge-optional">Optional</span> |
+| `previousResponseCode` | `string` | <span class="badge-optional">Optional</span> |
+| `referenceNumber` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `sourceAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionId` | `string` | <span class="badge-optional">Optional</span> |
+| `latestTransactionStatus` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionStatusDesc` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 

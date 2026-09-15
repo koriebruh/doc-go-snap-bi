@@ -37,6 +37,72 @@ samp {
   width: auto;
 }
 
+/* Column dividers: sidebar | content | TOC, and a line above the footer */
+.hextra-sidebar-container {
+  border-right: 1px solid #e5e7eb;
+  background: #fafafa;
+}
+
+.hextra-toc {
+  border-left: 1px solid #e5e7eb;
+}
+
+main.hextra-max-content-width {
+  background: #ffffff;
+}
+
+.hextra-footer {
+  border-top: 1px solid #e5e7eb;
+}
+
+:root[data-theme="dark"] .hextra-sidebar-container {
+  border-right-color: #262626;
+  background: #0a0a0a;
+}
+
+:root[data-theme="dark"] .hextra-toc {
+  border-left-color: #262626;
+}
+
+:root[data-theme="dark"] main.hextra-max-content-width {
+  background: #111111;
+}
+
+:root[data-theme="dark"] .hextra-footer {
+  border-top-color: #262626;
+}
+
+/* Field-presence badges (Mandatory/Wajib, Optional/Opsional) in reference tables */
+.badge-mandatory,
+.badge-optional {
+  display: inline-block;
+  padding: 0.05rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.8em;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge-mandatory {
+  color: #9a3412;
+  background: #ffedd5;
+}
+
+.badge-optional {
+  color: #1e40af;
+  background: #dbeafe;
+}
+
+:root[data-theme="dark"] .badge-mandatory {
+  color: #fdba74;
+  background: #431407;
+}
+
+:root[data-theme="dark"] .badge-optional {
+  color: #93c5fd;
+  background: #172554;
+}
+
 /* Subtle white-to-gray page background, light mode only */
 body {
   background: linear-gradient(180deg, #ffffff 0%, #f3f4f6 100%);

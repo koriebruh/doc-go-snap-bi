@@ -33,12 +33,12 @@ func TransactionHistoryList(ctx context.Context, t *snap.Transport, hb snap.Head
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Optional |
-| `fromDateTime` | `string` | Optional |
-| `toDateTime` | `string` | Optional |
-| `pageSize` | `string` | Optional |
-| `pageNumber` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `fromDateTime` | `string` | <span class="badge-optional">Optional</span> |
+| `toDateTime` | `string` | <span class="badge-optional">Optional</span> |
+| `pageSize` | `string` | <span class="badge-optional">Optional</span> |
+| `pageNumber` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `TransactionHistoryListResponse`**
 
@@ -46,25 +46,25 @@ The response body.
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `referenceNo` | `string` | Optional |
-| `partnerReferenceNo` | `string` | Optional |
-| `detailData` | `[]TransactionDetail` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `detailData` | `[]TransactionDetail` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 {{< details title="TransactionDetail fields" >}}
 One entry in `detailData`.
 
 | Field | Type | Presence |
 |---|---|---|
-| `dateTime` | `string` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `remark` | `string` | Optional |
-| `sourceOfFunds` | `[]SourceOfFund` | Optional |
-| `status` | `string` | Mandatory |
-| `type` | `string` | Mandatory |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `dateTime` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `remark` | `string` | <span class="badge-optional">Optional</span> |
+| `sourceOfFunds` | `[]SourceOfFund` | <span class="badge-optional">Optional</span> |
+| `status` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `type` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 {{< details title="SourceOfFund fields" >}}
@@ -72,8 +72,8 @@ Describes one source of funds used for a transaction. `source` is Mandatory; `am
 
 | Field | Type | Presence |
 |---|---|---|
-| `source` | `string` | Mandatory |
-| `amount` | `*snap.Money` | Optional |
+| `source` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 
@@ -91,8 +91,8 @@ func TransactionHistoryDetail(ctx context.Context, t *snap.Transport, hb snap.He
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalPartnerReferenceNo` | `string` | Mandatory |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `TransactionHistoryDetailResponse`**
 
@@ -100,27 +100,27 @@ func TransactionHistoryDetail(ctx context.Context, t *snap.Transport, hb snap.He
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `referenceNo` | `string` | Optional |
-| `partnerReferenceNo` | `string` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `cancelledTime` | `string` | Optional |
-| `dateTime` | `string` | Mandatory |
-| `refundAmount` | `*snap.Money` | Optional |
-| `remark` | `string` | Optional |
-| `sourceOfFunds` | `[]SourceOfFund` | Optional |
-| `status` | `string` | Mandatory |
-| `type` | `string` | Mandatory |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `cancelledTime` | `string` | <span class="badge-optional">Optional</span> |
+| `dateTime` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `refundAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `remark` | `string` | <span class="badge-optional">Optional</span> |
+| `sourceOfFunds` | `[]SourceOfFund` | <span class="badge-optional">Optional</span> |
+| `status` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `type` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 {{< details title="SourceOfFund fields" >}}
 Describes one source of funds used for a transaction. `source` is Mandatory; `amount` is a pointer since only its own `value`/`currency` are Mandatory, not the container itself.
 
 | Field | Type | Presence |
 |---|---|---|
-| `source` | `string` | Mandatory |
-| `amount` | `*snap.Money` | Optional |
+| `source` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 
@@ -140,12 +140,12 @@ func BankStatement(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Optional |
-| `bankCardToken` | `string` | Optional |
-| `accountNo` | `string` | Optional |
-| `fromDateTime` | `string` | Optional |
-| `toDateTime` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `bankCardToken` | `string` | <span class="badge-optional">Optional</span> |
+| `accountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `fromDateTime` | `string` | <span class="badge-optional">Optional</span> |
+| `toDateTime` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `BankStatementResponse`**
 
@@ -153,26 +153,26 @@ The response body.
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `referenceNo` | `string` | Optional |
-| `partnerReferenceNo` | `string` | Optional |
-| `balance` | `[]BankStatementBalance` | Optional |
-| `totalCreditEntries` | `*BankStatementEntryTotal` | Optional |
-| `totalDebitEntries` | `*BankStatementEntryTotal` | Optional |
-| `hasMore` | `string` | Optional |
-| `lastRecordDateTime` | `string` | Optional |
-| `detailData` | `[]BankStatementDetail` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `balance` | `[]BankStatementBalance` | <span class="badge-optional">Optional</span> |
+| `totalCreditEntries` | `*BankStatementEntryTotal` | <span class="badge-optional">Optional</span> |
+| `totalDebitEntries` | `*BankStatementEntryTotal` | <span class="badge-optional">Optional</span> |
+| `hasMore` | `string` | <span class="badge-optional">Optional</span> |
+| `lastRecordDateTime` | `string` | <span class="badge-optional">Optional</span> |
+| `detailData` | `[]BankStatementDetail` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 {{< details title="BankStatementBalance fields" >}}
 One entry in `balance`: the running balance before/after the statement period. Uses `BankStatementBalanceAmount` instead of plain `Money` because it also carries a `dateTime`.
 
 | Field | Type | Presence |
 |---|---|---|
-| `amount` | `BankStatementBalanceAmount` | Mandatory |
-| `startingBalance` | `BankStatementBalanceAmount` | Mandatory |
-| `endingBalance` | `BankStatementBalanceAmount` | Mandatory |
+| `amount` | `BankStatementBalanceAmount` | <span class="badge-mandatory">Mandatory</span> |
+| `startingBalance` | `BankStatementBalanceAmount` | <span class="badge-mandatory">Mandatory</span> |
+| `endingBalance` | `BankStatementBalanceAmount` | <span class="badge-mandatory">Mandatory</span> |
 {{< /details >}}
 
 {{< details title="BankStatementBalanceAmount fields" >}}
@@ -180,9 +180,9 @@ The `{value, currency, dateTime}` shape used by `BankStatementBalance` — like 
 
 | Field | Type | Presence |
 |---|---|---|
-| `value` | `string` | Mandatory |
-| `currency` | `string` | Mandatory |
-| `dateTime` | `string` | Mandatory |
+| `value` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `currency` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `dateTime` | `string` | <span class="badge-mandatory">Mandatory</span> |
 {{< /details >}}
 
 {{< details title="BankStatementEntryTotal fields" >}}
@@ -190,8 +190,8 @@ Shared shape for `totalCreditEntries` and `totalDebitEntries`. `numberOfEntries`
 
 | Field | Type | Presence |
 |---|---|---|
-| `numberOfEntries` | `string` | Optional |
-| `amount` | `snap.Money` | Mandatory |
+| `numberOfEntries` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `snap.Money` | <span class="badge-mandatory">Mandatory</span> |
 {{< /details >}}
 
 {{< details title="BankStatementDetail fields" >}}
@@ -199,15 +199,15 @@ One entry in `detailData`: a single transaction line.
 
 | Field | Type | Presence |
 |---|---|---|
-| `detailBalance` | `*BankStatementDetailBalance` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `originAmount` | `*snap.Money` | Optional |
-| `transactionDate` | `string` | Mandatory |
-| `remark` | `string` | Mandatory |
-| `transactionId` | `string` | Optional |
-| `type` | `string` | Mandatory |
-| `transactionDetailStatus` | `string` | Optional |
-| `detailInfo` | `json.RawMessage` | Optional |
+| `detailBalance` | `*BankStatementDetailBalance` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `originAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `transactionDate` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `remark` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionId` | `string` | <span class="badge-optional">Optional</span> |
+| `type` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionDetailStatus` | `string` | <span class="badge-optional">Optional</span> |
+| `detailInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 {{< details title="BankStatementDetailBalance fields" >}}
@@ -215,8 +215,8 @@ The balance immediately before (`startAmount`) and after (`endAmount`) one trans
 
 | Field | Type | Presence |
 |---|---|---|
-| `startAmount` | `[]BankStatementDetailBalanceEntry` | Optional |
-| `endAmount` | `[]BankStatementDetailBalanceEntry` | Optional |
+| `startAmount` | `[]BankStatementDetailBalanceEntry` | <span class="badge-optional">Optional</span> |
+| `endAmount` | `[]BankStatementDetailBalanceEntry` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 {{< details title="BankStatementDetailBalanceEntry fields" >}}
@@ -224,6 +224,6 @@ One entry in `startAmount`/`endAmount`.
 
 | Field | Type | Presence |
 |---|---|---|
-| `amount` | `*snap.Money` | Optional |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 

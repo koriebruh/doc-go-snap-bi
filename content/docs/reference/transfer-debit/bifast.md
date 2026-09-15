@@ -41,16 +41,16 @@ DirectDebitBIFASTEMandateRegistrationRequest is the request body for Registrasi 
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Optional |
-| `bankCode` | `string` | Mandatory |
-| `sourceAccountNo` | `string` | Mandatory |
-| `sourceAccountName` | `string` | Mandatory |
-| `maxAmount` | `*snap.Money` | Optional |
-| `billerId` | `string` | Mandatory |
-| `billerName` | `string` | Mandatory |
-| `customerId` | `string` | Mandatory |
-| `expiredDatetime` | `string` | Mandatory |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `bankCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `sourceAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `sourceAccountName` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `maxAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `billerId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `billerName` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `customerId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `expiredDatetime` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `DirectDebitBIFASTEMandateRegistrationResponse`**
 
@@ -58,12 +58,12 @@ DirectDebitBIFASTEMandateRegistrationResponse is the response body for Registras
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `referenceNo` | `string` | Optional |
-| `partnerReferenceNo` | `string` | Optional |
-| `eMandateReffId` | `string` | Mandatory |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `eMandateReffId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -84,20 +84,20 @@ DirectDebitBIFASTPaymentRequest is the request body for Trigger Direct Debit Tra
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Mandatory |
-| `currency` | `string` | Optional |
-| `customerReference` | `string` | Mandatory |
-| `feeType` | `string` | Optional |
-| `remark` | `string` | Optional |
-| `beneficiaryAccountNo` | `string` | Mandatory |
-| `beneficiaryAccountName` | `string` | Mandatory |
-| `transactionDate` | `string` | Mandatory |
-| `bankCode` | `string` | Mandatory |
-| `sourceAccountNo` | `string` | Mandatory |
-| `sourceAccountName` | `string` | Mandatory |
-| `amount` | `*snap.Money` | Optional |
-| `eMandateReffId` | `string` | Mandatory |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `currency` | `string` | <span class="badge-optional">Optional</span> |
+| `customerReference` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `feeType` | `string` | <span class="badge-optional">Optional</span> |
+| `remark` | `string` | <span class="badge-optional">Optional</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryAccountName` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionDate` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `bankCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `sourceAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `sourceAccountName` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `eMandateReffId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `DirectDebitBIFASTPaymentResponse`**
 
@@ -105,11 +105,11 @@ DirectDebitBIFASTPaymentResponse is the response body for Trigger Direct Debit T
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `referenceNo` | `string` | Optional |
-| `partnerReferenceNo` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -134,17 +134,17 @@ kept as-is rather than normalized.
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalReferenceNo` | `string` | Mandatory |
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `originalExternalId` | `string` | Optional |
-| `transactionStatus` | `string` | Mandatory |
-| `transactionStatusDesc` | `string` | Optional |
-| `eMandateReffId` | `string` | Mandatory |
-| `sourceAccountNo` | `string` | Mandatory |
-| `sourceAccountName` | `string` | Mandatory |
-| `amount` | `*snap.Money` | Optional |
-| `traceNo` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `originalReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Optional</span> |
+| `transactionStatus` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionStatusDesc` | `string` | <span class="badge-optional">Optional</span> |
+| `eMandateReffId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `sourceAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `sourceAccountName` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `traceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Your handler replies with &mdash; `DirectDebitBIFASTNotificationResponse`**
 
@@ -152,5 +152,5 @@ DirectDebitBIFASTNotificationResponse is envelope-only — just `responseCode` a
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |

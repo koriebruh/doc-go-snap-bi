@@ -33,33 +33,33 @@ DirectDebitPaymentRequest adalah request body untuk Direct Debit Payment. `partn
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Wajib |
-| `bankCardToken` | `string` | Opsional |
-| `chargeToken` | `string` | Opsional |
-| `otp` | `string` | Opsional |
-| `otpTrxCode` | `string` | Opsional |
-| `merchantId` | `string` | Opsional |
-| `terminalId` | `string` | Opsional |
-| `journeyId` | `string` | Opsional |
-| `subMerchantId` | `string` | Opsional |
-| `amount` | `*snap.Money` | Opsional |
-| `urlParams` | `[]DirectDebitPaymentURLParam` | Opsional |
-| `externalStoreId` | `string` | Opsional |
-| `validUpTo` | `string` | Opsional |
-| `pointOfInitiation` | `string` | Opsional |
-| `feeType` | `string` | Opsional |
-| `disabledPayMethods` | `string` | Opsional |
-| `payOptionDetails` | `[]DirectDebitPayOptionDetail` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `bankCardToken` | `string` | <span class="badge-optional">Opsional</span> |
+| `chargeToken` | `string` | <span class="badge-optional">Opsional</span> |
+| `otp` | `string` | <span class="badge-optional">Opsional</span> |
+| `otpTrxCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `merchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `terminalId` | `string` | <span class="badge-optional">Opsional</span> |
+| `journeyId` | `string` | <span class="badge-optional">Opsional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `urlParams` | `[]DirectDebitPaymentURLParam` | <span class="badge-optional">Opsional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Opsional</span> |
+| `validUpTo` | `string` | <span class="badge-optional">Opsional</span> |
+| `pointOfInitiation` | `string` | <span class="badge-optional">Opsional</span> |
+| `feeType` | `string` | <span class="badge-optional">Opsional</span> |
+| `disabledPayMethods` | `string` | <span class="badge-optional">Opsional</span> |
+| `payOptionDetails` | `[]DirectDebitPayOptionDetail` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="DirectDebitPaymentURLParam fields" >}}
 DirectDebitPaymentURLParam adalah satu entri dalam array `urlParams[]` pada request — sebuah URL redirect dan cara memakainya. `isDeeplink` adalah flag `"Y"`/`"N"`.
 
 | Field | Type | Presence |
 |---|---|---|
-| `url` | `string` | Wajib |
-| `type` | `string` | Wajib |
-| `isDeeplink` | `string` | Wajib |
+| `url` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `type` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `isDeeplink` | `string` | <span class="badge-mandatory">Wajib</span> |
 {{< /details >}}
 
 {{< details title="DirectDebitPayOptionDetail fields" >}}
@@ -67,13 +67,13 @@ DirectDebitPayOptionDetail adalah satu entri dalam array `payOptionDetails[]` pa
 
 | Field | Type | Presence |
 |---|---|---|
-| `payMethod` | `string` | Wajib |
-| `payOption` | `string` | Wajib |
-| `transAmount` | `*snap.Money` | Opsional |
-| `feeAmount` | `*snap.Money` | Opsional |
-| `cardToken` | `string` | Opsional |
-| `merchantToken` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `payMethod` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `payOption` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `transAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `feeAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `cardToken` | `string` | <span class="badge-optional">Opsional</span> |
+| `merchantToken` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 **Response &mdash; `DirectDebitPaymentResponse`**
@@ -90,14 +90,14 @@ dikendalikan penyerang.
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `referenceNo` | `string` | Opsional |
-| `partnerReferenceNo` | `string` | Opsional |
-| `approvalCode` | `string` | Opsional |
-| `appRedirectUrl` | `string` | Opsional |
-| `webRedirectUrl` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `approvalCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `appRedirectUrl` | `string` | <span class="badge-optional">Opsional</span> |
+| `webRedirectUrl` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -116,18 +116,18 @@ DirectDebitPaymentNotificationRequest adalah request body untuk Direct Debit Pay
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalPartnerReferenceNo` | `string` | Opsional |
-| `originalReferenceNo` | `string` | Wajib |
-| `originalExternalId` | `string` | Opsional |
-| `merchantId` | `string` | Opsional |
-| `subMerchantId` | `string` | Opsional |
-| `amount` | `*snap.Money` | Opsional |
-| `latestTransactionStatus` | `string` | Wajib |
-| `transactionStatusDesc` | `string` | Opsional |
-| `createdTime` | `string` | Opsional |
-| `finishedTime` | `string` | Opsional |
-| `externalStoreId` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Opsional</span> |
+| `merchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `latestTransactionStatus` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `transactionStatusDesc` | `string` | <span class="badge-optional">Opsional</span> |
+| `createdTime` | `string` | <span class="badge-optional">Opsional</span> |
+| `finishedTime` | `string` | <span class="badge-optional">Opsional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Handler Anda membalas dengan &mdash; `DirectDebitPaymentNotificationResponse`**
 
@@ -135,9 +135,9 @@ DirectDebitPaymentNotificationResponse punya satu field di luar envelope, `appro
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `approvalCode` | `string` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `approvalCode` | `string` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -156,15 +156,15 @@ DirectDebitPaymentStatusRequest adalah request body untuk Direct Debit Payment S
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalPartnerReferenceNo` | `string` | Opsional |
-| `originalReferenceNo` | `string` | Opsional |
-| `originalExternalId` | `string` | Opsional |
-| `serviceCode` | `string` | Wajib |
-| `transactionDate` | `string` | Opsional |
-| `amount` | `*snap.Money` | Opsional |
-| `merchantId` | `string` | Opsional |
-| `subMerchantId` | `string` | Opsional |
-| `externalStoreId` | `string` | Opsional |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Opsional</span> |
+| `serviceCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `merchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `DirectDebitPaymentStatusResponse`**
 
@@ -172,37 +172,37 @@ DirectDebitPaymentStatusResponse adalah response body untuk Direct Debit Payment
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `originalPartnerReferenceNo` | `string` | Opsional |
-| `originalReferenceNo` | `string` | Opsional |
-| `originalExternalId` | `string` | Opsional |
-| `serviceCode` | `string` | Opsional |
-| `transactionDate` | `string` | Opsional |
-| `amount` | `*snap.Money` | Opsional |
-| `approvalCode` | `string` | Opsional |
-| `latestTransactionStatus` | `string` | Wajib |
-| `transactionStatusDesc` | `string` | Opsional |
-| `originalResponseCode` | `string` | Opsional |
-| `originalResponseMessage` | `string` | Opsional |
-| `sessionId` | `string` | Opsional |
-| `requestId` | `string` | Opsional |
-| `refundHistory` | `[]DirectDebitRefundHistoryItem` | Opsional |
-| `transAmount` | `*snap.Money` | Opsional |
-| `feeAmount` | `*snap.Money` | Opsional |
-| `paidTime` | `string` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Opsional</span> |
+| `serviceCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `approvalCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `latestTransactionStatus` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `transactionStatusDesc` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalResponseCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalResponseMessage` | `string` | <span class="badge-optional">Opsional</span> |
+| `sessionId` | `string` | <span class="badge-optional">Opsional</span> |
+| `requestId` | `string` | <span class="badge-optional">Opsional</span> |
+| `refundHistory` | `[]DirectDebitRefundHistoryItem` | <span class="badge-optional">Opsional</span> |
+| `transAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `feeAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `paidTime` | `string` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="DirectDebitRefundHistoryItem fields" >}}
 DirectDebitRefundHistoryItem adalah satu entri dalam array `refundHistory[]` pada response — sebuah refund yang pernah terjadi pada pembayaran ini. `refundStatus` bernilai salah satu dari `00`, `03`, atau `06`.
 
 | Field | Type | Presence |
 |---|---|---|
-| `refundNo` | `string` | Opsional |
-| `partnerRefundNo` | `string` | Wajib |
-| `refundAmount` | `*snap.Money` | Opsional |
-| `refundStatus` | `string` | Wajib |
-| `refundDate` | `string` | Opsional |
-| `reason` | `string` | Opsional |
+| `refundNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerRefundNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `refundAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `refundStatus` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `refundDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `reason` | `string` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 
@@ -224,16 +224,16 @@ DirectDebitPaymentCancelRequest adalah request body untuk Direct Debit Payment C
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalPartnerReferenceNo` | `string` | Wajib |
-| `originalReferenceNo` | `string` | Opsional |
-| `approvalCode` | `string` | Opsional |
-| `originalExternalId` | `string` | Opsional |
-| `merchantId` | `string` | Opsional |
-| `subMerchantId` | `string` | Opsional |
-| `reason` | `string` | Opsional |
-| `externalStoreId` | `string` | Opsional |
-| `amount` | `*snap.Money` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `approvalCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Opsional</span> |
+| `merchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `reason` | `string` | <span class="badge-optional">Opsional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `DirectDebitPaymentCancelResponse`**
 
@@ -241,14 +241,14 @@ DirectDebitPaymentCancelResponse adalah response body untuk Direct Debit Payment
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `originalPartnerReferenceNo` | `string` | Opsional |
-| `originalReferenceNo` | `string` | Opsional |
-| `originalExternalId` | `string` | Opsional |
-| `cancelTime` | `string` | Opsional |
-| `transactionDate` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Opsional</span> |
+| `cancelTime` | `string` | <span class="badge-optional">Opsional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -269,16 +269,16 @@ DirectDebitPaymentRefundRequest adalah request body untuk Direct Debit Payment R
 
 | Field | Type | Presence |
 |---|---|---|
-| `merchantId` | `string` | Opsional |
-| `subMerchantId` | `string` | Opsional |
-| `originalPartnerReferenceNo` | `string` | Wajib |
-| `originalReferenceNo` | `string` | Opsional |
-| `originalExternalId` | `string` | Opsional |
-| `partnerRefundNo` | `string` | Wajib |
-| `refundAmount` | `*snap.Money` | Opsional |
-| `externalStoreId` | `string` | Opsional |
-| `reason` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `merchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerRefundNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `refundAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Opsional</span> |
+| `reason` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `DirectDebitPaymentRefundResponse`**
 
@@ -286,14 +286,14 @@ DirectDebitPaymentRefundResponse adalah response body untuk Direct Debit Payment
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `originalPartnerReferenceNo` | `string` | Opsional |
-| `originalReferenceNo` | `string` | Opsional |
-| `originalExternalId` | `string` | Opsional |
-| `partnerTrxId` | `string` | Opsional |
-| `refundNo` | `string` | Wajib |
-| `partnerRefundNo` | `string` | Wajib |
-| `refundAmount` | `*snap.Money` | Opsional |
-| `refundTime` | `string` | Wajib |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerTrxId` | `string` | <span class="badge-optional">Opsional</span> |
+| `refundNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `partnerRefundNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `refundAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `refundTime` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |

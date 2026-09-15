@@ -31,13 +31,13 @@ TransactionStatusInquiryBankRequest is the request body for API Transaction Stat
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `originalReferenceNo` | `string` | Optional |
-| `originalExternalId` | `string` | Optional |
-| `serviceCode` | `string` | Mandatory |
-| `transactionDate` | `string` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Optional</span> |
+| `serviceCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `TransactionStatusInquiryBankResponse`**
 
@@ -45,23 +45,23 @@ TransactionStatusInquiryBankResponse is the response body for API Transaction St
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `originalReferenceNo` | `string` | Optional |
-| `originalExternalId` | `string` | Optional |
-| `serviceCode` | `string` | Optional |
-| `transactionDate` | `string` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `beneficiaryAccountNo` | `string` | Mandatory |
-| `beneficiaryBankCode` | `string` | Optional |
-| `previousResponseCode` | `string` | Optional |
-| `referenceNumber` | `string` | Mandatory |
-| `sourceAccountNo` | `string` | Mandatory |
-| `transactionId` | `string` | Optional |
-| `latestTransactionStatus` | `string` | Mandatory |
-| `transactionStatusDesc` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Optional</span> |
+| `serviceCode` | `string` | <span class="badge-optional">Optional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryBankCode` | `string` | <span class="badge-optional">Optional</span> |
+| `previousResponseCode` | `string` | <span class="badge-optional">Optional</span> |
+| `referenceNumber` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `sourceAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionId` | `string` | <span class="badge-optional">Optional</span> |
+| `latestTransactionStatus` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionStatusDesc` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -82,17 +82,17 @@ TransactionStatusInquiryNonBankRequest is the request body for API Transaction S
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `originalReferenceNo` | `string` | Optional |
-| `originalExternalId` | `string` | Optional |
-| `serviceCode` | `string` | Mandatory |
-| `transactionDate` | `string` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
-| `originalResponseCode` | `string` | Optional |
-| `originalResponseMessage` | `string` | Optional |
-| `sessionId` | `string` | Optional |
-| `requestId` | `string` | Optional |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Optional</span> |
+| `serviceCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `originalResponseCode` | `string` | <span class="badge-optional">Optional</span> |
+| `originalResponseMessage` | `string` | <span class="badge-optional">Optional</span> |
+| `sessionId` | `string` | <span class="badge-optional">Optional</span> |
+| `requestId` | `string` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `TransactionStatusInquiryNonBankResponse`**
 
@@ -100,21 +100,21 @@ TransactionStatusInquiryNonBankResponse is the response body for API Transaction
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `originalReferenceNo` | `string` | Optional |
-| `originalExternalId` | `string` | Optional |
-| `serviceCode` | `string` | Optional |
-| `transactionDate` | `string` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `beneficiaryAccountNo` | `string` | Mandatory |
-| `beneficiaryBankCode` | `string` | Optional |
-| `previousResponseCode` | `string` | Optional |
-| `referenceNumber` | `string` | Mandatory |
-| `sourceAccountNo` | `string` | Mandatory |
-| `transactionId` | `string` | Optional |
-| `latestTransactionStatus` | `string` | Mandatory |
-| `transactionStatusDesc` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Optional</span> |
+| `serviceCode` | `string` | <span class="badge-optional">Optional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryBankCode` | `string` | <span class="badge-optional">Optional</span> |
+| `previousResponseCode` | `string` | <span class="badge-optional">Optional</span> |
+| `referenceNumber` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `sourceAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionId` | `string` | <span class="badge-optional">Optional</span> |
+| `latestTransactionStatus` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionStatusDesc` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 

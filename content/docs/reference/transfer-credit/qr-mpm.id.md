@@ -35,14 +35,14 @@ Semua field Opsional — tidak ada field yang didokumentasikan Wajib.
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Opsional |
-| `amount` | `*snap.Money` | Opsional |
-| `feeAmount` | `*snap.Money` | Opsional |
-| `merchantId` | `string` | Opsional |
-| `subMerchantId` | `string` | Opsional |
-| `storeId` | `string` | Opsional |
-| `terminalId` | `string` | Opsional |
-| `validityPeriod` | `string` | Opsional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `feeAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `merchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `storeId` | `string` | <span class="badge-optional">Opsional</span> |
+| `terminalId` | `string` | <span class="badge-optional">Opsional</span> |
+| `validityPeriod` | `string` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `GenerateQRMPMResponse`**
 
@@ -50,14 +50,14 @@ Semua field Opsional — tidak ada field yang didokumentasikan Wajib.
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `qrContent` | `string` | Opsional |
-| `qrUrl` | `string` | Opsional |
-| `redirectUrl` | `string` | Opsional |
-| `merchantName` | `string` | Opsional |
-| `storeId` | `string` | Opsional |
-| `terminalId` | `string` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `qrContent` | `string` | <span class="badge-optional">Opsional</span> |
+| `qrUrl` | `string` | <span class="badge-optional">Opsional</span> |
+| `redirectUrl` | `string` | <span class="badge-optional">Opsional</span> |
+| `merchantName` | `string` | <span class="badge-optional">Opsional</span> |
+| `storeId` | `string` | <span class="badge-optional">Opsional</span> |
+| `terminalId` | `string` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -78,17 +78,17 @@ Endpoint ini tidak punya request body bertipe selain parameter panggilan di atas
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `userResources` | `[]ApplyOTTUserResource` | Wajib |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `userResources` | `[]ApplyOTTUserResource` | <span class="badge-mandatory">Wajib</span> |
 
 {{< details title="Field ApplyOTTUserResource" >}}
 Satu entri dalam array `userResources` pada `ApplyOTTResponse`. Meski nama field-nya sama dengan request, ini bentuk yang berbeda (objek, bukan string biasa).
 
 | Field | Type | Presence |
 |---|---|---|
-| `resourceType` | `string` | Wajib |
-| `value` | `string` | Wajib |
+| `resourceType` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `value` | `string` | <span class="badge-mandatory">Wajib</span> |
 {{< /details >}}
 
 
@@ -110,12 +110,12 @@ func DecodeQRMPM(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, 
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Opsional |
-| `qrContent` | `string` | Wajib |
-| `amount` | `*snap.Money` | Opsional |
-| `merchantId` | `string` | Opsional |
-| `subMerchantId` | `string` | Opsional |
-| `scanTime` | `string` | Wajib |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `qrContent` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `merchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `scanTime` | `string` | <span class="badge-mandatory">Wajib</span> |
 
 **Response &mdash; `DecodeQRMPMResponse`**
 
@@ -123,16 +123,16 @@ func DecodeQRMPM(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, 
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `referenceNo` | `string` | Opsional |
-| `redirectUrl` | `string` | Opsional |
-| `merchantName` | `string` | Opsional |
-| `merchantCategory` | `string` | Opsional |
-| `merchantLocation` | `string` | Opsional |
-| `merchantInfos` | `[]MPMMerchantInfo` | Wajib |
-| `transactionAmount` | `*snap.Money` | Opsional |
-| `feeAmount` | `*snap.Money` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `redirectUrl` | `string` | <span class="badge-optional">Opsional</span> |
+| `merchantName` | `string` | <span class="badge-optional">Opsional</span> |
+| `merchantCategory` | `string` | <span class="badge-optional">Opsional</span> |
+| `merchantLocation` | `string` | <span class="badge-optional">Opsional</span> |
+| `merchantInfos` | `[]MPMMerchantInfo` | <span class="badge-mandatory">Wajib</span> |
+| `transactionAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `feeAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="Field MPMMerchantInfo" >}}
 Satu entri dalam array `merchantInfos` pada `DecodeQRMPMResponse`.
@@ -141,8 +141,8 @@ Satu entri dalam array `merchantInfos` pada `DecodeQRMPMResponse`.
 
 | Field | Type | Presence |
 |---|---|---|
-| `merchantPAN` | `json.RawMessage` | Wajib |
-| `acquirerName` | `string` | Wajib |
+| `merchantPAN` | `json.RawMessage` | <span class="badge-mandatory">Wajib</span> |
+| `acquirerName` | `string` | <span class="badge-mandatory">Wajib</span> |
 {{< /details >}}
 
 
@@ -166,23 +166,23 @@ func QRMPMPaymentH2H(ctx context.Context, t *snap.Transport, hb snap.HeaderBuild
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Wajib |
-| `merchantId` | `string` | Opsional |
-| `subMerchantId` | `string` | Opsional |
-| `amount` | `*snap.Money` | Opsional |
-| `feeAmount` | `*snap.Money` | Opsional |
-| `otp` | `string` | Opsional |
-| `verificationId` | `string` | Opsional |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `merchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `feeAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `otp` | `string` | <span class="badge-optional">Opsional</span> |
+| `verificationId` | `string` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `QRMPMPaymentH2HResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `referenceNo` | `string` | Opsional |
-| `transactionDate` | `string` | Opsional |
-| `verificationId` | `string` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `verificationId` | `string` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -199,17 +199,17 @@ Ini adalah callback settlement yang diterima PJP, bukan panggilan dari package i
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalReferenceNo` | `string` | Wajib |
-| `originalPartnerReferenceNo` | `string` | Opsional |
-| `latestTransactionStatus` | `string` | Wajib |
-| `customerNumber` | `string` | Opsional |
-| `accountType` | `string` | Opsional |
-| `destinationNumber` | `string` | Opsional |
-| `destinationAccountName` | `string` | Opsional |
-| `amount` | `*snap.Money` | Opsional |
-| `sessionId` | `string` | Opsional |
-| `bankCode` | `string` | Opsional |
-| `externalStoreId` | `string` | Opsional |
+| `originalReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `latestTransactionStatus` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `customerNumber` | `string` | <span class="badge-optional">Opsional</span> |
+| `accountType` | `string` | <span class="badge-optional">Opsional</span> |
+| `destinationNumber` | `string` | <span class="badge-optional">Opsional</span> |
+| `destinationAccountName` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `sessionId` | `string` | <span class="badge-optional">Opsional</span> |
+| `bankCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Opsional</span> |
 
 **Handler Anda membalas dengan &mdash; `QRMPMPaymentNotificationResponse`**
 
@@ -217,8 +217,8 @@ Tidak ada field lain selain envelope standar `responseCode`/`responseMessage`.
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
 
 
 ---
@@ -239,16 +239,16 @@ Field dasar yang sama dengan [`TransactionStatusInquiryBankRequest`](/id/docs/re
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalPartnerReferenceNo` | `string` | Opsional |
-| `originalReferenceNo` | `string` | Opsional |
-| `originalExternalId` | `string` | Opsional |
-| `serviceCode` | `string` | Wajib |
-| `transactionDate` | `string` | Opsional |
-| `amount` | `*snap.Money` | Opsional |
-| `merchantId` | `string` | Opsional |
-| `subMerchantId` | `string` | Opsional |
-| `externalStoreId` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Opsional</span> |
+| `serviceCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `merchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `QRMPMQueryPaymentResponse`**
 
@@ -256,25 +256,25 @@ Field yang sama dengan [`TransactionStatusInquiryBankResponse`](/id/docs/referen
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `originalPartnerReferenceNo` | `string` | Opsional |
-| `originalReferenceNo` | `string` | Opsional |
-| `originalExternalId` | `string` | Opsional |
-| `serviceCode` | `string` | Opsional |
-| `transactionDate` | `string` | Opsional |
-| `amount` | `*snap.Money` | Opsional |
-| `beneficiaryAccountNo` | `string` | Wajib |
-| `beneficiaryBankCode` | `string` | Opsional |
-| `previousResponseCode` | `string` | Opsional |
-| `referenceNumber` | `string` | Wajib |
-| `sourceAccountNo` | `string` | Wajib |
-| `transactionId` | `string` | Opsional |
-| `latestTransactionStatus` | `string` | Wajib |
-| `transactionStatusDesc` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
-| `paidTime` | `string` | Opsional |
-| `terminalId` | `string` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Opsional</span> |
+| `serviceCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryBankCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `previousResponseCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `referenceNumber` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `sourceAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `transactionId` | `string` | <span class="badge-optional">Opsional</span> |
+| `latestTransactionStatus` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `transactionStatusDesc` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `paidTime` | `string` | <span class="badge-optional">Opsional</span> |
+| `terminalId` | `string` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -295,14 +295,14 @@ Berbeda dari endpoint pola originalX lain di package ini, baris ini tidak mendok
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalPartnerReferenceNo` | `string` | Opsional |
-| `originalReferenceNo` | `string` | Opsional |
-| `originalExternalId` | `string` | Opsional |
-| `merchantId` | `string` | Wajib |
-| `subMerchantId` | `string` | Opsional |
-| `externalStoreId` | `string` | Opsional |
-| `reason` | `string` | Wajib |
-| `amount` | `*snap.Money` | Opsional |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Opsional</span> |
+| `merchantId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Opsional</span> |
+| `reason` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `QRMPMCancelPaymentResponse`**
 
@@ -310,10 +310,10 @@ Berbeda dari endpoint pola originalX lain di package ini, baris ini tidak mendok
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `cancelTime` | `string` | Opsional |
-| `transactionDate` | `string` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `cancelTime` | `string` | <span class="badge-optional">Opsional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -334,15 +334,15 @@ func QRMPMRefundPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBu
 
 | Field | Type | Presence |
 |---|---|---|
-| `merchantId` | `string` | Opsional |
-| `subMerchantId` | `string` | Opsional |
-| `externalStoreId` | `string` | Opsional |
-| `originalPartnerReferenceNo` | `string` | Wajib |
-| `originalReferenceNo` | `string` | Opsional |
-| `originalExternalId` | `string` | Opsional |
-| `partnerRefundNo` | `string` | Wajib |
-| `refundAmount` | `*snap.Money` | Opsional |
-| `reason` | `string` | Opsional |
+| `merchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerRefundNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `refundAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `reason` | `string` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `QRMPMRefundPaymentResponse`**
 
@@ -350,9 +350,9 @@ func QRMPMRefundPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBu
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `refundNo` | `string` | Wajib |
-| `partnerRefundNo` | `string` | Opsional |
-| `refundAmount` | `*snap.Money` | Opsional |
-| `refundTime` | `string` | Wajib |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `refundNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `partnerRefundNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `refundAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `refundTime` | `string` | <span class="badge-mandatory">Wajib</span> |

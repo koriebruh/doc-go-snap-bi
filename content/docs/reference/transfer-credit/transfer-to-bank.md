@@ -34,10 +34,10 @@ TransferToBankAccountInquiryRequest is the request body for API Transfer To Bank
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Optional |
-| `CustomerNumber` | `string` | Mandatory |
-| `amount` | `snap.Money` | Mandatory |
-| `beneficiaryAccountNumber` | `string` | Optional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `CustomerNumber` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `amount` | `snap.Money` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryAccountNumber` | `string` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `TransferToBankAccountInquiryResponse`**
 
@@ -45,16 +45,16 @@ TransferToBankAccountInquiryResponse is the response body for API Transfer To Ba
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `accountType` | `string` | Optional |
-| `beneficiaryAccountNumber` | `string` | Mandatory |
-| `beneficiaryAccountName` | `string` | Mandatory |
-| `beneficiaryBankCode` | `string` | Optional |
-| `beneficiaryBankShortName` | `string` | Optional |
-| `beneficiaryBankName` | `string` | Optional |
-| `amount` | `snap.Money` | Mandatory |
-| `sessionId` | `string` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `accountType` | `string` | <span class="badge-optional">Optional</span> |
+| `beneficiaryAccountNumber` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryAccountName` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryBankCode` | `string` | <span class="badge-optional">Optional</span> |
+| `beneficiaryBankShortName` | `string` | <span class="badge-optional">Optional</span> |
+| `beneficiaryBankName` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `snap.Money` | <span class="badge-mandatory">Mandatory</span> |
+| `sessionId` | `string` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -75,14 +75,14 @@ TransferToBankPaymentRequest is the request body for API Transfer To Bank - Paym
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Mandatory |
-| `customerNumber` | `string` | Mandatory |
-| `accountType` | `string` | Optional |
-| `beneficiaryAccountNumber` | `string` | Mandatory |
-| `beneficiaryBankCode` | `string` | Optional |
-| `amount` | `snap.Money` | Mandatory |
-| `sessionId` | `string` | Optional |
-| `feeType` | `string` | Optional |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `customerNumber` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `accountType` | `string` | <span class="badge-optional">Optional</span> |
+| `beneficiaryAccountNumber` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryBankCode` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `snap.Money` | <span class="badge-mandatory">Mandatory</span> |
+| `sessionId` | `string` | <span class="badge-optional">Optional</span> |
+| `feeType` | `string` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `TransferToBankPaymentResponse`**
 
@@ -90,9 +90,9 @@ TransferToBankPaymentResponse is the response body for API Transfer To Bank - Pa
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `referenceNo` | `string` | Optional |
-| `transactionDate` | `string` | Optional |
-| `referenceNumber` | `string` | Mandatory |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Optional</span> |
+| `referenceNumber` | `string` | <span class="badge-mandatory">Mandatory</span> |
 

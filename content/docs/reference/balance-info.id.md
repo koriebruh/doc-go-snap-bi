@@ -33,11 +33,11 @@ Isi tepat salah satu dari `BankCardToken` atau `AccountNo` (kecuali token custom
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Opsional |
-| `bankCardToken` | `string` | Opsional |
-| `accountNo` | `string` | Opsional |
-| `balanceTypes` | `[]string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `bankCardToken` | `string` | <span class="badge-optional">Opsional</span> |
+| `accountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `balanceTypes` | `[]string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `BalanceInquiryResponse`**
 
@@ -45,28 +45,28 @@ Body response-nya.
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `referenceNo` | `string` | Opsional |
-| `partnerReferenceNo` | `string` | Opsional |
-| `accountNo` | `string` | Opsional |
-| `name` | `string` | Opsional |
-| `accountInfos` | `[]AccountInfo` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `accountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `name` | `string` | <span class="badge-optional">Opsional</span> |
+| `accountInfos` | `[]AccountInfo` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="AccountInfo fields" >}}
 Satu entri di `accountInfos`.
 
 | Field | Type | Presence |
 |---|---|---|
-| `balanceType` | `string` | Opsional |
-| `amount` | `*snap.Money` | Opsional |
-| `floatAmount` | `*snap.Money` | Opsional |
-| `holdAmount` | `*snap.Money` | Opsional |
-| `availableBalance` | `*snap.Money` | Opsional |
-| `ledgerBalance` | `*snap.Money` | Opsional |
-| `currentMultilateralLimit` | `*snap.Money` | Opsional |
-| `registrationStatusCode` | `string` | Opsional |
-| `status` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `balanceType` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `floatAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `holdAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `availableBalance` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `ledgerBalance` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `currentMultilateralLimit` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `registrationStatusCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `status` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}

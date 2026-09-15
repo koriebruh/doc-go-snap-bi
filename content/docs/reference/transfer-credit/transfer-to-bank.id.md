@@ -34,25 +34,25 @@ func TransferToBankAccountInquiry(ctx context.Context, t *snap.Transport, hb sna
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Opsional |
-| `CustomerNumber` | `string` | Wajib |
-| `amount` | `snap.Money` | Wajib |
-| `beneficiaryAccountNumber` | `string` | Opsional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `CustomerNumber` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `amount` | `snap.Money` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryAccountNumber` | `string` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `TransferToBankAccountInquiryResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `accountType` | `string` | Opsional |
-| `beneficiaryAccountNumber` | `string` | Wajib |
-| `beneficiaryAccountName` | `string` | Wajib |
-| `beneficiaryBankCode` | `string` | Opsional |
-| `beneficiaryBankShortName` | `string` | Opsional |
-| `beneficiaryBankName` | `string` | Opsional |
-| `amount` | `snap.Money` | Wajib |
-| `sessionId` | `string` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `accountType` | `string` | <span class="badge-optional">Opsional</span> |
+| `beneficiaryAccountNumber` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryAccountName` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryBankCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `beneficiaryBankShortName` | `string` | <span class="badge-optional">Opsional</span> |
+| `beneficiaryBankName` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `snap.Money` | <span class="badge-mandatory">Wajib</span> |
+| `sessionId` | `string` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -73,14 +73,14 @@ func TransferToBankPayment(ctx context.Context, t *snap.Transport, hb snap.Heade
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Wajib |
-| `customerNumber` | `string` | Wajib |
-| `accountType` | `string` | Opsional |
-| `beneficiaryAccountNumber` | `string` | Wajib |
-| `beneficiaryBankCode` | `string` | Opsional |
-| `amount` | `snap.Money` | Wajib |
-| `sessionId` | `string` | Opsional |
-| `feeType` | `string` | Opsional |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `customerNumber` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `accountType` | `string` | <span class="badge-optional">Opsional</span> |
+| `beneficiaryAccountNumber` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryBankCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `snap.Money` | <span class="badge-mandatory">Wajib</span> |
+| `sessionId` | `string` | <span class="badge-optional">Opsional</span> |
+| `feeType` | `string` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `TransferToBankPaymentResponse`**
 
@@ -88,8 +88,8 @@ Perhatikan `referenceNo` dan `referenceNumber` adalah dua field terpisah yang sa
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `referenceNo` | `string` | Opsional |
-| `transactionDate` | `string` | Opsional |
-| `referenceNumber` | `string` | Wajib |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `referenceNumber` | `string` | <span class="badge-mandatory">Wajib</span> |

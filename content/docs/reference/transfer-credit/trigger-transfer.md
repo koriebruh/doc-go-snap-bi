@@ -39,27 +39,27 @@ IntrabankTransferRequest is the request body for API Intrabank Transfer (Service
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Mandatory |
-| `amount` | `snap.Money` | Mandatory |
-| `beneficiaryAccountNo` | `string` | Mandatory |
-| `beneficiaryEmail` | `string` | Optional |
-| `currency` | `string` | Optional |
-| `customerReference` | `string` | Optional |
-| `feeType` | `string` | Optional |
-| `remark` | `string` | Optional |
-| `sourceAccountNo` | `string` | Mandatory |
-| `transactionDate` | `string` | Mandatory |
-| `originatorInfos` | `[]TransferOriginatorInfo` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `amount` | `snap.Money` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryEmail` | `string` | <span class="badge-optional">Optional</span> |
+| `currency` | `string` | <span class="badge-optional">Optional</span> |
+| `customerReference` | `string` | <span class="badge-optional">Optional</span> |
+| `feeType` | `string` | <span class="badge-optional">Optional</span> |
+| `remark` | `string` | <span class="badge-optional">Optional</span> |
+| `sourceAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionDate` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originatorInfos` | `[]TransferOriginatorInfo` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 {{< details title="TransferOriginatorInfo fields" >}}
 TransferOriginatorInfo is the shared "originatorInfos[]" entry used by the Trigger Transfer sub-group. All three fields are String per the Guides tab.
 
 | Field | Type | Presence |
 |---|---|---|
-| `originatorCustomerNo` | `string` | Mandatory |
-| `originatorCustomerName` | `string` | Mandatory |
-| `originatorBankCode` | `string` | Mandatory |
+| `originatorCustomerNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originatorCustomerName` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originatorBankCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
 {{< /details >}}
 
 **Response &mdash; `IntrabankTransferResponse`**
@@ -68,27 +68,27 @@ IntrabankTransferResponse is the response body for API Intrabank Transfer.
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `referenceNo` | `string` | Optional |
-| `partnerReferenceNo` | `string` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `beneficiaryAccountNo` | `string` | Optional |
-| `currency` | `string` | Optional |
-| `customerReference` | `string` | Optional |
-| `sourceAccountNo` | `string` | Optional |
-| `transactionDate` | `string` | Optional |
-| `originatorInfos` | `[]TransferOriginatorInfo` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `currency` | `string` | <span class="badge-optional">Optional</span> |
+| `customerReference` | `string` | <span class="badge-optional">Optional</span> |
+| `sourceAccountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Optional</span> |
+| `originatorInfos` | `[]TransferOriginatorInfo` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 {{< details title="TransferOriginatorInfo fields" >}}
 TransferOriginatorInfo is the shared "originatorInfos[]" entry used by the Trigger Transfer sub-group. All three fields are String per the Guides tab.
 
 | Field | Type | Presence |
 |---|---|---|
-| `originatorCustomerNo` | `string` | Mandatory |
-| `originatorCustomerName` | `string` | Mandatory |
-| `originatorBankCode` | `string` | Mandatory |
+| `originatorCustomerNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originatorCustomerName` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originatorBankCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
 {{< /details >}}
 
 
@@ -110,31 +110,31 @@ InterbankTransferRequest is the request body for API Interbank Transfer (Service
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Mandatory |
-| `amount` | `snap.Money` | Mandatory |
-| `beneficiaryAccountNo` | `string` | Mandatory |
-| `beneficiaryAccountName` | `string` | Mandatory |
-| `beneficiaryAddress` | `string` | Optional |
-| `beneficiaryBankCode` | `string` | Mandatory |
-| `beneficiaryBankName` | `string` | Optional |
-| `beneficiaryEmail` | `string` | Optional |
-| `currency` | `string` | Optional |
-| `customerReference` | `string` | Optional |
-| `feeType` | `string` | Optional |
-| `remark` | `string` | Optional |
-| `sourceAccountNo` | `string` | Mandatory |
-| `transactionDate` | `string` | Mandatory |
-| `originatorInfos` | `[]TransferOriginatorInfo` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `amount` | `snap.Money` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryAccountName` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryAddress` | `string` | <span class="badge-optional">Optional</span> |
+| `beneficiaryBankCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryBankName` | `string` | <span class="badge-optional">Optional</span> |
+| `beneficiaryEmail` | `string` | <span class="badge-optional">Optional</span> |
+| `currency` | `string` | <span class="badge-optional">Optional</span> |
+| `customerReference` | `string` | <span class="badge-optional">Optional</span> |
+| `feeType` | `string` | <span class="badge-optional">Optional</span> |
+| `remark` | `string` | <span class="badge-optional">Optional</span> |
+| `sourceAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionDate` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originatorInfos` | `[]TransferOriginatorInfo` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 {{< details title="TransferOriginatorInfo fields" >}}
 TransferOriginatorInfo is the shared "originatorInfos[]" entry used by the Trigger Transfer sub-group. All three fields are String per the Guides tab.
 
 | Field | Type | Presence |
 |---|---|---|
-| `originatorCustomerNo` | `string` | Mandatory |
-| `originatorCustomerName` | `string` | Mandatory |
-| `originatorBankCode` | `string` | Mandatory |
+| `originatorCustomerNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originatorCustomerName` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originatorBankCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
 {{< /details >}}
 
 **Response &mdash; `InterbankTransferResponse`**
@@ -143,28 +143,28 @@ InterbankTransferResponse is the response body for API Interbank Transfer.
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `referenceNo` | `string` | Optional |
-| `partnerReferenceNo` | `string` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `beneficiaryAccountNo` | `string` | Optional |
-| `currency` | `string` | Optional |
-| `customerReference` | `string` | Optional |
-| `sourceAccountNo` | `string` | Optional |
-| `transactionDate` | `string` | Optional |
-| `traceNo` | `string` | Optional |
-| `originatorInfos` | `[]TransferOriginatorInfo` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `currency` | `string` | <span class="badge-optional">Optional</span> |
+| `customerReference` | `string` | <span class="badge-optional">Optional</span> |
+| `sourceAccountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Optional</span> |
+| `traceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originatorInfos` | `[]TransferOriginatorInfo` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 {{< details title="TransferOriginatorInfo fields" >}}
 TransferOriginatorInfo is the shared "originatorInfos[]" entry used by the Trigger Transfer sub-group. All three fields are String per the Guides tab.
 
 | Field | Type | Presence |
 |---|---|---|
-| `originatorCustomerNo` | `string` | Mandatory |
-| `originatorCustomerName` | `string` | Mandatory |
-| `originatorBankCode` | `string` | Mandatory |
+| `originatorCustomerNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originatorCustomerName` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originatorBankCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
 {{< /details >}}
 
 
@@ -186,28 +186,28 @@ InterbankBulkTransferRequest is the request body for API Interbank Bulk Transfer
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerBulkId` | `string` | Optional |
-| `currency` | `string` | Optional |
-| `customerReference` | `string` | Mandatory |
-| `feeType` | `string` | Optional |
-| `remark` | `string` | Optional |
-| `sourceAccountNo` | `string` | Mandatory |
-| `transactionDate` | `string` | Mandatory |
-| `bulkObject` | `[]InterbankBulkTransferItem` | Mandatory |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerBulkId` | `string` | <span class="badge-optional">Optional</span> |
+| `currency` | `string` | <span class="badge-optional">Optional</span> |
+| `customerReference` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `feeType` | `string` | <span class="badge-optional">Optional</span> |
+| `remark` | `string` | <span class="badge-optional">Optional</span> |
+| `sourceAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionDate` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `bulkObject` | `[]InterbankBulkTransferItem` | <span class="badge-mandatory">Mandatory</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 {{< details title="InterbankBulkTransferItem fields" >}}
 InterbankBulkTransferItem is one entry in Interbank Bulk Transfer's request "bulkObject[]" array.
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Mandatory |
-| `bankCode` | `string` | Mandatory |
-| `beneficiaryAccountNo` | `string` | Mandatory |
-| `beneficiaryAccountName` | `string` | Mandatory |
-| `amount` | `snap.Money` | Mandatory |
-| `originatorInfos` | `[]TransferOriginatorInfo` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `bankCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryAccountName` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `amount` | `snap.Money` | <span class="badge-mandatory">Mandatory</span> |
+| `originatorInfos` | `[]TransferOriginatorInfo` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 {{< details title="TransferOriginatorInfo fields" >}}
@@ -215,9 +215,9 @@ TransferOriginatorInfo is the shared "originatorInfos[]" entry used by the Trigg
 
 | Field | Type | Presence |
 |---|---|---|
-| `originatorCustomerNo` | `string` | Mandatory |
-| `originatorCustomerName` | `string` | Mandatory |
-| `originatorBankCode` | `string` | Mandatory |
+| `originatorCustomerNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originatorCustomerName` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originatorBankCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
 {{< /details >}}
 
 **Response &mdash; `InterbankBulkTransferResponse`**
@@ -226,11 +226,11 @@ InterbankBulkTransferResponse is the response body for API Interbank Bulk Transf
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `bulkId` | `string` | Optional |
-| `partnerBulkId` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `bulkId` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerBulkId` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -247,18 +247,18 @@ InterbankBulkTransferNotificationRequest is the settlement-callback body for API
 
 | Field | Type | Presence |
 |---|---|---|
-| `bulkId` | `string` | Mandatory |
-| `partnerBulkId` | `string` | Mandatory |
-| `bulkObject` | `[]InterbankBulkTransferNotificationItem` | Mandatory |
+| `bulkId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `partnerBulkId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `bulkObject` | `[]InterbankBulkTransferNotificationItem` | <span class="badge-mandatory">Mandatory</span> |
 
 {{< details title="InterbankBulkTransferNotificationItem fields" >}}
 InterbankBulkTransferNotificationItem is one entry in Interbank Bulk Transfer - Notification's request "bulkObject[]" array — a settlement-result callback shape, distinct from InterbankBulkTransferItem's transfer-instruction shape.
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Mandatory |
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
 {{< /details >}}
 
 **Your handler replies with &mdash; `InterbankBulkTransferNotificationResponse`**
@@ -267,11 +267,11 @@ InterbankBulkTransferNotificationResponse is the response body a caller sends ba
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `bulkId` | `string` | Optional |
-| `partnerBulkId` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `bulkId` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerBulkId` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -292,18 +292,18 @@ RequestForPaymentRequest is the request body for API Request for Payment (Servic
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Mandatory |
-| `bankCode` | `string` | Mandatory |
-| `beneficiaryAccountNo` | `string` | Mandatory |
-| `beneficiaryAccountName` | `string` | Mandatory |
-| `remark` | `string` | Optional |
-| `expiredDatetime` | `string` | Mandatory |
-| `sourceAccountNo` | `string` | Mandatory |
-| `sourceAccountName` | `string` | Mandatory |
-| `currency` | `string` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `feeType` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `bankCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryAccountName` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `remark` | `string` | <span class="badge-optional">Optional</span> |
+| `expiredDatetime` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `sourceAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `sourceAccountName` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `currency` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `feeType` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `RequestForPaymentResponse`**
 
@@ -311,11 +311,11 @@ RequestForPaymentResponse is the response body for API Request for Payment.
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `referenceNo` | `string` | Optional |
-| `partnerReferenceNo` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -336,38 +336,38 @@ RTGSTransferRequest is the request body for API Transfer RTGS (Service Code 22).
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Mandatory |
-| `amount` | `snap.Money` | Mandatory |
-| `beneficiaryAccountNo` | `string` | Mandatory |
-| `beneficiaryAccountName` | `string` | Mandatory |
-| `beneficiaryAddress` | `string` | Optional |
-| `beneficiaryBankCode` | `string` | Mandatory |
-| `beneficiaryBankName` | `string` | Optional |
-| `beneficiaryEmail` | `string` | Optional |
-| `currency` | `string` | Optional |
-| `customerReference` | `string` | Optional |
-| `feeType` | `string` | Optional |
-| `remark` | `string` | Optional |
-| `sourceAccountNo` | `string` | Mandatory |
-| `transactionDate` | `string` | Mandatory |
-| `beneficiaryCustomerResidence` | `string` | Mandatory |
-| `beneficiaryCustomerType` | `string` | Mandatory |
-| `kodepos` | `string` | Optional |
-| `receiverPhone` | `string` | Optional |
-| `senderCustomerResidence` | `string` | Optional |
-| `senderCustomerType` | `string` | Optional |
-| `senderPhone` | `string` | Optional |
-| `originatorInfos` | `[]TransferOriginatorInfo` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `amount` | `snap.Money` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryAccountName` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryAddress` | `string` | <span class="badge-optional">Optional</span> |
+| `beneficiaryBankCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryBankName` | `string` | <span class="badge-optional">Optional</span> |
+| `beneficiaryEmail` | `string` | <span class="badge-optional">Optional</span> |
+| `currency` | `string` | <span class="badge-optional">Optional</span> |
+| `customerReference` | `string` | <span class="badge-optional">Optional</span> |
+| `feeType` | `string` | <span class="badge-optional">Optional</span> |
+| `remark` | `string` | <span class="badge-optional">Optional</span> |
+| `sourceAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionDate` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryCustomerResidence` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryCustomerType` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `kodepos` | `string` | <span class="badge-optional">Optional</span> |
+| `receiverPhone` | `string` | <span class="badge-optional">Optional</span> |
+| `senderCustomerResidence` | `string` | <span class="badge-optional">Optional</span> |
+| `senderCustomerType` | `string` | <span class="badge-optional">Optional</span> |
+| `senderPhone` | `string` | <span class="badge-optional">Optional</span> |
+| `originatorInfos` | `[]TransferOriginatorInfo` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 {{< details title="TransferOriginatorInfo fields" >}}
 TransferOriginatorInfo is the shared "originatorInfos[]" entry used by the Trigger Transfer sub-group. All three fields are String per the Guides tab.
 
 | Field | Type | Presence |
 |---|---|---|
-| `originatorCustomerNo` | `string` | Mandatory |
-| `originatorCustomerName` | `string` | Mandatory |
-| `originatorBankCode` | `string` | Mandatory |
+| `originatorCustomerNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originatorCustomerName` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originatorBankCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
 {{< /details >}}
 
 **Response &mdash; `RTGSTransferResponse`**
@@ -376,31 +376,31 @@ RTGSTransferResponse is the response body for API Transfer RTGS.
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `referenceNo` | `string` | Optional |
-| `partnerReferenceNo` | `string` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `beneficiaryAccountNo` | `string` | Optional |
-| `currency` | `string` | Optional |
-| `customerReference` | `string` | Optional |
-| `sourceAccountNo` | `string` | Optional |
-| `transactionDate` | `string` | Optional |
-| `traceNo` | `string` | Optional |
-| `transactionStatus` | `string` | Optional |
-| `transactionStatusDesc` | `string` | Optional |
-| `beneficiaryAccountType` | `string` | Optional |
-| `originatorInfos` | `[]TransferOriginatorInfo` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `currency` | `string` | <span class="badge-optional">Optional</span> |
+| `customerReference` | `string` | <span class="badge-optional">Optional</span> |
+| `sourceAccountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Optional</span> |
+| `traceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `transactionStatus` | `string` | <span class="badge-optional">Optional</span> |
+| `transactionStatusDesc` | `string` | <span class="badge-optional">Optional</span> |
+| `beneficiaryAccountType` | `string` | <span class="badge-optional">Optional</span> |
+| `originatorInfos` | `[]TransferOriginatorInfo` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 {{< details title="TransferOriginatorInfo fields" >}}
 TransferOriginatorInfo is the shared "originatorInfos[]" entry used by the Trigger Transfer sub-group. All three fields are String per the Guides tab.
 
 | Field | Type | Presence |
 |---|---|---|
-| `originatorCustomerNo` | `string` | Mandatory |
-| `originatorCustomerName` | `string` | Mandatory |
-| `originatorBankCode` | `string` | Mandatory |
+| `originatorCustomerNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originatorCustomerName` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originatorBankCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
 {{< /details >}}
 
 
@@ -418,17 +418,17 @@ RTGSNotificationRequest is the settlement-callback body for API RTGS - Notificat
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `originalReferenceNo` | `string` | Optional |
-| `originalExternalId` | `string` | Optional |
-| `latestTransactionStatus` | `string` | Mandatory |
-| `amount` | `*snap.Money` | Optional |
-| `beneficiaryAccountName` | `string` | Mandatory |
-| `beneficiaryAccountNo` | `string` | Mandatory |
-| `beneficiaryBankCode` | `string` | Mandatory |
-| `sourceAccountNo` | `string` | Mandatory |
-| `transactionDate` | `string` | Mandatory |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Optional</span> |
+| `latestTransactionStatus` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `beneficiaryAccountName` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryBankCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `sourceAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionDate` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Your handler replies with &mdash; `RTGSNotificationResponse`**
 
@@ -436,8 +436,8 @@ RTGSNotificationResponse is the response body a caller sends back for API RTGS -
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
 
 
 ---
@@ -458,38 +458,38 @@ SKNBITransferRequest is the request body for API Transfer SKNBI (Service Code 23
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Mandatory |
-| `amount` | `snap.Money` | Mandatory |
-| `beneficiaryAccountNo` | `string` | Mandatory |
-| `beneficiaryAccountName` | `string` | Mandatory |
-| `beneficiaryAddress` | `string` | Optional |
-| `beneficiaryBankCode` | `string` | Mandatory |
-| `beneficiaryBankName` | `string` | Optional |
-| `beneficiaryEmail` | `string` | Optional |
-| `currency` | `string` | Optional |
-| `customerReference` | `string` | Optional |
-| `feeType` | `string` | Optional |
-| `remark` | `string` | Optional |
-| `sourceAccountNo` | `string` | Mandatory |
-| `transactionDate` | `string` | Mandatory |
-| `beneficiaryCustomerResidence` | `string` | Mandatory |
-| `beneficiaryCustomerType` | `string` | Mandatory |
-| `kodepos` | `string` | Optional |
-| `receiverPhone` | `string` | Optional |
-| `senderCustomerResidence` | `string` | Optional |
-| `senderCustomerType` | `string` | Optional |
-| `senderPhone` | `string` | Optional |
-| `originatorInfos` | `[]TransferOriginatorInfo` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `amount` | `snap.Money` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryAccountName` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryAddress` | `string` | <span class="badge-optional">Optional</span> |
+| `beneficiaryBankCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryBankName` | `string` | <span class="badge-optional">Optional</span> |
+| `beneficiaryEmail` | `string` | <span class="badge-optional">Optional</span> |
+| `currency` | `string` | <span class="badge-optional">Optional</span> |
+| `customerReference` | `string` | <span class="badge-optional">Optional</span> |
+| `feeType` | `string` | <span class="badge-optional">Optional</span> |
+| `remark` | `string` | <span class="badge-optional">Optional</span> |
+| `sourceAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionDate` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryCustomerResidence` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryCustomerType` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `kodepos` | `string` | <span class="badge-optional">Optional</span> |
+| `receiverPhone` | `string` | <span class="badge-optional">Optional</span> |
+| `senderCustomerResidence` | `string` | <span class="badge-optional">Optional</span> |
+| `senderCustomerType` | `string` | <span class="badge-optional">Optional</span> |
+| `senderPhone` | `string` | <span class="badge-optional">Optional</span> |
+| `originatorInfos` | `[]TransferOriginatorInfo` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 {{< details title="TransferOriginatorInfo fields" >}}
 TransferOriginatorInfo is the shared "originatorInfos[]" entry used by the Trigger Transfer sub-group. All three fields are String per the Guides tab.
 
 | Field | Type | Presence |
 |---|---|---|
-| `originatorCustomerNo` | `string` | Mandatory |
-| `originatorCustomerName` | `string` | Mandatory |
-| `originatorBankCode` | `string` | Mandatory |
+| `originatorCustomerNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originatorCustomerName` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originatorBankCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
 {{< /details >}}
 
 **Response &mdash; `SKNBITransferResponse`**
@@ -498,31 +498,31 @@ SKNBITransferResponse is the response body for API Transfer SKNBI — the same s
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `referenceNo` | `string` | Optional |
-| `partnerReferenceNo` | `string` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `beneficiaryAccountNo` | `string` | Optional |
-| `currency` | `string` | Optional |
-| `customerReference` | `string` | Optional |
-| `sourceAccountNo` | `string` | Optional |
-| `transactionDate` | `string` | Optional |
-| `traceNo` | `string` | Optional |
-| `transactionStatus` | `string` | Optional |
-| `transactionStatusDesc` | `string` | Optional |
-| `beneficiaryAccountType` | `string` | Optional |
-| `originatorInfos` | `[]TransferOriginatorInfo` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `currency` | `string` | <span class="badge-optional">Optional</span> |
+| `customerReference` | `string` | <span class="badge-optional">Optional</span> |
+| `sourceAccountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Optional</span> |
+| `traceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `transactionStatus` | `string` | <span class="badge-optional">Optional</span> |
+| `transactionStatusDesc` | `string` | <span class="badge-optional">Optional</span> |
+| `beneficiaryAccountType` | `string` | <span class="badge-optional">Optional</span> |
+| `originatorInfos` | `[]TransferOriginatorInfo` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 {{< details title="TransferOriginatorInfo fields" >}}
 TransferOriginatorInfo is the shared "originatorInfos[]" entry used by the Trigger Transfer sub-group. All three fields are String per the Guides tab.
 
 | Field | Type | Presence |
 |---|---|---|
-| `originatorCustomerNo` | `string` | Mandatory |
-| `originatorCustomerName` | `string` | Mandatory |
-| `originatorBankCode` | `string` | Mandatory |
+| `originatorCustomerNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originatorCustomerName` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originatorBankCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
 {{< /details >}}
 
 
@@ -540,17 +540,17 @@ SKNBINotificationRequest is the settlement-callback body for API SKNBI - Notific
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `originalReferenceNo` | `string` | Optional |
-| `originalExternalId` | `string` | Optional |
-| `latestTransactionStatus` | `string` | Mandatory |
-| `amount` | `*snap.Money` | Optional |
-| `beneficiaryAccountName` | `string` | Mandatory |
-| `beneficiaryAccountNo` | `string` | Mandatory |
-| `beneficiaryBankCode` | `string` | Mandatory |
-| `sourceAccountNo` | `string` | Mandatory |
-| `transactionDate` | `string` | Mandatory |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Optional</span> |
+| `latestTransactionStatus` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `beneficiaryAccountName` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryBankCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `sourceAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionDate` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Your handler replies with &mdash; `SKNBINotificationResponse`**
 
@@ -558,6 +558,6 @@ SKNBINotificationResponse is the response body a caller sends back for API SKNBI
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
 

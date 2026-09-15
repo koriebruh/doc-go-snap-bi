@@ -34,37 +34,37 @@ CreateVARequest is the request body for API VA - Create VA (Service Code 27). Vi
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Optional |
-| `customerNo` | `string` | Optional |
-| `virtualAccountNo` | `string` | Optional |
-| `virtualAccountName` | `string` | Mandatory |
-| `trxId` | `string` | Mandatory |
-| `totalAmount` | `*snap.Money` | Optional |
-| `billDetails` | `[]BillDetail` | Optional |
-| `freeTexts` | `[]LocalizedText` | Optional |
-| `virtualAccountTrxType` | `string` | Optional |
-| `feeAmount` | `*snap.Money` | Optional |
-| `expiredDate` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerServiceId` | `string` | <span class="badge-optional">Optional</span> |
+| `customerNo` | `string` | <span class="badge-optional">Optional</span> |
+| `virtualAccountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `virtualAccountName` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `trxId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `totalAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `billDetails` | `[]BillDetail` | <span class="badge-optional">Optional</span> |
+| `freeTexts` | `[]LocalizedText` | <span class="badge-optional">Optional</span> |
+| `virtualAccountTrxType` | `string` | <span class="badge-optional">Optional</span> |
+| `feeAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `expiredDate` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 {{< details title="BillDetail fields" >}}
 BillDetail is one entry in the `billDetails[]` array (max 24 entries) used across the Virtual Account group. `billReferenceNo` is `json.RawMessage` because the standard documents it as Numeric but some issuers send it as a bare JSON number — when you set it yourself (e.g. in `CreateVARequest`), supply a complete JSON value like `json.RawMessage(\`"BILLREF1"\`)` or `json.RawMessage(\`123\`)`, not a bare Go string.
 
 | Field | Type | Presence |
 |---|---|---|
-| `billCode` | `string` | Optional |
-| `billNo` | `string` | Optional |
-| `billName` | `string` | Optional |
-| `billShortName` | `string` | Optional |
-| `billDescription` | `*LocalizedText` | Optional |
-| `billSubCompany` | `string` | Optional |
-| `billAmount` | `*snap.Money` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
-| `billAmountLabel` | `string` | Optional |
-| `billAmountValue` | `string` | Optional |
-| `billReferenceNo` | `json.RawMessage` | Optional |
-| `status` | `string` | Optional |
-| `reason` | `*LocalizedText` | Optional |
+| `billCode` | `string` | <span class="badge-optional">Optional</span> |
+| `billNo` | `string` | <span class="badge-optional">Optional</span> |
+| `billName` | `string` | <span class="badge-optional">Optional</span> |
+| `billShortName` | `string` | <span class="badge-optional">Optional</span> |
+| `billDescription` | `*LocalizedText` | <span class="badge-optional">Optional</span> |
+| `billSubCompany` | `string` | <span class="badge-optional">Optional</span> |
+| `billAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `billAmountLabel` | `string` | <span class="badge-optional">Optional</span> |
+| `billAmountValue` | `string` | <span class="badge-optional">Optional</span> |
+| `billReferenceNo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `status` | `string` | <span class="badge-optional">Optional</span> |
+| `reason` | `*LocalizedText` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 {{< details title="LocalizedText fields" >}}
@@ -72,8 +72,8 @@ LocalizedText is the shared {english, indonesia} bilingual text shape used acros
 
 | Field | Type | Presence |
 |---|---|---|
-| `english` | `string` | Optional |
-| `indonesia` | `string` | Optional |
+| `english` | `string` | <span class="badge-optional">Optional</span> |
+| `indonesia` | `string` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 **Response &mdash; `CreateVAResponse`**
@@ -82,27 +82,27 @@ CreateVAResponse is the response body for API VA - Create VA.
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `virtualAccountData` | `*CreateVAData` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `virtualAccountData` | `*CreateVAData` | <span class="badge-optional">Optional</span> |
 
 {{< details title="CreateVAData fields" >}}
 CreateVAData is the "virtualAccountData" object in CreateVAResponse.
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Optional |
-| `customerNo` | `string` | Optional |
-| `virtualAccountNo` | `string` | Optional |
-| `virtualAccountName` | `string` | Optional |
-| `trxId` | `string` | Optional |
-| `totalAmount` | `*snap.Money` | Optional |
-| `billDetails` | `[]BillDetail` | Optional |
-| `freeTexts` | `[]LocalizedText` | Optional |
-| `virtualAccountTrxType` | `string` | Optional |
-| `feeAmount` | `*snap.Money` | Optional |
-| `expiredDate` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerServiceId` | `string` | <span class="badge-optional">Optional</span> |
+| `customerNo` | `string` | <span class="badge-optional">Optional</span> |
+| `virtualAccountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `virtualAccountName` | `string` | <span class="badge-optional">Optional</span> |
+| `trxId` | `string` | <span class="badge-optional">Optional</span> |
+| `totalAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `billDetails` | `[]BillDetail` | <span class="badge-optional">Optional</span> |
+| `freeTexts` | `[]LocalizedText` | <span class="badge-optional">Optional</span> |
+| `virtualAccountTrxType` | `string` | <span class="badge-optional">Optional</span> |
+| `feeAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `expiredDate` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 {{< details title="BillDetail fields" >}}
@@ -110,19 +110,19 @@ BillDetail is one entry in the `billDetails[]` array (max 24 entries) used acros
 
 | Field | Type | Presence |
 |---|---|---|
-| `billCode` | `string` | Optional |
-| `billNo` | `string` | Optional |
-| `billName` | `string` | Optional |
-| `billShortName` | `string` | Optional |
-| `billDescription` | `*LocalizedText` | Optional |
-| `billSubCompany` | `string` | Optional |
-| `billAmount` | `*snap.Money` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
-| `billAmountLabel` | `string` | Optional |
-| `billAmountValue` | `string` | Optional |
-| `billReferenceNo` | `json.RawMessage` | Optional |
-| `status` | `string` | Optional |
-| `reason` | `*LocalizedText` | Optional |
+| `billCode` | `string` | <span class="badge-optional">Optional</span> |
+| `billNo` | `string` | <span class="badge-optional">Optional</span> |
+| `billName` | `string` | <span class="badge-optional">Optional</span> |
+| `billShortName` | `string` | <span class="badge-optional">Optional</span> |
+| `billDescription` | `*LocalizedText` | <span class="badge-optional">Optional</span> |
+| `billSubCompany` | `string` | <span class="badge-optional">Optional</span> |
+| `billAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `billAmountLabel` | `string` | <span class="badge-optional">Optional</span> |
+| `billAmountValue` | `string` | <span class="badge-optional">Optional</span> |
+| `billReferenceNo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `status` | `string` | <span class="badge-optional">Optional</span> |
+| `reason` | `*LocalizedText` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 {{< details title="LocalizedText fields" >}}
@@ -130,8 +130,8 @@ LocalizedText is the shared {english, indonesia} bilingual text shape used acros
 
 | Field | Type | Presence |
 |---|---|---|
-| `english` | `string` | Optional |
-| `indonesia` | `string` | Optional |
+| `english` | `string` | <span class="badge-optional">Optional</span> |
+| `indonesia` | `string` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 
@@ -153,37 +153,37 @@ UpdateVARequest is the request body for API VA - Update VA (Service Code 28). Pa
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Mandatory |
-| `customerNo` | `string` | Mandatory |
-| `virtualAccountNo` | `string` | Mandatory |
-| `virtualAccountName` | `string` | Mandatory |
-| `trxId` | `string` | Mandatory |
-| `totalAmount` | `*snap.Money` | Optional |
-| `billDetails` | `[]BillDetail` | Optional |
-| `freeTexts` | `[]LocalizedText` | Optional |
-| `virtualAccountTrxType` | `string` | Optional |
-| `feeAmount` | `*snap.Money` | Optional |
-| `expiredDate` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerServiceId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `customerNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `virtualAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `virtualAccountName` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `trxId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `totalAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `billDetails` | `[]BillDetail` | <span class="badge-optional">Optional</span> |
+| `freeTexts` | `[]LocalizedText` | <span class="badge-optional">Optional</span> |
+| `virtualAccountTrxType` | `string` | <span class="badge-optional">Optional</span> |
+| `feeAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `expiredDate` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 {{< details title="BillDetail fields" >}}
 BillDetail is one entry in the `billDetails[]` array (max 24 entries) used across the Virtual Account group. `billReferenceNo` is `json.RawMessage` because the standard documents it as Numeric but some issuers send it as a bare JSON number — when you set it yourself (e.g. in `CreateVARequest`), supply a complete JSON value like `json.RawMessage(\`"BILLREF1"\`)` or `json.RawMessage(\`123\`)`, not a bare Go string.
 
 | Field | Type | Presence |
 |---|---|---|
-| `billCode` | `string` | Optional |
-| `billNo` | `string` | Optional |
-| `billName` | `string` | Optional |
-| `billShortName` | `string` | Optional |
-| `billDescription` | `*LocalizedText` | Optional |
-| `billSubCompany` | `string` | Optional |
-| `billAmount` | `*snap.Money` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
-| `billAmountLabel` | `string` | Optional |
-| `billAmountValue` | `string` | Optional |
-| `billReferenceNo` | `json.RawMessage` | Optional |
-| `status` | `string` | Optional |
-| `reason` | `*LocalizedText` | Optional |
+| `billCode` | `string` | <span class="badge-optional">Optional</span> |
+| `billNo` | `string` | <span class="badge-optional">Optional</span> |
+| `billName` | `string` | <span class="badge-optional">Optional</span> |
+| `billShortName` | `string` | <span class="badge-optional">Optional</span> |
+| `billDescription` | `*LocalizedText` | <span class="badge-optional">Optional</span> |
+| `billSubCompany` | `string` | <span class="badge-optional">Optional</span> |
+| `billAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `billAmountLabel` | `string` | <span class="badge-optional">Optional</span> |
+| `billAmountValue` | `string` | <span class="badge-optional">Optional</span> |
+| `billReferenceNo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `status` | `string` | <span class="badge-optional">Optional</span> |
+| `reason` | `*LocalizedText` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 {{< details title="LocalizedText fields" >}}
@@ -191,8 +191,8 @@ LocalizedText is the shared {english, indonesia} bilingual text shape used acros
 
 | Field | Type | Presence |
 |---|---|---|
-| `english` | `string` | Optional |
-| `indonesia` | `string` | Optional |
+| `english` | `string` | <span class="badge-optional">Optional</span> |
+| `indonesia` | `string` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 **Response &mdash; `UpdateVAResponse`**
@@ -201,29 +201,29 @@ UpdateVAResponse is the response body for API VA - Update VA.
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `virtualAccountData` | `*UpdateVAData` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `virtualAccountData` | `*UpdateVAData` | <span class="badge-optional">Optional</span> |
 
 {{< details title="UpdateVAData fields" >}}
 UpdateVAData is the "virtualAccountData" object in UpdateVAResponse — Create VA's data fields plus LastUpdateDate and PaymentDate.
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Optional |
-| `customerNo` | `string` | Optional |
-| `virtualAccountNo` | `string` | Optional |
-| `virtualAccountName` | `string` | Optional |
-| `trxId` | `string` | Optional |
-| `totalAmount` | `*snap.Money` | Optional |
-| `billDetails` | `[]BillDetail` | Optional |
-| `freeTexts` | `[]LocalizedText` | Optional |
-| `virtualAccountTrxType` | `string` | Optional |
-| `feeAmount` | `*snap.Money` | Optional |
-| `expiredDate` | `string` | Optional |
-| `lastUpdateDate` | `string` | Optional |
-| `paymentDate` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerServiceId` | `string` | <span class="badge-optional">Optional</span> |
+| `customerNo` | `string` | <span class="badge-optional">Optional</span> |
+| `virtualAccountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `virtualAccountName` | `string` | <span class="badge-optional">Optional</span> |
+| `trxId` | `string` | <span class="badge-optional">Optional</span> |
+| `totalAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `billDetails` | `[]BillDetail` | <span class="badge-optional">Optional</span> |
+| `freeTexts` | `[]LocalizedText` | <span class="badge-optional">Optional</span> |
+| `virtualAccountTrxType` | `string` | <span class="badge-optional">Optional</span> |
+| `feeAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `expiredDate` | `string` | <span class="badge-optional">Optional</span> |
+| `lastUpdateDate` | `string` | <span class="badge-optional">Optional</span> |
+| `paymentDate` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 {{< details title="BillDetail fields" >}}
@@ -231,19 +231,19 @@ BillDetail is one entry in the `billDetails[]` array (max 24 entries) used acros
 
 | Field | Type | Presence |
 |---|---|---|
-| `billCode` | `string` | Optional |
-| `billNo` | `string` | Optional |
-| `billName` | `string` | Optional |
-| `billShortName` | `string` | Optional |
-| `billDescription` | `*LocalizedText` | Optional |
-| `billSubCompany` | `string` | Optional |
-| `billAmount` | `*snap.Money` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
-| `billAmountLabel` | `string` | Optional |
-| `billAmountValue` | `string` | Optional |
-| `billReferenceNo` | `json.RawMessage` | Optional |
-| `status` | `string` | Optional |
-| `reason` | `*LocalizedText` | Optional |
+| `billCode` | `string` | <span class="badge-optional">Optional</span> |
+| `billNo` | `string` | <span class="badge-optional">Optional</span> |
+| `billName` | `string` | <span class="badge-optional">Optional</span> |
+| `billShortName` | `string` | <span class="badge-optional">Optional</span> |
+| `billDescription` | `*LocalizedText` | <span class="badge-optional">Optional</span> |
+| `billSubCompany` | `string` | <span class="badge-optional">Optional</span> |
+| `billAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `billAmountLabel` | `string` | <span class="badge-optional">Optional</span> |
+| `billAmountValue` | `string` | <span class="badge-optional">Optional</span> |
+| `billReferenceNo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `status` | `string` | <span class="badge-optional">Optional</span> |
+| `reason` | `*LocalizedText` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 {{< details title="LocalizedText fields" >}}
@@ -251,8 +251,8 @@ LocalizedText is the shared {english, indonesia} bilingual text shape used acros
 
 | Field | Type | Presence |
 |---|---|---|
-| `english` | `string` | Optional |
-| `indonesia` | `string` | Optional |
+| `english` | `string` | <span class="badge-optional">Optional</span> |
+| `indonesia` | `string` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 
@@ -274,12 +274,12 @@ UpdateStatusVARequest is the request body for API VA - Update Status VA (Service
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Mandatory |
-| `customerNo` | `string` | Mandatory |
-| `virtualAccountNo` | `string` | Mandatory |
-| `trxId` | `string` | Mandatory |
-| `paidStatus` | `string` | Mandatory |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerServiceId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `customerNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `virtualAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `trxId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `paidStatus` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `UpdateStatusVAResponse`**
 
@@ -287,29 +287,29 @@ UpdateStatusVAResponse is the response body for API VA - Update Status VA.
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `virtualAccountData` | `*UpdateStatusVAData` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `virtualAccountData` | `*UpdateStatusVAData` | <span class="badge-optional">Optional</span> |
 
 {{< details title="UpdateStatusVAData fields" >}}
 UpdateStatusVAData is the "virtualAccountData" object in UpdateStatusVAResponse — per the research doc, "the full VA data object", the same field set as UpdateVAData, under its own type name.
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Optional |
-| `customerNo` | `string` | Optional |
-| `virtualAccountNo` | `string` | Optional |
-| `virtualAccountName` | `string` | Optional |
-| `trxId` | `string` | Optional |
-| `totalAmount` | `*snap.Money` | Optional |
-| `billDetails` | `[]BillDetail` | Optional |
-| `freeTexts` | `[]LocalizedText` | Optional |
-| `virtualAccountTrxType` | `string` | Optional |
-| `feeAmount` | `*snap.Money` | Optional |
-| `expiredDate` | `string` | Optional |
-| `lastUpdateDate` | `string` | Optional |
-| `paymentDate` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerServiceId` | `string` | <span class="badge-optional">Optional</span> |
+| `customerNo` | `string` | <span class="badge-optional">Optional</span> |
+| `virtualAccountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `virtualAccountName` | `string` | <span class="badge-optional">Optional</span> |
+| `trxId` | `string` | <span class="badge-optional">Optional</span> |
+| `totalAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `billDetails` | `[]BillDetail` | <span class="badge-optional">Optional</span> |
+| `freeTexts` | `[]LocalizedText` | <span class="badge-optional">Optional</span> |
+| `virtualAccountTrxType` | `string` | <span class="badge-optional">Optional</span> |
+| `feeAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `expiredDate` | `string` | <span class="badge-optional">Optional</span> |
+| `lastUpdateDate` | `string` | <span class="badge-optional">Optional</span> |
+| `paymentDate` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 {{< details title="BillDetail fields" >}}
@@ -317,19 +317,19 @@ BillDetail is one entry in the `billDetails[]` array (max 24 entries) used acros
 
 | Field | Type | Presence |
 |---|---|---|
-| `billCode` | `string` | Optional |
-| `billNo` | `string` | Optional |
-| `billName` | `string` | Optional |
-| `billShortName` | `string` | Optional |
-| `billDescription` | `*LocalizedText` | Optional |
-| `billSubCompany` | `string` | Optional |
-| `billAmount` | `*snap.Money` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
-| `billAmountLabel` | `string` | Optional |
-| `billAmountValue` | `string` | Optional |
-| `billReferenceNo` | `json.RawMessage` | Optional |
-| `status` | `string` | Optional |
-| `reason` | `*LocalizedText` | Optional |
+| `billCode` | `string` | <span class="badge-optional">Optional</span> |
+| `billNo` | `string` | <span class="badge-optional">Optional</span> |
+| `billName` | `string` | <span class="badge-optional">Optional</span> |
+| `billShortName` | `string` | <span class="badge-optional">Optional</span> |
+| `billDescription` | `*LocalizedText` | <span class="badge-optional">Optional</span> |
+| `billSubCompany` | `string` | <span class="badge-optional">Optional</span> |
+| `billAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `billAmountLabel` | `string` | <span class="badge-optional">Optional</span> |
+| `billAmountValue` | `string` | <span class="badge-optional">Optional</span> |
+| `billReferenceNo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `status` | `string` | <span class="badge-optional">Optional</span> |
+| `reason` | `*LocalizedText` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 {{< details title="LocalizedText fields" >}}
@@ -337,8 +337,8 @@ LocalizedText is the shared {english, indonesia} bilingual text shape used acros
 
 | Field | Type | Presence |
 |---|---|---|
-| `english` | `string` | Optional |
-| `indonesia` | `string` | Optional |
+| `english` | `string` | <span class="badge-optional">Optional</span> |
+| `indonesia` | `string` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 
@@ -358,11 +358,11 @@ InquiryVARequest is the request body for API VA - Inquiry VA (Service Code 30). 
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Mandatory |
-| `customerNo` | `string` | Mandatory |
-| `virtualAccountNo` | `string` | Mandatory |
-| `trxId` | `string` | Mandatory |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerServiceId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `customerNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `virtualAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `trxId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `InquiryVAResponse`**
 
@@ -370,29 +370,29 @@ InquiryVAResponse is the response body for API VA - Inquiry VA.
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `virtualAccountData` | `*InquiryVAData` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `virtualAccountData` | `*InquiryVAData` | <span class="badge-optional">Optional</span> |
 
 {{< details title="InquiryVAData fields" >}}
 InquiryVAData is the "virtualAccountData" object in InquiryVAResponse — per the research doc, "full VA data object (same shape as Update VA response)", the same field set as UpdateVAData, under its own type name.
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Optional |
-| `customerNo` | `string` | Optional |
-| `virtualAccountNo` | `string` | Optional |
-| `virtualAccountName` | `string` | Optional |
-| `trxId` | `string` | Optional |
-| `totalAmount` | `*snap.Money` | Optional |
-| `billDetails` | `[]BillDetail` | Optional |
-| `freeTexts` | `[]LocalizedText` | Optional |
-| `virtualAccountTrxType` | `string` | Optional |
-| `feeAmount` | `*snap.Money` | Optional |
-| `expiredDate` | `string` | Optional |
-| `lastUpdateDate` | `string` | Optional |
-| `paymentDate` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerServiceId` | `string` | <span class="badge-optional">Optional</span> |
+| `customerNo` | `string` | <span class="badge-optional">Optional</span> |
+| `virtualAccountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `virtualAccountName` | `string` | <span class="badge-optional">Optional</span> |
+| `trxId` | `string` | <span class="badge-optional">Optional</span> |
+| `totalAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `billDetails` | `[]BillDetail` | <span class="badge-optional">Optional</span> |
+| `freeTexts` | `[]LocalizedText` | <span class="badge-optional">Optional</span> |
+| `virtualAccountTrxType` | `string` | <span class="badge-optional">Optional</span> |
+| `feeAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `expiredDate` | `string` | <span class="badge-optional">Optional</span> |
+| `lastUpdateDate` | `string` | <span class="badge-optional">Optional</span> |
+| `paymentDate` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 {{< details title="BillDetail fields" >}}
@@ -400,19 +400,19 @@ BillDetail is one entry in the `billDetails[]` array (max 24 entries) used acros
 
 | Field | Type | Presence |
 |---|---|---|
-| `billCode` | `string` | Optional |
-| `billNo` | `string` | Optional |
-| `billName` | `string` | Optional |
-| `billShortName` | `string` | Optional |
-| `billDescription` | `*LocalizedText` | Optional |
-| `billSubCompany` | `string` | Optional |
-| `billAmount` | `*snap.Money` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
-| `billAmountLabel` | `string` | Optional |
-| `billAmountValue` | `string` | Optional |
-| `billReferenceNo` | `json.RawMessage` | Optional |
-| `status` | `string` | Optional |
-| `reason` | `*LocalizedText` | Optional |
+| `billCode` | `string` | <span class="badge-optional">Optional</span> |
+| `billNo` | `string` | <span class="badge-optional">Optional</span> |
+| `billName` | `string` | <span class="badge-optional">Optional</span> |
+| `billShortName` | `string` | <span class="badge-optional">Optional</span> |
+| `billDescription` | `*LocalizedText` | <span class="badge-optional">Optional</span> |
+| `billSubCompany` | `string` | <span class="badge-optional">Optional</span> |
+| `billAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `billAmountLabel` | `string` | <span class="badge-optional">Optional</span> |
+| `billAmountValue` | `string` | <span class="badge-optional">Optional</span> |
+| `billReferenceNo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `status` | `string` | <span class="badge-optional">Optional</span> |
+| `reason` | `*LocalizedText` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 {{< details title="LocalizedText fields" >}}
@@ -420,8 +420,8 @@ LocalizedText is the shared {english, indonesia} bilingual text shape used acros
 
 | Field | Type | Presence |
 |---|---|---|
-| `english` | `string` | Optional |
-| `indonesia` | `string` | Optional |
+| `english` | `string` | <span class="badge-optional">Optional</span> |
+| `indonesia` | `string` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 
@@ -443,11 +443,11 @@ DeleteVARequest is the request body for API VA - Delete VA (Service Code 31). Pa
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Mandatory |
-| `customerNo` | `string` | Mandatory |
-| `virtualAccountNo` | `string` | Mandatory |
-| `trxId` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerServiceId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `customerNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `virtualAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `trxId` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `DeleteVAResponse`**
 
@@ -455,20 +455,20 @@ DeleteVAResponse is the response body for API VA - Delete VA.
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `virtualAccountData` | `*DeleteVAData` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `virtualAccountData` | `*DeleteVAData` | <span class="badge-optional">Optional</span> |
 
 {{< details title="DeleteVAData fields" >}}
 DeleteVAData is the "virtualAccountData" object in DeleteVAResponse — a smaller shape than the other VA management endpoints' data object, per the research doc.
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Optional |
-| `customerNo` | `string` | Optional |
-| `virtualAccountNo` | `string` | Optional |
-| `trxId` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerServiceId` | `string` | <span class="badge-optional">Optional</span> |
+| `customerNo` | `string` | <span class="badge-optional">Optional</span> |
+| `virtualAccountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `trxId` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 
@@ -488,17 +488,17 @@ VAInquiryRequest is the request body for API VA - VA Inquiry (Service Code 24). 
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Mandatory |
-| `customerNo` | `json.RawMessage` | Mandatory |
-| `virtualAccountNo` | `string` | Mandatory |
-| `trxDateInit` | `string` | Optional |
-| `channelCode` | `json.RawMessage` | Optional |
-| `language` | `string` | Optional |
-| `hashedSourceAccountNo` | `string` | Optional |
-| `sourceBankCode` | `string` | Optional |
-| `passApp` | `string` | Optional |
-| `inquiryRequestId` | `string` | Mandatory |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerServiceId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `customerNo` | `json.RawMessage` | <span class="badge-mandatory">Mandatory</span> |
+| `virtualAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `trxDateInit` | `string` | <span class="badge-optional">Optional</span> |
+| `channelCode` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `language` | `string` | <span class="badge-optional">Optional</span> |
+| `hashedSourceAccountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `sourceBankCode` | `string` | <span class="badge-optional">Optional</span> |
+| `passApp` | `string` | <span class="badge-optional">Optional</span> |
+| `inquiryRequestId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `VAInquiryResponse`**
 
@@ -506,31 +506,31 @@ VAInquiryResponse is the response body for API VA - VA Inquiry.
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `virtualAccountData` | `*VAInquiryData` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `virtualAccountData` | `*VAInquiryData` | <span class="badge-optional">Optional</span> |
 
 {{< details title="VAInquiryData fields" >}}
 VAInquiryData is the "virtualAccountData" object in VAInquiryResponse. Fields beyond the identity triple carry no M/O letter in the Guides tab, so all are Optional (omitempty); InquiryReason, TotalAmount, and FeeAmount are pointers since omitempty has no effect on a non-pointer struct value.
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Optional |
-| `customerNo` | `json.RawMessage` | Optional |
-| `virtualAccountNo` | `string` | Optional |
-| `inquiryStatus` | `string` | Optional |
-| `inquiryReason` | `*LocalizedText` | Optional |
-| `virtualAccountName` | `string` | Optional |
-| `virtualAccountEmail` | `string` | Optional |
-| `virtualAccountPhone` | `string` | Optional |
-| `inquiryRequestId` | `string` | Optional |
-| `totalAmount` | `*snap.Money` | Optional |
-| `subCompany` | `string` | Optional |
-| `billDetails` | `[]BillDetail` | Optional |
-| `freeTexts` | `[]LocalizedText` | Optional |
-| `virtualAccountTrxType` | `string` | Optional |
-| `feeAmount` | `*snap.Money` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerServiceId` | `string` | <span class="badge-optional">Optional</span> |
+| `customerNo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `virtualAccountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `inquiryStatus` | `string` | <span class="badge-optional">Optional</span> |
+| `inquiryReason` | `*LocalizedText` | <span class="badge-optional">Optional</span> |
+| `virtualAccountName` | `string` | <span class="badge-optional">Optional</span> |
+| `virtualAccountEmail` | `string` | <span class="badge-optional">Optional</span> |
+| `virtualAccountPhone` | `string` | <span class="badge-optional">Optional</span> |
+| `inquiryRequestId` | `string` | <span class="badge-optional">Optional</span> |
+| `totalAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `subCompany` | `string` | <span class="badge-optional">Optional</span> |
+| `billDetails` | `[]BillDetail` | <span class="badge-optional">Optional</span> |
+| `freeTexts` | `[]LocalizedText` | <span class="badge-optional">Optional</span> |
+| `virtualAccountTrxType` | `string` | <span class="badge-optional">Optional</span> |
+| `feeAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 {{< details title="LocalizedText fields" >}}
@@ -538,8 +538,8 @@ LocalizedText is the shared {english, indonesia} bilingual text shape used acros
 
 | Field | Type | Presence |
 |---|---|---|
-| `english` | `string` | Optional |
-| `indonesia` | `string` | Optional |
+| `english` | `string` | <span class="badge-optional">Optional</span> |
+| `indonesia` | `string` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 {{< details title="BillDetail fields" >}}
@@ -547,19 +547,19 @@ BillDetail is one entry in the `billDetails[]` array (max 24 entries) used acros
 
 | Field | Type | Presence |
 |---|---|---|
-| `billCode` | `string` | Optional |
-| `billNo` | `string` | Optional |
-| `billName` | `string` | Optional |
-| `billShortName` | `string` | Optional |
-| `billDescription` | `*LocalizedText` | Optional |
-| `billSubCompany` | `string` | Optional |
-| `billAmount` | `*snap.Money` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
-| `billAmountLabel` | `string` | Optional |
-| `billAmountValue` | `string` | Optional |
-| `billReferenceNo` | `json.RawMessage` | Optional |
-| `status` | `string` | Optional |
-| `reason` | `*LocalizedText` | Optional |
+| `billCode` | `string` | <span class="badge-optional">Optional</span> |
+| `billNo` | `string` | <span class="badge-optional">Optional</span> |
+| `billName` | `string` | <span class="badge-optional">Optional</span> |
+| `billShortName` | `string` | <span class="badge-optional">Optional</span> |
+| `billDescription` | `*LocalizedText` | <span class="badge-optional">Optional</span> |
+| `billSubCompany` | `string` | <span class="badge-optional">Optional</span> |
+| `billAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `billAmountLabel` | `string` | <span class="badge-optional">Optional</span> |
+| `billAmountValue` | `string` | <span class="badge-optional">Optional</span> |
+| `billReferenceNo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `status` | `string` | <span class="badge-optional">Optional</span> |
+| `reason` | `*LocalizedText` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 
@@ -581,46 +581,46 @@ VAPaymentRequest is the request body for API VA - VA Payment (Service Code 25). 
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Mandatory |
-| `customerNo` | `json.RawMessage` | Mandatory |
-| `virtualAccountNo` | `string` | Mandatory |
-| `trxId` | `string` | Optional |
-| `paymentRequestId` | `string` | Mandatory |
-| `channelCode` | `json.RawMessage` | Optional |
-| `hashedSourceAccountNo` | `string` | Optional |
-| `sourceBankCode` | `string` | Optional |
-| `paidAmount` | `snap.Money` | Mandatory |
-| `cumulativePaymentAmount` | `*snap.Money` | Optional |
-| `paidBills` | `string` | Optional |
-| `totalAmount` | `*snap.Money` | Optional |
-| `trxDateTime` | `string` | Optional |
-| `referenceNo` | `string` | Optional |
-| `journalNum` | `string` | Optional |
-| `paymentType` | `json.RawMessage` | Optional |
-| `flagAdvise` | `string` | Optional |
-| `subCompany` | `string` | Optional |
-| `billDetails` | `[]BillDetail` | Optional |
-| `freeTexts` | `[]LocalizedText` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerServiceId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `customerNo` | `json.RawMessage` | <span class="badge-mandatory">Mandatory</span> |
+| `virtualAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `trxId` | `string` | <span class="badge-optional">Optional</span> |
+| `paymentRequestId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `channelCode` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `hashedSourceAccountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `sourceBankCode` | `string` | <span class="badge-optional">Optional</span> |
+| `paidAmount` | `snap.Money` | <span class="badge-mandatory">Mandatory</span> |
+| `cumulativePaymentAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `paidBills` | `string` | <span class="badge-optional">Optional</span> |
+| `totalAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `trxDateTime` | `string` | <span class="badge-optional">Optional</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `journalNum` | `string` | <span class="badge-optional">Optional</span> |
+| `paymentType` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `flagAdvise` | `string` | <span class="badge-optional">Optional</span> |
+| `subCompany` | `string` | <span class="badge-optional">Optional</span> |
+| `billDetails` | `[]BillDetail` | <span class="badge-optional">Optional</span> |
+| `freeTexts` | `[]LocalizedText` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 {{< details title="BillDetail fields" >}}
 BillDetail is one entry in the `billDetails[]` array (max 24 entries) used across the Virtual Account group. `billReferenceNo` is `json.RawMessage` because the standard documents it as Numeric but some issuers send it as a bare JSON number — when you set it yourself (e.g. in `CreateVARequest`), supply a complete JSON value like `json.RawMessage(\`"BILLREF1"\`)` or `json.RawMessage(\`123\`)`, not a bare Go string.
 
 | Field | Type | Presence |
 |---|---|---|
-| `billCode` | `string` | Optional |
-| `billNo` | `string` | Optional |
-| `billName` | `string` | Optional |
-| `billShortName` | `string` | Optional |
-| `billDescription` | `*LocalizedText` | Optional |
-| `billSubCompany` | `string` | Optional |
-| `billAmount` | `*snap.Money` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
-| `billAmountLabel` | `string` | Optional |
-| `billAmountValue` | `string` | Optional |
-| `billReferenceNo` | `json.RawMessage` | Optional |
-| `status` | `string` | Optional |
-| `reason` | `*LocalizedText` | Optional |
+| `billCode` | `string` | <span class="badge-optional">Optional</span> |
+| `billNo` | `string` | <span class="badge-optional">Optional</span> |
+| `billName` | `string` | <span class="badge-optional">Optional</span> |
+| `billShortName` | `string` | <span class="badge-optional">Optional</span> |
+| `billDescription` | `*LocalizedText` | <span class="badge-optional">Optional</span> |
+| `billSubCompany` | `string` | <span class="badge-optional">Optional</span> |
+| `billAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `billAmountLabel` | `string` | <span class="badge-optional">Optional</span> |
+| `billAmountValue` | `string` | <span class="badge-optional">Optional</span> |
+| `billReferenceNo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `status` | `string` | <span class="badge-optional">Optional</span> |
+| `reason` | `*LocalizedText` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 {{< details title="LocalizedText fields" >}}
@@ -628,8 +628,8 @@ LocalizedText is the shared {english, indonesia} bilingual text shape used acros
 
 | Field | Type | Presence |
 |---|---|---|
-| `english` | `string` | Optional |
-| `indonesia` | `string` | Optional |
+| `english` | `string` | <span class="badge-optional">Optional</span> |
+| `indonesia` | `string` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 **Response &mdash; `VAPaymentResponse`**
@@ -638,38 +638,38 @@ VAPaymentResponse is the response body for API VA - VA Payment.
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `virtualAccountData` | `*VAPaymentData` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `virtualAccountData` | `*VAPaymentData` | <span class="badge-optional">Optional</span> |
 
 {{< details title="VAPaymentData fields" >}}
 VAPaymentData is the `virtualAccountData` object in VAPaymentResponse — it mirrors the request's fields plus `paymentFlagReason` and `paymentFlagStatus`.
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Optional |
-| `customerNo` | `json.RawMessage` | Optional |
-| `virtualAccountNo` | `string` | Optional |
-| `trxId` | `string` | Optional |
-| `paymentRequestId` | `string` | Optional |
-| `channelCode` | `json.RawMessage` | Optional |
-| `hashedSourceAccountNo` | `string` | Optional |
-| `sourceBankCode` | `string` | Optional |
-| `paidAmount` | `*snap.Money` | Optional |
-| `cumulativePaymentAmount` | `*snap.Money` | Optional |
-| `paidBills` | `string` | Optional |
-| `totalAmount` | `*snap.Money` | Optional |
-| `trxDateTime` | `string` | Optional |
-| `referenceNo` | `string` | Optional |
-| `journalNum` | `string` | Optional |
-| `paymentType` | `json.RawMessage` | Optional |
-| `flagAdvise` | `string` | Optional |
-| `subCompany` | `string` | Optional |
-| `billDetails` | `[]BillDetail` | Optional |
-| `freeTexts` | `[]LocalizedText` | Optional |
-| `paymentFlagReason` | `*LocalizedText` | Optional |
-| `paymentFlagStatus` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerServiceId` | `string` | <span class="badge-optional">Optional</span> |
+| `customerNo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `virtualAccountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `trxId` | `string` | <span class="badge-optional">Optional</span> |
+| `paymentRequestId` | `string` | <span class="badge-optional">Optional</span> |
+| `channelCode` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `hashedSourceAccountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `sourceBankCode` | `string` | <span class="badge-optional">Optional</span> |
+| `paidAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `cumulativePaymentAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `paidBills` | `string` | <span class="badge-optional">Optional</span> |
+| `totalAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `trxDateTime` | `string` | <span class="badge-optional">Optional</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `journalNum` | `string` | <span class="badge-optional">Optional</span> |
+| `paymentType` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `flagAdvise` | `string` | <span class="badge-optional">Optional</span> |
+| `subCompany` | `string` | <span class="badge-optional">Optional</span> |
+| `billDetails` | `[]BillDetail` | <span class="badge-optional">Optional</span> |
+| `freeTexts` | `[]LocalizedText` | <span class="badge-optional">Optional</span> |
+| `paymentFlagReason` | `*LocalizedText` | <span class="badge-optional">Optional</span> |
+| `paymentFlagStatus` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 {{< details title="BillDetail fields" >}}
@@ -677,19 +677,19 @@ BillDetail is one entry in the `billDetails[]` array (max 24 entries) used acros
 
 | Field | Type | Presence |
 |---|---|---|
-| `billCode` | `string` | Optional |
-| `billNo` | `string` | Optional |
-| `billName` | `string` | Optional |
-| `billShortName` | `string` | Optional |
-| `billDescription` | `*LocalizedText` | Optional |
-| `billSubCompany` | `string` | Optional |
-| `billAmount` | `*snap.Money` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
-| `billAmountLabel` | `string` | Optional |
-| `billAmountValue` | `string` | Optional |
-| `billReferenceNo` | `json.RawMessage` | Optional |
-| `status` | `string` | Optional |
-| `reason` | `*LocalizedText` | Optional |
+| `billCode` | `string` | <span class="badge-optional">Optional</span> |
+| `billNo` | `string` | <span class="badge-optional">Optional</span> |
+| `billName` | `string` | <span class="badge-optional">Optional</span> |
+| `billShortName` | `string` | <span class="badge-optional">Optional</span> |
+| `billDescription` | `*LocalizedText` | <span class="badge-optional">Optional</span> |
+| `billSubCompany` | `string` | <span class="badge-optional">Optional</span> |
+| `billAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `billAmountLabel` | `string` | <span class="badge-optional">Optional</span> |
+| `billAmountValue` | `string` | <span class="badge-optional">Optional</span> |
+| `billReferenceNo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `status` | `string` | <span class="badge-optional">Optional</span> |
+| `reason` | `*LocalizedText` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 {{< details title="LocalizedText fields" >}}
@@ -697,8 +697,8 @@ LocalizedText is the shared {english, indonesia} bilingual text shape used acros
 
 | Field | Type | Presence |
 |---|---|---|
-| `english` | `string` | Optional |
-| `indonesia` | `string` | Optional |
+| `english` | `string` | <span class="badge-optional">Optional</span> |
+| `indonesia` | `string` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 
@@ -718,12 +718,12 @@ VAInquiryStatusRequest is the request body for API VA - VA Inquiry Status (Servi
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Mandatory |
-| `customerNo` | `json.RawMessage` | Mandatory |
-| `virtualAccountNo` | `string` | Mandatory |
-| `inquiryRequestId` | `string` | Optional |
-| `paymentRequestId` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerServiceId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `customerNo` | `json.RawMessage` | <span class="badge-mandatory">Mandatory</span> |
+| `virtualAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `inquiryRequestId` | `string` | <span class="badge-optional">Optional</span> |
+| `paymentRequestId` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `VAInquiryStatusResponse`**
 
@@ -731,39 +731,39 @@ VAInquiryStatusResponse is the response body for API VA - VA Inquiry Status.
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `virtualAccountData` | `*VAInquiryStatusData` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `virtualAccountData` | `*VAInquiryStatusData` | <span class="badge-optional">Optional</span> |
 
 {{< details title="VAInquiryStatusData fields" >}}
 VAInquiryStatusData is the `virtualAccountData` object in VAInquiryStatusResponse — the same shape as `VAPaymentData` plus `transactionDate`, kept as its own type since it belongs to a different Service Code.
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Optional |
-| `customerNo` | `json.RawMessage` | Optional |
-| `virtualAccountNo` | `string` | Optional |
-| `trxId` | `string` | Optional |
-| `paymentRequestId` | `string` | Optional |
-| `channelCode` | `json.RawMessage` | Optional |
-| `hashedSourceAccountNo` | `string` | Optional |
-| `sourceBankCode` | `string` | Optional |
-| `paidAmount` | `*snap.Money` | Optional |
-| `cumulativePaymentAmount` | `*snap.Money` | Optional |
-| `paidBills` | `string` | Optional |
-| `totalAmount` | `*snap.Money` | Optional |
-| `trxDateTime` | `string` | Optional |
-| `referenceNo` | `string` | Optional |
-| `journalNum` | `string` | Optional |
-| `paymentType` | `json.RawMessage` | Optional |
-| `flagAdvise` | `string` | Optional |
-| `subCompany` | `string` | Optional |
-| `billDetails` | `[]BillDetail` | Optional |
-| `freeTexts` | `[]LocalizedText` | Optional |
-| `paymentFlagReason` | `*LocalizedText` | Optional |
-| `paymentFlagStatus` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
-| `transactionDate` | `string` | Optional |
+| `partnerServiceId` | `string` | <span class="badge-optional">Optional</span> |
+| `customerNo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `virtualAccountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `trxId` | `string` | <span class="badge-optional">Optional</span> |
+| `paymentRequestId` | `string` | <span class="badge-optional">Optional</span> |
+| `channelCode` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `hashedSourceAccountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `sourceBankCode` | `string` | <span class="badge-optional">Optional</span> |
+| `paidAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `cumulativePaymentAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `paidBills` | `string` | <span class="badge-optional">Optional</span> |
+| `totalAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `trxDateTime` | `string` | <span class="badge-optional">Optional</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `journalNum` | `string` | <span class="badge-optional">Optional</span> |
+| `paymentType` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `flagAdvise` | `string` | <span class="badge-optional">Optional</span> |
+| `subCompany` | `string` | <span class="badge-optional">Optional</span> |
+| `billDetails` | `[]BillDetail` | <span class="badge-optional">Optional</span> |
+| `freeTexts` | `[]LocalizedText` | <span class="badge-optional">Optional</span> |
+| `paymentFlagReason` | `*LocalizedText` | <span class="badge-optional">Optional</span> |
+| `paymentFlagStatus` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 {{< details title="BillDetail fields" >}}
@@ -771,19 +771,19 @@ BillDetail is one entry in the `billDetails[]` array (max 24 entries) used acros
 
 | Field | Type | Presence |
 |---|---|---|
-| `billCode` | `string` | Optional |
-| `billNo` | `string` | Optional |
-| `billName` | `string` | Optional |
-| `billShortName` | `string` | Optional |
-| `billDescription` | `*LocalizedText` | Optional |
-| `billSubCompany` | `string` | Optional |
-| `billAmount` | `*snap.Money` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
-| `billAmountLabel` | `string` | Optional |
-| `billAmountValue` | `string` | Optional |
-| `billReferenceNo` | `json.RawMessage` | Optional |
-| `status` | `string` | Optional |
-| `reason` | `*LocalizedText` | Optional |
+| `billCode` | `string` | <span class="badge-optional">Optional</span> |
+| `billNo` | `string` | <span class="badge-optional">Optional</span> |
+| `billName` | `string` | <span class="badge-optional">Optional</span> |
+| `billShortName` | `string` | <span class="badge-optional">Optional</span> |
+| `billDescription` | `*LocalizedText` | <span class="badge-optional">Optional</span> |
+| `billSubCompany` | `string` | <span class="badge-optional">Optional</span> |
+| `billAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `billAmountLabel` | `string` | <span class="badge-optional">Optional</span> |
+| `billAmountValue` | `string` | <span class="badge-optional">Optional</span> |
+| `billReferenceNo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `status` | `string` | <span class="badge-optional">Optional</span> |
+| `reason` | `*LocalizedText` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 {{< details title="LocalizedText fields" >}}
@@ -791,8 +791,8 @@ LocalizedText is the shared {english, indonesia} bilingual text shape used acros
 
 | Field | Type | Presence |
 |---|---|---|
-| `english` | `string` | Optional |
-| `indonesia` | `string` | Optional |
+| `english` | `string` | <span class="badge-optional">Optional</span> |
+| `indonesia` | `string` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 
@@ -812,13 +812,13 @@ VAInquiryPaymentIntrabankRequest is the request body for API VA - Inquiry Paymen
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Mandatory |
-| `customerNo` | `json.RawMessage` | Mandatory |
-| `virtualAccountNo` | `string` | Mandatory |
-| `partnerReferenceNo` | `string` | Optional |
-| `sourceAccountNo` | `string` | Optional |
-| `sourceAccountType` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerServiceId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `customerNo` | `json.RawMessage` | <span class="badge-mandatory">Mandatory</span> |
+| `virtualAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `sourceAccountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `sourceAccountType` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `VAInquiryPaymentIntrabankResponse`**
 
@@ -826,25 +826,25 @@ VAInquiryPaymentIntrabankResponse is the response body for API VA - Inquiry Paym
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `virtualAccountdata` | `*VAInquiryPaymentIntrabankData` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `virtualAccountdata` | `*VAInquiryPaymentIntrabankData` | <span class="badge-optional">Optional</span> |
 
 {{< details title="VAInquiryPaymentIntrabankData fields" >}}
 VAInquiryPaymentIntrabankData is the `virtualAccountdata` object (lowercase "d" — deliberately matching the standard's own wire key, unlike most other VA endpoints which use `virtualAccountData`) in VAInquiryPaymentIntrabankResponse.
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Optional |
-| `customerNo` | `json.RawMessage` | Optional |
-| `virtualAccountNo` | `string` | Optional |
-| `partnerReferenceNo` | `string` | Optional |
-| `sourceAccountNo` | `string` | Optional |
-| `sourceAccountType` | `string` | Optional |
-| `productName` | `string` | Optional |
-| `billAmountLabel` | `string` | Optional |
-| `billAmountValue` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerServiceId` | `string` | <span class="badge-optional">Optional</span> |
+| `customerNo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `virtualAccountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `sourceAccountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `sourceAccountType` | `string` | <span class="badge-optional">Optional</span> |
+| `productName` | `string` | <span class="badge-optional">Optional</span> |
+| `billAmountLabel` | `string` | <span class="badge-optional">Optional</span> |
+| `billAmountValue` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 
@@ -866,19 +866,19 @@ VAPaymentIntrabankRequest is the request body for API VA - Payment Intrabank (Se
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Mandatory |
-| `customerNo` | `json.RawMessage` | Mandatory |
-| `virtualAccountNo` | `string` | Mandatory |
-| `sourceAccountNo` | `string` | Optional |
-| `sourceAccountType` | `string` | Optional |
-| `inquiryRequestId` | `string` | Optional |
-| `partnerReferenceNo` | `string` | Mandatory |
-| `paidAmount` | `snap.Money` | Mandatory |
-| `cumulativePaymentAmount` | `*snap.Money` | Optional |
-| `paidBills` | `string` | Optional |
-| `paymentStatus` | `string` | Optional |
-| `referenceNo` | `json.RawMessage` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerServiceId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `customerNo` | `json.RawMessage` | <span class="badge-mandatory">Mandatory</span> |
+| `virtualAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `sourceAccountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `sourceAccountType` | `string` | <span class="badge-optional">Optional</span> |
+| `inquiryRequestId` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `paidAmount` | `snap.Money` | <span class="badge-mandatory">Mandatory</span> |
+| `cumulativePaymentAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `paidBills` | `string` | <span class="badge-optional">Optional</span> |
+| `paymentStatus` | `string` | <span class="badge-optional">Optional</span> |
+| `referenceNo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `VAPaymentIntrabankResponse`**
 
@@ -886,28 +886,28 @@ VAPaymentIntrabankResponse is the response body for API VA - Payment Intrabank.
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `virtualAccountdata` | `*VAPaymentIntrabankData` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `virtualAccountdata` | `*VAPaymentIntrabankData` | <span class="badge-optional">Optional</span> |
 
 {{< details title="VAPaymentIntrabankData fields" >}}
 VAPaymentIntrabankData is the `virtualAccountdata` object (lowercase "d") in VAPaymentIntrabankResponse — it mirrors the request's own fields.
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Optional |
-| `customerNo` | `json.RawMessage` | Optional |
-| `virtualAccountNo` | `string` | Optional |
-| `sourceAccountNo` | `string` | Optional |
-| `sourceAccountType` | `string` | Optional |
-| `inquiryRequestId` | `string` | Optional |
-| `partnerReferenceNo` | `string` | Optional |
-| `paidAmount` | `*snap.Money` | Optional |
-| `cumulativePaymentAmount` | `*snap.Money` | Optional |
-| `paidBills` | `string` | Optional |
-| `paymentStatus` | `string` | Optional |
-| `referenceNo` | `json.RawMessage` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerServiceId` | `string` | <span class="badge-optional">Optional</span> |
+| `customerNo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `virtualAccountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `sourceAccountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `sourceAccountType` | `string` | <span class="badge-optional">Optional</span> |
+| `inquiryRequestId` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `paidAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `cumulativePaymentAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `paidBills` | `string` | <span class="badge-optional">Optional</span> |
+| `paymentStatus` | `string` | <span class="badge-optional">Optional</span> |
+| `referenceNo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 
@@ -929,24 +929,24 @@ VANotifyPaymentIntrabankRequest is the request body for API VA - Notify Payment 
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Mandatory |
-| `customerNo` | `json.RawMessage` | Mandatory |
-| `virtualAccountNo` | `string` | Mandatory |
-| `inquiryRequestId` | `string` | Optional |
-| `paymentRequestId` | `string` | Optional |
-| `partnerReferenceNo` | `string` | Optional |
-| `trxDateTime` | `string` | Optional |
-| `paymentStatus` | `string` | Optional |
-| `paymentFlagReason` | `*LocalizedText` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerServiceId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `customerNo` | `json.RawMessage` | <span class="badge-mandatory">Mandatory</span> |
+| `virtualAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `inquiryRequestId` | `string` | <span class="badge-optional">Optional</span> |
+| `paymentRequestId` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `trxDateTime` | `string` | <span class="badge-optional">Optional</span> |
+| `paymentStatus` | `string` | <span class="badge-optional">Optional</span> |
+| `paymentFlagReason` | `*LocalizedText` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 {{< details title="LocalizedText fields" >}}
 LocalizedText is the shared {english, indonesia} bilingual text shape used across the Virtual Account sub-group (e.g. inquiryReason, paymentFlagReason, billDescription, per-bill reason, freeTexts[] entries). Both fields are String, unmarked for M/O in the source, so both carry omitempty.
 
 | Field | Type | Presence |
 |---|---|---|
-| `english` | `string` | Optional |
-| `indonesia` | `string` | Optional |
+| `english` | `string` | <span class="badge-optional">Optional</span> |
+| `indonesia` | `string` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 **Response &mdash; `VANotifyPaymentIntrabankResponse`**
@@ -955,25 +955,25 @@ VANotifyPaymentIntrabankResponse is the response body for API VA - Notify Paymen
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `virtualAccountdata` | `*VANotifyPaymentIntrabankData` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `virtualAccountdata` | `*VANotifyPaymentIntrabankData` | <span class="badge-optional">Optional</span> |
 
 {{< details title="VANotifyPaymentIntrabankData fields" >}}
 VANotifyPaymentIntrabankData is the `virtualAccountdata` object (lowercase "d") in VANotifyPaymentIntrabankResponse — it mirrors most of the request's fields, plus the envelope.
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Optional |
-| `customerNo` | `json.RawMessage` | Optional |
-| `virtualAccountNo` | `string` | Optional |
-| `inquiryRequestId` | `string` | Optional |
-| `paymentRequestId` | `string` | Optional |
-| `partnerReferenceNo` | `string` | Optional |
-| `trxDateTime` | `string` | Optional |
-| `paymentStatus` | `string` | Optional |
-| `paymentFlagReason` | `*LocalizedText` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerServiceId` | `string` | <span class="badge-optional">Optional</span> |
+| `customerNo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `virtualAccountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `inquiryRequestId` | `string` | <span class="badge-optional">Optional</span> |
+| `paymentRequestId` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `trxDateTime` | `string` | <span class="badge-optional">Optional</span> |
+| `paymentStatus` | `string` | <span class="badge-optional">Optional</span> |
+| `paymentFlagReason` | `*LocalizedText` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 {{< details title="LocalizedText fields" >}}
@@ -981,8 +981,8 @@ LocalizedText is the shared {english, indonesia} bilingual text shape used acros
 
 | Field | Type | Presence |
 |---|---|---|
-| `english` | `string` | Optional |
-| `indonesia` | `string` | Optional |
+| `english` | `string` | <span class="badge-optional">Optional</span> |
+| `indonesia` | `string` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 
@@ -1004,12 +1004,12 @@ VAGetReportRequest is the request body for API VA - Get Report (Service Code 35)
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `json.RawMessage` | Mandatory |
-| `startDate` | `string` | Optional |
-| `startTime` | `string` | Optional |
-| `endDate` | `string` | Optional |
-| `endTime` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerServiceId` | `json.RawMessage` | <span class="badge-mandatory">Mandatory</span> |
+| `startDate` | `string` | <span class="badge-optional">Optional</span> |
+| `startTime` | `string` | <span class="badge-optional">Optional</span> |
+| `endDate` | `string` | <span class="badge-optional">Optional</span> |
+| `endTime` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `VAGetReportResponse`**
 
@@ -1017,39 +1017,39 @@ VAGetReportResponse is the response body for API VA - Get Report — the only VA
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `virtualAccountdata` | `[]GetReportData` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `virtualAccountdata` | `[]GetReportData` | <span class="badge-optional">Optional</span> |
 
 {{< details title="GetReportData fields" >}}
 GetReportData is one entry in VAGetReportResponse's `virtualAccountdata` array (lowercase "d") — the same shape as `VAInquiryStatusData`, kept as its own type since it belongs to a different Service Code.
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Optional |
-| `customerNo` | `json.RawMessage` | Optional |
-| `virtualAccountNo` | `string` | Optional |
-| `trxId` | `string` | Optional |
-| `paymentRequestId` | `string` | Optional |
-| `channelCode` | `json.RawMessage` | Optional |
-| `hashedSourceAccountNo` | `string` | Optional |
-| `sourceBankCode` | `string` | Optional |
-| `paidAmount` | `*snap.Money` | Optional |
-| `cumulativePaymentAmount` | `*snap.Money` | Optional |
-| `paidBills` | `string` | Optional |
-| `totalAmount` | `*snap.Money` | Optional |
-| `trxDateTime` | `string` | Optional |
-| `referenceNo` | `string` | Optional |
-| `journalNum` | `string` | Optional |
-| `paymentType` | `json.RawMessage` | Optional |
-| `flagAdvise` | `string` | Optional |
-| `subCompany` | `string` | Optional |
-| `billDetails` | `[]BillDetail` | Optional |
-| `freeTexts` | `[]LocalizedText` | Optional |
-| `paymentFlagReason` | `*LocalizedText` | Optional |
-| `paymentFlagStatus` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
-| `transactionDate` | `string` | Optional |
+| `partnerServiceId` | `string` | <span class="badge-optional">Optional</span> |
+| `customerNo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `virtualAccountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `trxId` | `string` | <span class="badge-optional">Optional</span> |
+| `paymentRequestId` | `string` | <span class="badge-optional">Optional</span> |
+| `channelCode` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `hashedSourceAccountNo` | `string` | <span class="badge-optional">Optional</span> |
+| `sourceBankCode` | `string` | <span class="badge-optional">Optional</span> |
+| `paidAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `cumulativePaymentAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `paidBills` | `string` | <span class="badge-optional">Optional</span> |
+| `totalAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `trxDateTime` | `string` | <span class="badge-optional">Optional</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `journalNum` | `string` | <span class="badge-optional">Optional</span> |
+| `paymentType` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `flagAdvise` | `string` | <span class="badge-optional">Optional</span> |
+| `subCompany` | `string` | <span class="badge-optional">Optional</span> |
+| `billDetails` | `[]BillDetail` | <span class="badge-optional">Optional</span> |
+| `freeTexts` | `[]LocalizedText` | <span class="badge-optional">Optional</span> |
+| `paymentFlagReason` | `*LocalizedText` | <span class="badge-optional">Optional</span> |
+| `paymentFlagStatus` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 {{< details title="BillDetail fields" >}}
@@ -1057,19 +1057,19 @@ BillDetail is one entry in the `billDetails[]` array (max 24 entries) used acros
 
 | Field | Type | Presence |
 |---|---|---|
-| `billCode` | `string` | Optional |
-| `billNo` | `string` | Optional |
-| `billName` | `string` | Optional |
-| `billShortName` | `string` | Optional |
-| `billDescription` | `*LocalizedText` | Optional |
-| `billSubCompany` | `string` | Optional |
-| `billAmount` | `*snap.Money` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
-| `billAmountLabel` | `string` | Optional |
-| `billAmountValue` | `string` | Optional |
-| `billReferenceNo` | `json.RawMessage` | Optional |
-| `status` | `string` | Optional |
-| `reason` | `*LocalizedText` | Optional |
+| `billCode` | `string` | <span class="badge-optional">Optional</span> |
+| `billNo` | `string` | <span class="badge-optional">Optional</span> |
+| `billName` | `string` | <span class="badge-optional">Optional</span> |
+| `billShortName` | `string` | <span class="badge-optional">Optional</span> |
+| `billDescription` | `*LocalizedText` | <span class="badge-optional">Optional</span> |
+| `billSubCompany` | `string` | <span class="badge-optional">Optional</span> |
+| `billAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `billAmountLabel` | `string` | <span class="badge-optional">Optional</span> |
+| `billAmountValue` | `string` | <span class="badge-optional">Optional</span> |
+| `billReferenceNo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `status` | `string` | <span class="badge-optional">Optional</span> |
+| `reason` | `*LocalizedText` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 {{< details title="LocalizedText fields" >}}
@@ -1077,7 +1077,7 @@ LocalizedText is the shared {english, indonesia} bilingual text shape used acros
 
 | Field | Type | Presence |
 |---|---|---|
-| `english` | `string` | Optional |
-| `indonesia` | `string` | Optional |
+| `english` | `string` | <span class="badge-optional">Optional</span> |
+| `indonesia` | `string` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 

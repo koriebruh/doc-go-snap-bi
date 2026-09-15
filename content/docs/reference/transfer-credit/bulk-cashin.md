@@ -33,23 +33,23 @@ SubmitBulkCashInRequest is the request body for API Submit Bulk Cash In (Service
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerBulkId` | `string` | Optional |
-| `transactionDate` | `string` | Mandatory |
-| `currency` | `string` | Optional |
-| `bulkObject` | `[]BulkCashInItem` | Optional |
-| `feeType` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerBulkId` | `string` | <span class="badge-optional">Optional</span> |
+| `transactionDate` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `currency` | `string` | <span class="badge-optional">Optional</span> |
+| `bulkObject` | `[]BulkCashInItem` | <span class="badge-optional">Optional</span> |
+| `feeType` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 {{< details title="BulkCashInItem fields" >}}
 BulkCashInItem is one entry in Submit Bulk Cash In's request "bulkObject[]" array. AccountNumber and PartnerReferenceNo are mandatory per the Guides tab.
 
 | Field | Type | Presence |
 |---|---|---|
-| `accountNumber` | `string` | Mandatory |
-| `accountName` | `string` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `partnerReferenceNo` | `string` | Mandatory |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `accountNumber` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `accountName` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 **Response &mdash; `SubmitBulkCashInResponse`**
@@ -58,10 +58,10 @@ SubmitBulkCashInResponse is the response body for API Submit Bulk Cash In. Note 
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `bulkid` | `string` | Mandatory |
-| `partnerBulkId` | `string` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `bulkid` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `partnerBulkId` | `string` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -78,23 +78,23 @@ NotifyBulkCashInRequest is the request body for API Notify Bulk Cash In (Service
 
 | Field | Type | Presence |
 |---|---|---|
-| `bulkId` | `string` | Mandatory |
-| `partnerBulkId` | `string` | Mandatory |
-| `bulkObject` | `[]BulkCashInNotificationItem` | Mandatory |
+| `bulkId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `partnerBulkId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `bulkObject` | `[]BulkCashInNotificationItem` | <span class="badge-mandatory">Mandatory</span> |
 
 {{< details title="BulkCashInNotificationItem fields" >}}
 BulkCashInNotificationItem is one entry in the notification's `bulkObject[]` array — a settlement-result shape, distinct from `BulkCashInItem`'s transfer-instruction shape. CustomerNumber, ReferenceNo, PartnerReferenceNo, ResponseCode, and ResponseMessage are all Mandatory.
 
 | Field | Type | Presence |
 |---|---|---|
-| `customerNumber` | `string` | Mandatory |
-| `customerName` | `string` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `referenceNo` | `string` | Mandatory |
-| `partnerReferenceNo` | `string` | Mandatory |
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `customerNumber` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `customerName` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `referenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 **Your handler replies with &mdash; `NotifyBulkCashInResponse`**
@@ -103,8 +103,8 @@ NotifyBulkCashInResponse is the response body your handler sends back. BulkID an
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `bulkId` | `string` | Mandatory |
-| `partnerBulkId` | `string` | Mandatory |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `bulkId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `partnerBulkId` | `string` | <span class="badge-mandatory">Mandatory</span> |
 

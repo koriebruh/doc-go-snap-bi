@@ -39,54 +39,54 @@ func IntrabankTransfer(ctx context.Context, t *snap.Transport, hb snap.HeaderBui
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Wajib |
-| `amount` | `snap.Money` | Wajib |
-| `beneficiaryAccountNo` | `string` | Wajib |
-| `beneficiaryEmail` | `string` | Opsional |
-| `currency` | `string` | Opsional |
-| `customerReference` | `string` | Opsional |
-| `feeType` | `string` | Opsional |
-| `remark` | `string` | Opsional |
-| `sourceAccountNo` | `string` | Wajib |
-| `transactionDate` | `string` | Wajib |
-| `originatorInfos` | `[]TransferOriginatorInfo` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `amount` | `snap.Money` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryEmail` | `string` | <span class="badge-optional">Opsional</span> |
+| `currency` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerReference` | `string` | <span class="badge-optional">Opsional</span> |
+| `feeType` | `string` | <span class="badge-optional">Opsional</span> |
+| `remark` | `string` | <span class="badge-optional">Opsional</span> |
+| `sourceAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `transactionDate` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originatorInfos` | `[]TransferOriginatorInfo` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="TransferOriginatorInfo fields" >}}
 Bentuk entri "originatorInfos[]" yang dipakai bersama di seluruh kelompok Trigger Transfer. Ketiga field bertipe String.
 
 | Field | Type | Presence |
 |---|---|---|
-| `originatorCustomerNo` | `string` | Wajib |
-| `originatorCustomerName` | `string` | Wajib |
-| `originatorBankCode` | `string` | Wajib |
+| `originatorCustomerNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originatorCustomerName` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originatorBankCode` | `string` | <span class="badge-mandatory">Wajib</span> |
 {{< /details >}}
 
 **Response &mdash; `IntrabankTransferResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `referenceNo` | `string` | Opsional |
-| `partnerReferenceNo` | `string` | Opsional |
-| `amount` | `*snap.Money` | Opsional |
-| `beneficiaryAccountNo` | `string` | Opsional |
-| `currency` | `string` | Opsional |
-| `customerReference` | `string` | Opsional |
-| `sourceAccountNo` | `string` | Opsional |
-| `transactionDate` | `string` | Opsional |
-| `originatorInfos` | `[]TransferOriginatorInfo` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `currency` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerReference` | `string` | <span class="badge-optional">Opsional</span> |
+| `sourceAccountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `originatorInfos` | `[]TransferOriginatorInfo` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="TransferOriginatorInfo fields" >}}
 Bentuk entri "originatorInfos[]" yang dipakai bersama di seluruh kelompok Trigger Transfer. Ketiga field bertipe String.
 
 | Field | Type | Presence |
 |---|---|---|
-| `originatorCustomerNo` | `string` | Wajib |
-| `originatorCustomerName` | `string` | Wajib |
-| `originatorBankCode` | `string` | Wajib |
+| `originatorCustomerNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originatorCustomerName` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originatorBankCode` | `string` | <span class="badge-mandatory">Wajib</span> |
 {{< /details >}}
 
 
@@ -108,59 +108,59 @@ func InterbankTransfer(ctx context.Context, t *snap.Transport, hb snap.HeaderBui
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Wajib |
-| `amount` | `snap.Money` | Wajib |
-| `beneficiaryAccountNo` | `string` | Wajib |
-| `beneficiaryAccountName` | `string` | Wajib |
-| `beneficiaryAddress` | `string` | Opsional |
-| `beneficiaryBankCode` | `string` | Wajib |
-| `beneficiaryBankName` | `string` | Opsional |
-| `beneficiaryEmail` | `string` | Opsional |
-| `currency` | `string` | Opsional |
-| `customerReference` | `string` | Opsional |
-| `feeType` | `string` | Opsional |
-| `remark` | `string` | Opsional |
-| `sourceAccountNo` | `string` | Wajib |
-| `transactionDate` | `string` | Wajib |
-| `originatorInfos` | `[]TransferOriginatorInfo` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `amount` | `snap.Money` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryAccountName` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryAddress` | `string` | <span class="badge-optional">Opsional</span> |
+| `beneficiaryBankCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryBankName` | `string` | <span class="badge-optional">Opsional</span> |
+| `beneficiaryEmail` | `string` | <span class="badge-optional">Opsional</span> |
+| `currency` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerReference` | `string` | <span class="badge-optional">Opsional</span> |
+| `feeType` | `string` | <span class="badge-optional">Opsional</span> |
+| `remark` | `string` | <span class="badge-optional">Opsional</span> |
+| `sourceAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `transactionDate` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originatorInfos` | `[]TransferOriginatorInfo` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="TransferOriginatorInfo fields" >}}
 Bentuk entri "originatorInfos[]" yang dipakai bersama di seluruh kelompok Trigger Transfer. Ketiga field bertipe String.
 
 | Field | Type | Presence |
 |---|---|---|
-| `originatorCustomerNo` | `string` | Wajib |
-| `originatorCustomerName` | `string` | Wajib |
-| `originatorBankCode` | `string` | Wajib |
+| `originatorCustomerNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originatorCustomerName` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originatorBankCode` | `string` | <span class="badge-mandatory">Wajib</span> |
 {{< /details >}}
 
 **Response &mdash; `InterbankTransferResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `referenceNo` | `string` | Opsional |
-| `partnerReferenceNo` | `string` | Opsional |
-| `amount` | `*snap.Money` | Opsional |
-| `beneficiaryAccountNo` | `string` | Opsional |
-| `currency` | `string` | Opsional |
-| `customerReference` | `string` | Opsional |
-| `sourceAccountNo` | `string` | Opsional |
-| `transactionDate` | `string` | Opsional |
-| `traceNo` | `string` | Opsional |
-| `originatorInfos` | `[]TransferOriginatorInfo` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `currency` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerReference` | `string` | <span class="badge-optional">Opsional</span> |
+| `sourceAccountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `traceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originatorInfos` | `[]TransferOriginatorInfo` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="TransferOriginatorInfo fields" >}}
 Bentuk entri "originatorInfos[]" yang dipakai bersama di seluruh kelompok Trigger Transfer. Ketiga field bertipe String.
 
 | Field | Type | Presence |
 |---|---|---|
-| `originatorCustomerNo` | `string` | Wajib |
-| `originatorCustomerName` | `string` | Wajib |
-| `originatorBankCode` | `string` | Wajib |
+| `originatorCustomerNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originatorCustomerName` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originatorBankCode` | `string` | <span class="badge-mandatory">Wajib</span> |
 {{< /details >}}
 
 
@@ -182,28 +182,28 @@ func InterbankBulkTransfer(ctx context.Context, t *snap.Transport, hb snap.Heade
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerBulkId` | `string` | Opsional |
-| `currency` | `string` | Opsional |
-| `customerReference` | `string` | Wajib |
-| `feeType` | `string` | Opsional |
-| `remark` | `string` | Opsional |
-| `sourceAccountNo` | `string` | Wajib |
-| `transactionDate` | `string` | Wajib |
-| `bulkObject` | `[]InterbankBulkTransferItem` | Wajib |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerBulkId` | `string` | <span class="badge-optional">Opsional</span> |
+| `currency` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerReference` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `feeType` | `string` | <span class="badge-optional">Opsional</span> |
+| `remark` | `string` | <span class="badge-optional">Opsional</span> |
+| `sourceAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `transactionDate` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `bulkObject` | `[]InterbankBulkTransferItem` | <span class="badge-mandatory">Wajib</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="InterbankBulkTransferItem fields" >}}
 Satu entri dalam array "bulkObject[]" pada request Interbank Bulk Transfer.
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Wajib |
-| `bankCode` | `string` | Wajib |
-| `beneficiaryAccountNo` | `string` | Wajib |
-| `beneficiaryAccountName` | `string` | Wajib |
-| `amount` | `snap.Money` | Wajib |
-| `originatorInfos` | `[]TransferOriginatorInfo` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `bankCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryAccountName` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `amount` | `snap.Money` | <span class="badge-mandatory">Wajib</span> |
+| `originatorInfos` | `[]TransferOriginatorInfo` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 {{< details title="TransferOriginatorInfo fields" >}}
@@ -211,20 +211,20 @@ Bentuk entri "originatorInfos[]" yang dipakai bersama di seluruh kelompok Trigge
 
 | Field | Type | Presence |
 |---|---|---|
-| `originatorCustomerNo` | `string` | Wajib |
-| `originatorCustomerName` | `string` | Wajib |
-| `originatorBankCode` | `string` | Wajib |
+| `originatorCustomerNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originatorCustomerName` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originatorBankCode` | `string` | <span class="badge-mandatory">Wajib</span> |
 {{< /details >}}
 
 **Response &mdash; `InterbankBulkTransferResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `bulkId` | `string` | Opsional |
-| `partnerBulkId` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `bulkId` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerBulkId` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -241,29 +241,29 @@ Body callback settlement untuk API Interbank Bulk Transfer - Notification (Servi
 
 | Field | Type | Presence |
 |---|---|---|
-| `bulkId` | `string` | Wajib |
-| `partnerBulkId` | `string` | Wajib |
-| `bulkObject` | `[]InterbankBulkTransferNotificationItem` | Wajib |
+| `bulkId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `partnerBulkId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `bulkObject` | `[]InterbankBulkTransferNotificationItem` | <span class="badge-mandatory">Wajib</span> |
 
 {{< details title="InterbankBulkTransferNotificationItem fields" >}}
 Satu entri dalam array "bulkObject[]" pada request Interbank Bulk Transfer - Notification — bentuk hasil settlement, berbeda dari bentuk instruksi transfer `InterbankBulkTransferItem`.
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Wajib |
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
 {{< /details >}}
 
 **Handler Anda membalas dengan &mdash; `InterbankBulkTransferNotificationResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `bulkId` | `string` | Opsional |
-| `partnerBulkId` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `bulkId` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerBulkId` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -284,28 +284,28 @@ func RequestForPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBui
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Wajib |
-| `bankCode` | `string` | Wajib |
-| `beneficiaryAccountNo` | `string` | Wajib |
-| `beneficiaryAccountName` | `string` | Wajib |
-| `remark` | `string` | Opsional |
-| `expiredDatetime` | `string` | Wajib |
-| `sourceAccountNo` | `string` | Wajib |
-| `sourceAccountName` | `string` | Wajib |
-| `currency` | `string` | Opsional |
-| `amount` | `*snap.Money` | Opsional |
-| `feeType` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `bankCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryAccountName` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `remark` | `string` | <span class="badge-optional">Opsional</span> |
+| `expiredDatetime` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `sourceAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `sourceAccountName` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `currency` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `feeType` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `RequestForPaymentResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `referenceNo` | `string` | Opsional |
-| `partnerReferenceNo` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -326,69 +326,69 @@ func RTGSTransfer(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder,
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Wajib |
-| `amount` | `snap.Money` | Wajib |
-| `beneficiaryAccountNo` | `string` | Wajib |
-| `beneficiaryAccountName` | `string` | Wajib |
-| `beneficiaryAddress` | `string` | Opsional |
-| `beneficiaryBankCode` | `string` | Wajib |
-| `beneficiaryBankName` | `string` | Opsional |
-| `beneficiaryEmail` | `string` | Opsional |
-| `currency` | `string` | Opsional |
-| `customerReference` | `string` | Opsional |
-| `feeType` | `string` | Opsional |
-| `remark` | `string` | Opsional |
-| `sourceAccountNo` | `string` | Wajib |
-| `transactionDate` | `string` | Wajib |
-| `beneficiaryCustomerResidence` | `string` | Wajib |
-| `beneficiaryCustomerType` | `string` | Wajib |
-| `kodepos` | `string` | Opsional |
-| `receiverPhone` | `string` | Opsional |
-| `senderCustomerResidence` | `string` | Opsional |
-| `senderCustomerType` | `string` | Opsional |
-| `senderPhone` | `string` | Opsional |
-| `originatorInfos` | `[]TransferOriginatorInfo` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `amount` | `snap.Money` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryAccountName` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryAddress` | `string` | <span class="badge-optional">Opsional</span> |
+| `beneficiaryBankCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryBankName` | `string` | <span class="badge-optional">Opsional</span> |
+| `beneficiaryEmail` | `string` | <span class="badge-optional">Opsional</span> |
+| `currency` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerReference` | `string` | <span class="badge-optional">Opsional</span> |
+| `feeType` | `string` | <span class="badge-optional">Opsional</span> |
+| `remark` | `string` | <span class="badge-optional">Opsional</span> |
+| `sourceAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `transactionDate` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryCustomerResidence` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryCustomerType` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `kodepos` | `string` | <span class="badge-optional">Opsional</span> |
+| `receiverPhone` | `string` | <span class="badge-optional">Opsional</span> |
+| `senderCustomerResidence` | `string` | <span class="badge-optional">Opsional</span> |
+| `senderCustomerType` | `string` | <span class="badge-optional">Opsional</span> |
+| `senderPhone` | `string` | <span class="badge-optional">Opsional</span> |
+| `originatorInfos` | `[]TransferOriginatorInfo` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="TransferOriginatorInfo fields" >}}
 Bentuk entri "originatorInfos[]" yang dipakai bersama di seluruh kelompok Trigger Transfer. Ketiga field bertipe String.
 
 | Field | Type | Presence |
 |---|---|---|
-| `originatorCustomerNo` | `string` | Wajib |
-| `originatorCustomerName` | `string` | Wajib |
-| `originatorBankCode` | `string` | Wajib |
+| `originatorCustomerNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originatorCustomerName` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originatorBankCode` | `string` | <span class="badge-mandatory">Wajib</span> |
 {{< /details >}}
 
 **Response &mdash; `RTGSTransferResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `referenceNo` | `string` | Opsional |
-| `partnerReferenceNo` | `string` | Opsional |
-| `amount` | `*snap.Money` | Opsional |
-| `beneficiaryAccountNo` | `string` | Opsional |
-| `currency` | `string` | Opsional |
-| `customerReference` | `string` | Opsional |
-| `sourceAccountNo` | `string` | Opsional |
-| `transactionDate` | `string` | Opsional |
-| `traceNo` | `string` | Opsional |
-| `transactionStatus` | `string` | Opsional |
-| `transactionStatusDesc` | `string` | Opsional |
-| `beneficiaryAccountType` | `string` | Opsional |
-| `originatorInfos` | `[]TransferOriginatorInfo` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `currency` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerReference` | `string` | <span class="badge-optional">Opsional</span> |
+| `sourceAccountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `traceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `transactionStatus` | `string` | <span class="badge-optional">Opsional</span> |
+| `transactionStatusDesc` | `string` | <span class="badge-optional">Opsional</span> |
+| `beneficiaryAccountType` | `string` | <span class="badge-optional">Opsional</span> |
+| `originatorInfos` | `[]TransferOriginatorInfo` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="TransferOriginatorInfo fields" >}}
 Bentuk entri "originatorInfos[]" yang dipakai bersama di seluruh kelompok Trigger Transfer. Ketiga field bertipe String.
 
 | Field | Type | Presence |
 |---|---|---|
-| `originatorCustomerNo` | `string` | Wajib |
-| `originatorCustomerName` | `string` | Wajib |
-| `originatorBankCode` | `string` | Wajib |
+| `originatorCustomerNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originatorCustomerName` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originatorBankCode` | `string` | <span class="badge-mandatory">Wajib</span> |
 {{< /details >}}
 
 
@@ -406,17 +406,17 @@ Body callback settlement untuk API RTGS - Notification (Service Code 76, path ..
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalPartnerReferenceNo` | `string` | Opsional |
-| `originalReferenceNo` | `string` | Opsional |
-| `originalExternalId` | `string` | Opsional |
-| `latestTransactionStatus` | `string` | Wajib |
-| `amount` | `*snap.Money` | Opsional |
-| `beneficiaryAccountName` | `string` | Wajib |
-| `beneficiaryAccountNo` | `string` | Wajib |
-| `beneficiaryBankCode` | `string` | Wajib |
-| `sourceAccountNo` | `string` | Wajib |
-| `transactionDate` | `string` | Wajib |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Opsional</span> |
+| `latestTransactionStatus` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `beneficiaryAccountName` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryBankCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `sourceAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `transactionDate` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Handler Anda membalas dengan &mdash; `RTGSNotificationResponse`**
 
@@ -424,8 +424,8 @@ Hanya berisi envelope, tidak ada field lain.
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
 
 
 ---
@@ -446,38 +446,38 @@ Bentuknya sama dengan `RTGSTransferRequest`, hanya beda service code dan path. `
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Wajib |
-| `amount` | `snap.Money` | Wajib |
-| `beneficiaryAccountNo` | `string` | Wajib |
-| `beneficiaryAccountName` | `string` | Wajib |
-| `beneficiaryAddress` | `string` | Opsional |
-| `beneficiaryBankCode` | `string` | Wajib |
-| `beneficiaryBankName` | `string` | Opsional |
-| `beneficiaryEmail` | `string` | Opsional |
-| `currency` | `string` | Opsional |
-| `customerReference` | `string` | Opsional |
-| `feeType` | `string` | Opsional |
-| `remark` | `string` | Opsional |
-| `sourceAccountNo` | `string` | Wajib |
-| `transactionDate` | `string` | Wajib |
-| `beneficiaryCustomerResidence` | `string` | Wajib |
-| `beneficiaryCustomerType` | `string` | Wajib |
-| `kodepos` | `string` | Opsional |
-| `receiverPhone` | `string` | Opsional |
-| `senderCustomerResidence` | `string` | Opsional |
-| `senderCustomerType` | `string` | Opsional |
-| `senderPhone` | `string` | Opsional |
-| `originatorInfos` | `[]TransferOriginatorInfo` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `amount` | `snap.Money` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryAccountName` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryAddress` | `string` | <span class="badge-optional">Opsional</span> |
+| `beneficiaryBankCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryBankName` | `string` | <span class="badge-optional">Opsional</span> |
+| `beneficiaryEmail` | `string` | <span class="badge-optional">Opsional</span> |
+| `currency` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerReference` | `string` | <span class="badge-optional">Opsional</span> |
+| `feeType` | `string` | <span class="badge-optional">Opsional</span> |
+| `remark` | `string` | <span class="badge-optional">Opsional</span> |
+| `sourceAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `transactionDate` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryCustomerResidence` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryCustomerType` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `kodepos` | `string` | <span class="badge-optional">Opsional</span> |
+| `receiverPhone` | `string` | <span class="badge-optional">Opsional</span> |
+| `senderCustomerResidence` | `string` | <span class="badge-optional">Opsional</span> |
+| `senderCustomerType` | `string` | <span class="badge-optional">Opsional</span> |
+| `senderPhone` | `string` | <span class="badge-optional">Opsional</span> |
+| `originatorInfos` | `[]TransferOriginatorInfo` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="TransferOriginatorInfo fields" >}}
 Bentuk entri "originatorInfos[]" yang dipakai bersama di seluruh kelompok Trigger Transfer. Ketiga field bertipe String.
 
 | Field | Type | Presence |
 |---|---|---|
-| `originatorCustomerNo` | `string` | Wajib |
-| `originatorCustomerName` | `string` | Wajib |
-| `originatorBankCode` | `string` | Wajib |
+| `originatorCustomerNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originatorCustomerName` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originatorBankCode` | `string` | <span class="badge-mandatory">Wajib</span> |
 {{< /details >}}
 
 **Response &mdash; `SKNBITransferResponse`**
@@ -486,31 +486,31 @@ Bentuknya sama dengan `RTGSTransferResponse`.
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `referenceNo` | `string` | Opsional |
-| `partnerReferenceNo` | `string` | Opsional |
-| `amount` | `*snap.Money` | Opsional |
-| `beneficiaryAccountNo` | `string` | Opsional |
-| `currency` | `string` | Opsional |
-| `customerReference` | `string` | Opsional |
-| `sourceAccountNo` | `string` | Opsional |
-| `transactionDate` | `string` | Opsional |
-| `traceNo` | `string` | Opsional |
-| `transactionStatus` | `string` | Opsional |
-| `transactionStatusDesc` | `string` | Opsional |
-| `beneficiaryAccountType` | `string` | Opsional |
-| `originatorInfos` | `[]TransferOriginatorInfo` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `currency` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerReference` | `string` | <span class="badge-optional">Opsional</span> |
+| `sourceAccountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `traceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `transactionStatus` | `string` | <span class="badge-optional">Opsional</span> |
+| `transactionStatusDesc` | `string` | <span class="badge-optional">Opsional</span> |
+| `beneficiaryAccountType` | `string` | <span class="badge-optional">Opsional</span> |
+| `originatorInfos` | `[]TransferOriginatorInfo` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="TransferOriginatorInfo fields" >}}
 Bentuk entri "originatorInfos[]" yang dipakai bersama di seluruh kelompok Trigger Transfer. Ketiga field bertipe String.
 
 | Field | Type | Presence |
 |---|---|---|
-| `originatorCustomerNo` | `string` | Wajib |
-| `originatorCustomerName` | `string` | Wajib |
-| `originatorBankCode` | `string` | Wajib |
+| `originatorCustomerNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originatorCustomerName` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originatorBankCode` | `string` | <span class="badge-mandatory">Wajib</span> |
 {{< /details >}}
 
 
@@ -528,17 +528,17 @@ Body callback settlement untuk API SKNBI - Notification (Service Code 75, path .
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalPartnerReferenceNo` | `string` | Opsional |
-| `originalReferenceNo` | `string` | Opsional |
-| `originalExternalId` | `string` | Opsional |
-| `latestTransactionStatus` | `string` | Wajib |
-| `amount` | `*snap.Money` | Opsional |
-| `beneficiaryAccountName` | `string` | Wajib |
-| `beneficiaryAccountNo` | `string` | Wajib |
-| `beneficiaryBankCode` | `string` | Wajib |
-| `sourceAccountNo` | `string` | Wajib |
-| `transactionDate` | `string` | Wajib |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Opsional</span> |
+| `latestTransactionStatus` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `beneficiaryAccountName` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryBankCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `sourceAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `transactionDate` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Handler Anda membalas dengan &mdash; `SKNBINotificationResponse`**
 
@@ -546,5 +546,5 @@ Bentuknya sama dengan `RTGSNotificationResponse`: hanya berisi envelope, tidak a
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |

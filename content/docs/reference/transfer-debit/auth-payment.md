@@ -37,16 +37,16 @@ AuthPaymentRequest is the request body for Auth Payment. It places a hold on fun
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Mandatory |
-| `merchantId` | `string` | Mandatory |
-| `subMerchantId` | `string` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `feeType` | `string` | Optional |
-| `mcc` | `string` | Optional |
-| `productCode` | `string` | Optional |
-| `title` | `string` | Mandatory |
-| `items` | `json.RawMessage` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `merchantId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `feeType` | `string` | <span class="badge-optional">Optional</span> |
+| `mcc` | `string` | <span class="badge-optional">Optional</span> |
+| `productCode` | `string` | <span class="badge-optional">Optional</span> |
+| `title` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `items` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `AuthPaymentResponse`**
 
@@ -54,13 +54,13 @@ AuthPaymentResponse is the response body for Auth Payment. `referenceNo` is Cond
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `referenceNo` | `string` | Optional |
-| `partnerReferenceNo` | `string` | Optional |
-| `amount` | `snap.Money` | Mandatory |
-| `paidTime` | `string` | Mandatory |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `snap.Money` | <span class="badge-mandatory">Mandatory</span> |
+| `paidTime` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -79,12 +79,12 @@ AuthPaymentQueryRequest is the request body for Payment Query. No field is Manda
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `originalReferenceNo` | `string` | Optional |
-| `merchantId` | `string` | Optional |
-| `subMerchantId` | `string` | Optional |
-| `externalStoreId` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `merchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `AuthPaymentQueryResponse`**
 
@@ -92,15 +92,15 @@ AuthPaymentQueryResponse is the response body for Payment Query. `paidTime` and 
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `originalReferenceNo` | `string` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `paidTime` | `string` | Mandatory |
-| `latestTransactionStatus` | `string` | Mandatory |
-| `transactionStatusDesc` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `paidTime` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `latestTransactionStatus` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionStatusDesc` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -123,15 +123,15 @@ AuthCaptureRequest is the request body for Capture. It charges some or all of an
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalReferenceNo` | `string` | Mandatory |
-| `originalPartnerReferenceNo` | `string` | Mandatory |
-| `merchantId` | `string` | Mandatory |
-| `subMerchantId` | `string` | Optional |
-| `partnerCaptureNo` | `string` | Mandatory |
-| `captureAmount` | `*snap.Money` | Optional |
-| `title` | `string` | Mandatory |
-| `lastCapture` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `originalReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `merchantId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerCaptureNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `captureAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `title` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `lastCapture` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `AuthCaptureResponse`**
 
@@ -139,15 +139,15 @@ AuthCaptureResponse is the response body for Capture. `captureNo` and `captureTi
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `originalReferenceNo` | `string` | Optional |
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `partnerCaptureNo` | `string` | Optional |
-| `captureNo` | `string` | Optional |
-| `captureAmount` | `snap.Money` | Mandatory |
-| `captureTime` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerCaptureNo` | `string` | <span class="badge-optional">Optional</span> |
+| `captureNo` | `string` | <span class="badge-optional">Optional</span> |
+| `captureAmount` | `snap.Money` | <span class="badge-mandatory">Mandatory</span> |
+| `captureTime` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -166,13 +166,13 @@ AuthCaptureQueryRequest is the request body for Capture Query (Service Code 66).
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalReferenceNo` | `string` | Mandatory |
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `merchantId` | `string` | Mandatory |
-| `subMerchantId` | `string` | Optional |
-| `captureNo` | `string` | Optional |
-| `partnerCaptureNo` | `string` | Mandatory |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `originalReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `merchantId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `captureNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerCaptureNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `AuthCaptureQueryResponse`**
 
@@ -180,16 +180,16 @@ AuthCaptureQueryResponse is the response body for Capture Query. `captureAmount`
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `originalReferenceNo` | `string` | Optional |
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `captureNo` | `string` | Optional |
-| `captureAmount` | `snap.Money` | Mandatory |
-| `captureTime` | `string` | Optional |
-| `latestCaptureStatus` | `string` | Optional |
-| `partnerCaptureNo` | `string` | Mandatory |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `captureNo` | `string` | <span class="badge-optional">Optional</span> |
+| `captureAmount` | `snap.Money` | <span class="badge-mandatory">Mandatory</span> |
+| `captureTime` | `string` | <span class="badge-optional">Optional</span> |
+| `latestCaptureStatus` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerCaptureNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -212,15 +212,15 @@ AuthVoidRequest is the request body for Void. It releases funds a hold from Auth
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalReferenceNo` | `string` | Mandatory |
-| `originalPartnerReferenceNo` | `string` | Mandatory |
-| `merchantId` | `string` | Mandatory |
-| `subMerchantId` | `string` | Optional |
-| `voidAmount` | `*snap.Money` | Optional |
-| `partnerVoidNo` | `string` | Mandatory |
-| `voidRemainingAmount` | `string` | Optional |
-| `reason` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `originalReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `merchantId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `voidAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `partnerVoidNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `voidRemainingAmount` | `string` | <span class="badge-optional">Optional</span> |
+| `reason` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `AuthVoidResponse`**
 
@@ -228,15 +228,15 @@ AuthVoidResponse is the response body for Void. `voidNo` and `voidTime` are Cond
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `originalReferenceNo` | `string` | Optional |
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `voidNo` | `string` | Optional |
-| `partnerVoidNo` | `string` | Mandatory |
-| `voidAmount` | `snap.Money` | Mandatory |
-| `voidTime` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `voidNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerVoidNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `voidAmount` | `snap.Money` | <span class="badge-mandatory">Mandatory</span> |
+| `voidTime` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -255,13 +255,13 @@ AuthVoidQueryRequest is the request body for Void Query. `originalReferenceNo`, 
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalReferenceNo` | `string` | Mandatory |
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `merchantId` | `string` | Mandatory |
-| `subMerchantId` | `string` | Optional |
-| `voidNo` | `string` | Optional |
-| `partnerVoidNo` | `string` | Mandatory |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `originalReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `merchantId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `voidNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerVoidNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `AuthVoidQueryResponse`**
 
@@ -269,16 +269,16 @@ AuthVoidQueryResponse is the response body for Void Query. `voidAmount` is Manda
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `originalReferenceNo` | `string` | Optional |
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `voidNo` | `string` | Optional |
-| `voidAmount` | `snap.Money` | Mandatory |
-| `voidTime` | `string` | Optional |
-| `latestVoidStatus` | `string` | Optional |
-| `partnerVoidNo` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `voidNo` | `string` | <span class="badge-optional">Optional</span> |
+| `voidAmount` | `snap.Money` | <span class="badge-mandatory">Mandatory</span> |
+| `voidTime` | `string` | <span class="badge-optional">Optional</span> |
+| `latestVoidStatus` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerVoidNo` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -301,16 +301,16 @@ AuthRefundRequest is the request body for Refund. It reverses an amount already 
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalPartnerReferenceNo` | `string` | Mandatory |
-| `originalReferenceNo` | `string` | Optional |
-| `partnerRefundNo` | `string` | Mandatory |
-| `merchantId` | `string` | Optional |
-| `subMerchantId` | `string` | Optional |
-| `originalCaptureNo` | `string` | Optional |
-| `refundAmount` | `*snap.Money` | Optional |
-| `externalStoreId` | `string` | Optional |
-| `reason` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerRefundNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `merchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `originalCaptureNo` | `string` | <span class="badge-optional">Optional</span> |
+| `refundAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Optional</span> |
+| `reason` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `AuthRefundResponse`**
 
@@ -320,13 +320,13 @@ AuthRefundResponse is the response body for Refund. `refundNo` and `refundTime` 
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `originalCaptureNo` | `string` | Optional |
-| `originalReferenceNo` | `string` | Optional |
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `partnerRefundNo` | `string` | Optional |
-| `refundNo` | `string` | Mandatory |
-| `refundAmount` | `*snap.Money` | Optional |
-| `refundTime` | `string` | Mandatory |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalCaptureNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerRefundNo` | `string` | <span class="badge-optional">Optional</span> |
+| `refundNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `refundAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `refundTime` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |

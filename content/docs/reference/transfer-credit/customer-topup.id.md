@@ -31,10 +31,10 @@ func AccountInquiryCustomerTopUp(ctx context.Context, t *snap.Transport, hb snap
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Opsional |
-| `customerNumber` | `string` | Opsional |
-| `amount` | `snap.Money` | Wajib |
-| `transactionDate` | `string` | Opsional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerNumber` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `snap.Money` | <span class="badge-mandatory">Wajib</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `AccountInquiryCustomerTopUpResponse`**
 
@@ -42,19 +42,19 @@ func AccountInquiryCustomerTopUp(ctx context.Context, t *snap.Transport, hb snap
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `referenceNo` | `string` | Opsional |
-| `partnerReferenceNo` | `string` | Opsional |
-| `sessionId` | `string` | Opsional |
-| `customerNumber` | `string` | Opsional |
-| `customerName` | `string` | Wajib |
-| `customerMonthlyInLimit` | `json.RawMessage` | Opsional |
-| `minAmount` | `*snap.Money` | Opsional |
-| `maxAmount` | `*snap.Money` | Opsional |
-| `amount` | `*snap.Money` | Opsional |
-| `feeAmount` | `*snap.Money` | Opsional |
-| `feeType` | `string` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `sessionId` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerNumber` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerName` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `customerMonthlyInLimit` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `minAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `maxAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `feeAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `feeType` | `string` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -75,15 +75,15 @@ func CustomerTopUp(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Wajib |
-| `customerNumber` | `string` | Opsional |
-| `customerName` | `string` | Opsional |
-| `amount` | `*snap.Money` | Opsional |
-| `feeAmount` | `*snap.Money` | Opsional |
-| `transactionDate` | `string` | Opsional |
-| `sessionId` | `string` | Opsional |
-| `categoryId` | `json.RawMessage` | Opsional |
-| `notes` | `string` | Opsional |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `customerNumber` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerName` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `feeAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `sessionId` | `string` | <span class="badge-optional">Opsional</span> |
+| `categoryId` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `notes` | `string` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `CustomerTopUpResponse`**
 
@@ -91,14 +91,14 @@ func CustomerTopUp(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `referenceNo` | `string` | Opsional |
-| `partnerReferenceNo` | `string` | Opsional |
-| `sessionId` | `string` | Opsional |
-| `customerNumber` | `string` | Opsional |
-| `amount` | `*snap.Money` | Opsional |
-| `referenceNumber` | `string` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `sessionId` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerNumber` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `referenceNumber` | `string` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -117,13 +117,13 @@ Bentuknya sama dengan [`TransactionStatusInquiryBankRequest`](/id/docs/reference
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalPartnerReferenceNo` | `string` | Opsional |
-| `originalReferenceNo` | `string` | Opsional |
-| `originalExternalId` | `string` | Opsional |
-| `serviceCode` | `string` | Wajib |
-| `transactionDate` | `string` | Opsional |
-| `amount` | `*snap.Money` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Opsional</span> |
+| `serviceCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `CustomerTopUpInquiryStatusResponse`**
 
@@ -131,20 +131,20 @@ Bentuknya sama dengan `TransactionStatusInquiryBankResponse`, hanya beda nama ti
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `originalPartnerReferenceNo` | `string` | Opsional |
-| `originalReferenceNo` | `string` | Opsional |
-| `originalExternalId` | `string` | Opsional |
-| `serviceCode` | `string` | Opsional |
-| `transactionDate` | `string` | Opsional |
-| `amount` | `*snap.Money` | Opsional |
-| `beneficiaryAccountNo` | `string` | Wajib |
-| `beneficiaryBankCode` | `string` | Opsional |
-| `previousResponseCode` | `string` | Opsional |
-| `referenceNumber` | `string` | Wajib |
-| `sourceAccountNo` | `string` | Wajib |
-| `transactionId` | `string` | Opsional |
-| `latestTransactionStatus` | `string` | Wajib |
-| `transactionStatusDesc` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Opsional</span> |
+| `serviceCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryBankCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `previousResponseCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `referenceNumber` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `sourceAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `transactionId` | `string` | <span class="badge-optional">Opsional</span> |
+| `latestTransactionStatus` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `transactionStatusDesc` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |

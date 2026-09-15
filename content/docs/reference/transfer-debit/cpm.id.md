@@ -35,12 +35,12 @@ CPMGenerateQRRequest adalah request body untuk Generate QR CPM. `partnerTrxDate`
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Opsional |
-| `userAccessToken` | `string` | Opsional |
-| `merchantId` | `string` | Opsional |
-| `subMerchantId` | `string` | Opsional |
-| `partnerTrxDate` | `string` | Wajib |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `userAccessToken` | `string` | <span class="badge-optional">Opsional</span> |
+| `merchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerTrxDate` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `CPMGenerateQRResponse`**
 
@@ -48,14 +48,14 @@ CPMGenerateQRResponse adalah response body untuk Generate QR CPM. `expiryTime` a
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `referenceNo` | `string` | Opsional |
-| `partnerReferenceNo` | `string` | Opsional |
-| `qrContent` | `string` | Opsional |
-| `qrUrl` | `string` | Opsional |
-| `expiryTime` | `string` | Wajib |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `qrContent` | `string` | <span class="badge-optional">Opsional</span> |
+| `qrUrl` | `string` | <span class="badge-optional">Opsional</span> |
+| `expiryTime` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -78,32 +78,32 @@ CPMPaymentRequest adalah request body untuk CPM Payment. `partnerReferenceNo`, `
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Wajib |
-| `qrContent` | `string` | Wajib |
-| `amount` | `*snap.Money` | Opsional |
-| `feeAmount` | `*snap.Money` | Opsional |
-| `merchantId` | `string` | Wajib |
-| `subMerchantId` | `string` | Opsional |
-| `title` | `string` | Opsional |
-| `expiryTime` | `string` | Opsional |
-| `items` | `json.RawMessage` | Opsional |
-| `externalStoreId` | `string` | Opsional |
-| `merchantName` | `string` | Opsional |
-| `merchantLocation` | `string` | Opsional |
-| `acquirerName` | `string` | Opsional |
-| `terminalId` | `string` | Opsional |
-| `scannerInfo` | `*CPMPaymentScannerInfo` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `qrContent` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `feeAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `merchantId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `title` | `string` | <span class="badge-optional">Opsional</span> |
+| `expiryTime` | `string` | <span class="badge-optional">Opsional</span> |
+| `items` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Opsional</span> |
+| `merchantName` | `string` | <span class="badge-optional">Opsional</span> |
+| `merchantLocation` | `string` | <span class="badge-optional">Opsional</span> |
+| `acquirerName` | `string` | <span class="badge-optional">Opsional</span> |
+| `terminalId` | `string` | <span class="badge-optional">Opsional</span> |
+| `scannerInfo` | `*CPMPaymentScannerInfo` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="CPMPaymentScannerInfo fields" >}}
 CPMPaymentScannerInfo adalah objek opsional `scannerInfo` yang mendeskripsikan perangkat yang men-scan QR. Keempat field-nya Opsional.
 
 | Field | Type | Presence |
 |---|---|---|
-| `deviceId` | `string` | Opsional |
-| `deviceVersion` | `string` | Opsional |
-| `deviceModel` | `string` | Opsional |
-| `deviceIp` | `string` | Opsional |
+| `deviceId` | `string` | <span class="badge-optional">Opsional</span> |
+| `deviceVersion` | `string` | <span class="badge-optional">Opsional</span> |
+| `deviceModel` | `string` | <span class="badge-optional">Opsional</span> |
+| `deviceIp` | `string` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 **Response &mdash; `CPMPaymentResponse`**
@@ -112,12 +112,12 @@ CPMPaymentResponse adalah response body untuk CPM Payment. `referenceNo` bersifa
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `referenceNo` | `string` | Opsional |
-| `partnerReferenceNo` | `string` | Opsional |
-| `transactionDate` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -136,21 +136,21 @@ CPMPaymentNotificationRequest adalah request body untuk Payment Notification (Se
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalPartnerReferenceNo` | `string` | Opsional |
-| `originalReferenceNo` | `string` | Opsional |
-| `merchantId` | `string` | Wajib |
-| `subMerchantId` | `string` | Opsional |
-| `externalStoreId` | `string` | Opsional |
-| `amount` | `*snap.Money` | Opsional |
-| `latestTransactionStatus` | `string` | Wajib |
-| `transactionStatusDesc` | `string` | Opsional |
-| `customerNumber` | `string` | Opsional |
-| `accountType` | `string` | Opsional |
-| `destinationNumber` | `string` | Opsional |
-| `destinationAccountName` | `string` | Opsional |
-| `sessionId` | `string` | Opsional |
-| `bankCode` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `merchantId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `latestTransactionStatus` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `transactionStatusDesc` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerNumber` | `string` | <span class="badge-optional">Opsional</span> |
+| `accountType` | `string` | <span class="badge-optional">Opsional</span> |
+| `destinationNumber` | `string` | <span class="badge-optional">Opsional</span> |
+| `destinationAccountName` | `string` | <span class="badge-optional">Opsional</span> |
+| `sessionId` | `string` | <span class="badge-optional">Opsional</span> |
+| `bankCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Handler Anda membalas dengan &mdash; `CPMPaymentNotificationResponse`**
 
@@ -158,8 +158,8 @@ CPMPaymentNotificationResponse hanya berisi envelope — cuma `responseCode` dan
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
 
 
 ---
@@ -178,13 +178,13 @@ CPMQueryPaymentRequest adalah request body untuk Query Payment. Tidak ada field 
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalReferenceNo` | `string` | Opsional |
-| `originalPartnerReferenceNo` | `string` | Opsional |
-| `originalExternalId` | `string` | Opsional |
-| `merchantId` | `string` | Opsional |
-| `subMerchantId` | `string` | Opsional |
-| `externalStoreId` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Opsional</span> |
+| `merchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `CPMQueryPaymentResponse`**
 
@@ -192,16 +192,16 @@ CPMQueryPaymentResponse adalah response body untuk Query Payment. `latestTransac
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `originalReferenceNo` | `string` | Opsional |
-| `originalPartnerReferenceNo` | `string` | Opsional |
-| `originalExternalId` | `string` | Opsional |
-| `title` | `string` | Opsional |
-| `latestTransactionStatus` | `string` | Wajib |
-| `transactionStatusDesc` | `string` | Opsional |
-| `paidTime` | `string` | Wajib |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Opsional</span> |
+| `title` | `string` | <span class="badge-optional">Opsional</span> |
+| `latestTransactionStatus` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `transactionStatusDesc` | `string` | <span class="badge-optional">Opsional</span> |
+| `paidTime` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -222,15 +222,15 @@ CPMCancelPaymentRequest adalah request body untuk Cancel Payment. `originalPartn
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalPartnerReferenceNo` | `string` | Wajib |
-| `originalReferenceNo` | `string` | Opsional |
-| `originalExternalId` | `string` | Opsional |
-| `merchantId` | `string` | Opsional |
-| `subMerchantId` | `string` | Opsional |
-| `externalStoreId` | `string` | Opsional |
-| `amount` | `*snap.Money` | Opsional |
-| `reason` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Opsional</span> |
+| `merchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `reason` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `CPMCancelPaymentResponse`**
 
@@ -238,14 +238,14 @@ CPMCancelPaymentResponse adalah response body untuk Cancel Payment. `originalRef
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `originalPartnerReferenceNo` | `string` | Opsional |
-| `originalReferenceNo` | `string` | Opsional |
-| `originalExternalId` | `string` | Opsional |
-| `cancelTime` | `string` | Opsional |
-| `transactionDate` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Opsional</span> |
+| `cancelTime` | `string` | <span class="badge-optional">Opsional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -266,16 +266,16 @@ CPMRefundPaymentRequest adalah request body untuk Refund Payment. `originalPartn
 
 | Field | Type | Presence |
 |---|---|---|
-| `merchantId` | `string` | Opsional |
-| `subMerchantId` | `string` | Opsional |
-| `externalStoreId` | `string` | Opsional |
-| `originalPartnerReferenceNo` | `string` | Wajib |
-| `originalReferenceNo` | `string` | Opsional |
-| `originalExternalId` | `string` | Opsional |
-| `partnerRefundNo` | `string` | Wajib |
-| `refundAmount` | `*snap.Money` | Opsional |
-| `reason` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `merchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerRefundNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `refundAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `reason` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `CPMRefundPaymentResponse`**
 
@@ -283,13 +283,13 @@ CPMRefundPaymentResponse adalah response body untuk Refund Payment. `refundNo` d
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `originalPartnerReferenceNo` | `string` | Opsional |
-| `originalReferenceNo` | `string` | Opsional |
-| `originalExternalId` | `string` | Opsional |
-| `refundNo` | `string` | Wajib |
-| `partnerRefundNo` | `string` | Opsional |
-| `refundAmount` | `*snap.Money` | Opsional |
-| `refundTime` | `string` | Wajib |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Opsional</span> |
+| `refundNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `partnerRefundNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `refundAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `refundTime` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |

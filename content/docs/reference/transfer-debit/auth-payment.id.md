@@ -37,16 +37,16 @@ AuthPaymentRequest adalah request body untuk Auth Payment. Fungsi ini menahan da
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Wajib |
-| `merchantId` | `string` | Wajib |
-| `subMerchantId` | `string` | Opsional |
-| `amount` | `*snap.Money` | Opsional |
-| `feeType` | `string` | Opsional |
-| `mcc` | `string` | Opsional |
-| `productCode` | `string` | Opsional |
-| `title` | `string` | Wajib |
-| `items` | `json.RawMessage` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `merchantId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `feeType` | `string` | <span class="badge-optional">Opsional</span> |
+| `mcc` | `string` | <span class="badge-optional">Opsional</span> |
+| `productCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `title` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `items` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `AuthPaymentResponse`**
 
@@ -54,13 +54,13 @@ AuthPaymentResponse adalah response body untuk Auth Payment. `referenceNo` bersi
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `referenceNo` | `string` | Opsional |
-| `partnerReferenceNo` | `string` | Opsional |
-| `amount` | `snap.Money` | Wajib |
-| `paidTime` | `string` | Wajib |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `snap.Money` | <span class="badge-mandatory">Wajib</span> |
+| `paidTime` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -79,12 +79,12 @@ AuthPaymentQueryRequest adalah request body untuk Payment Query. Tidak ada field
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalPartnerReferenceNo` | `string` | Opsional |
-| `originalReferenceNo` | `string` | Opsional |
-| `merchantId` | `string` | Opsional |
-| `subMerchantId` | `string` | Opsional |
-| `externalStoreId` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `merchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `AuthPaymentQueryResponse`**
 
@@ -92,15 +92,15 @@ AuthPaymentQueryResponse adalah response body untuk Payment Query. `paidTime` da
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `originalPartnerReferenceNo` | `string` | Opsional |
-| `originalReferenceNo` | `string` | Opsional |
-| `amount` | `*snap.Money` | Opsional |
-| `paidTime` | `string` | Wajib |
-| `latestTransactionStatus` | `string` | Wajib |
-| `transactionStatusDesc` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `paidTime` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `latestTransactionStatus` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `transactionStatusDesc` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -123,15 +123,15 @@ AuthCaptureRequest adalah request body untuk Capture. Fungsi ini menagih sebagia
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalReferenceNo` | `string` | Wajib |
-| `originalPartnerReferenceNo` | `string` | Wajib |
-| `merchantId` | `string` | Wajib |
-| `subMerchantId` | `string` | Opsional |
-| `partnerCaptureNo` | `string` | Wajib |
-| `captureAmount` | `*snap.Money` | Opsional |
-| `title` | `string` | Wajib |
-| `lastCapture` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `originalReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `merchantId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerCaptureNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `captureAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `title` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `lastCapture` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `AuthCaptureResponse`**
 
@@ -139,15 +139,15 @@ AuthCaptureResponse adalah response body untuk Capture. `captureNo` dan `capture
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `originalReferenceNo` | `string` | Opsional |
-| `originalPartnerReferenceNo` | `string` | Opsional |
-| `partnerCaptureNo` | `string` | Opsional |
-| `captureNo` | `string` | Opsional |
-| `captureAmount` | `snap.Money` | Wajib |
-| `captureTime` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerCaptureNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `captureNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `captureAmount` | `snap.Money` | <span class="badge-mandatory">Wajib</span> |
+| `captureTime` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -166,13 +166,13 @@ AuthCaptureQueryRequest adalah request body untuk Capture Query (Service Code 66
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalReferenceNo` | `string` | Wajib |
-| `originalPartnerReferenceNo` | `string` | Opsional |
-| `merchantId` | `string` | Wajib |
-| `subMerchantId` | `string` | Opsional |
-| `captureNo` | `string` | Opsional |
-| `partnerCaptureNo` | `string` | Wajib |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `originalReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `merchantId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `captureNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerCaptureNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `AuthCaptureQueryResponse`**
 
@@ -180,16 +180,16 @@ AuthCaptureQueryResponse adalah response body untuk Capture Query. `captureAmoun
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `originalReferenceNo` | `string` | Opsional |
-| `originalPartnerReferenceNo` | `string` | Opsional |
-| `captureNo` | `string` | Opsional |
-| `captureAmount` | `snap.Money` | Wajib |
-| `captureTime` | `string` | Opsional |
-| `latestCaptureStatus` | `string` | Opsional |
-| `partnerCaptureNo` | `string` | Wajib |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `captureNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `captureAmount` | `snap.Money` | <span class="badge-mandatory">Wajib</span> |
+| `captureTime` | `string` | <span class="badge-optional">Opsional</span> |
+| `latestCaptureStatus` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerCaptureNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -212,15 +212,15 @@ AuthVoidRequest adalah request body untuk Void. Fungsi ini melepas dana hasil ho
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalReferenceNo` | `string` | Wajib |
-| `originalPartnerReferenceNo` | `string` | Wajib |
-| `merchantId` | `string` | Wajib |
-| `subMerchantId` | `string` | Opsional |
-| `voidAmount` | `*snap.Money` | Opsional |
-| `partnerVoidNo` | `string` | Wajib |
-| `voidRemainingAmount` | `string` | Opsional |
-| `reason` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `originalReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `merchantId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `voidAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `partnerVoidNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `voidRemainingAmount` | `string` | <span class="badge-optional">Opsional</span> |
+| `reason` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `AuthVoidResponse`**
 
@@ -228,15 +228,15 @@ AuthVoidResponse adalah response body untuk Void. `voidNo` dan `voidTime` bersif
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `originalReferenceNo` | `string` | Opsional |
-| `originalPartnerReferenceNo` | `string` | Opsional |
-| `voidNo` | `string` | Opsional |
-| `partnerVoidNo` | `string` | Wajib |
-| `voidAmount` | `snap.Money` | Wajib |
-| `voidTime` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `voidNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerVoidNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `voidAmount` | `snap.Money` | <span class="badge-mandatory">Wajib</span> |
+| `voidTime` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -255,13 +255,13 @@ AuthVoidQueryRequest adalah request body untuk Void Query. `originalReferenceNo`
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalReferenceNo` | `string` | Wajib |
-| `originalPartnerReferenceNo` | `string` | Opsional |
-| `merchantId` | `string` | Wajib |
-| `subMerchantId` | `string` | Opsional |
-| `voidNo` | `string` | Opsional |
-| `partnerVoidNo` | `string` | Wajib |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `originalReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `merchantId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `voidNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerVoidNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `AuthVoidQueryResponse`**
 
@@ -269,16 +269,16 @@ AuthVoidQueryResponse adalah response body untuk Void Query. `voidAmount` bersif
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `originalReferenceNo` | `string` | Opsional |
-| `originalPartnerReferenceNo` | `string` | Opsional |
-| `voidNo` | `string` | Opsional |
-| `voidAmount` | `snap.Money` | Wajib |
-| `voidTime` | `string` | Opsional |
-| `latestVoidStatus` | `string` | Opsional |
-| `partnerVoidNo` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `voidNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `voidAmount` | `snap.Money` | <span class="badge-mandatory">Wajib</span> |
+| `voidTime` | `string` | <span class="badge-optional">Opsional</span> |
+| `latestVoidStatus` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerVoidNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -301,16 +301,16 @@ AuthRefundRequest adalah request body untuk Refund. Fungsi ini membalikkan dana 
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalPartnerReferenceNo` | `string` | Wajib |
-| `originalReferenceNo` | `string` | Opsional |
-| `partnerRefundNo` | `string` | Wajib |
-| `merchantId` | `string` | Opsional |
-| `subMerchantId` | `string` | Opsional |
-| `originalCaptureNo` | `string` | Opsional |
-| `refundAmount` | `*snap.Money` | Opsional |
-| `externalStoreId` | `string` | Opsional |
-| `reason` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerRefundNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `merchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalCaptureNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `refundAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Opsional</span> |
+| `reason` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `AuthRefundResponse`**
 
@@ -320,13 +320,13 @@ AuthRefundResponse adalah response body untuk Refund. `refundNo` dan `refundTime
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `originalCaptureNo` | `string` | Opsional |
-| `originalReferenceNo` | `string` | Opsional |
-| `originalPartnerReferenceNo` | `string` | Opsional |
-| `partnerRefundNo` | `string` | Opsional |
-| `refundNo` | `string` | Wajib |
-| `refundAmount` | `*snap.Money` | Opsional |
-| `refundTime` | `string` | Wajib |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originalCaptureNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerRefundNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `refundNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `refundAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `refundTime` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |

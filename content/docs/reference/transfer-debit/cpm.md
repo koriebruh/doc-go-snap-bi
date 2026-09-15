@@ -35,12 +35,12 @@ CPMGenerateQRRequest is the request body for Generate QR CPM. `partnerTrxDate` i
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Optional |
-| `userAccessToken` | `string` | Optional |
-| `merchantId` | `string` | Optional |
-| `subMerchantId` | `string` | Optional |
-| `partnerTrxDate` | `string` | Mandatory |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `userAccessToken` | `string` | <span class="badge-optional">Optional</span> |
+| `merchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerTrxDate` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `CPMGenerateQRResponse`**
 
@@ -48,14 +48,14 @@ CPMGenerateQRResponse is the response body for Generate QR CPM. `expiryTime` is 
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `referenceNo` | `string` | Optional |
-| `partnerReferenceNo` | `string` | Optional |
-| `qrContent` | `string` | Optional |
-| `qrUrl` | `string` | Optional |
-| `expiryTime` | `string` | Mandatory |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `qrContent` | `string` | <span class="badge-optional">Optional</span> |
+| `qrUrl` | `string` | <span class="badge-optional">Optional</span> |
+| `expiryTime` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -78,32 +78,32 @@ CPMPaymentRequest is the request body for CPM Payment. `partnerReferenceNo`, `qr
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Mandatory |
-| `qrContent` | `string` | Mandatory |
-| `amount` | `*snap.Money` | Optional |
-| `feeAmount` | `*snap.Money` | Optional |
-| `merchantId` | `string` | Mandatory |
-| `subMerchantId` | `string` | Optional |
-| `title` | `string` | Optional |
-| `expiryTime` | `string` | Optional |
-| `items` | `json.RawMessage` | Optional |
-| `externalStoreId` | `string` | Optional |
-| `merchantName` | `string` | Optional |
-| `merchantLocation` | `string` | Optional |
-| `acquirerName` | `string` | Optional |
-| `terminalId` | `string` | Optional |
-| `scannerInfo` | `*CPMPaymentScannerInfo` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `qrContent` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `feeAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `merchantId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `title` | `string` | <span class="badge-optional">Optional</span> |
+| `expiryTime` | `string` | <span class="badge-optional">Optional</span> |
+| `items` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Optional</span> |
+| `merchantName` | `string` | <span class="badge-optional">Optional</span> |
+| `merchantLocation` | `string` | <span class="badge-optional">Optional</span> |
+| `acquirerName` | `string` | <span class="badge-optional">Optional</span> |
+| `terminalId` | `string` | <span class="badge-optional">Optional</span> |
+| `scannerInfo` | `*CPMPaymentScannerInfo` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 {{< details title="CPMPaymentScannerInfo fields" >}}
 CPMPaymentScannerInfo is the optional `scannerInfo` object describing the device that scanned the QR. All four fields are Optional.
 
 | Field | Type | Presence |
 |---|---|---|
-| `deviceId` | `string` | Optional |
-| `deviceVersion` | `string` | Optional |
-| `deviceModel` | `string` | Optional |
-| `deviceIp` | `string` | Optional |
+| `deviceId` | `string` | <span class="badge-optional">Optional</span> |
+| `deviceVersion` | `string` | <span class="badge-optional">Optional</span> |
+| `deviceModel` | `string` | <span class="badge-optional">Optional</span> |
+| `deviceIp` | `string` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 **Response &mdash; `CPMPaymentResponse`**
@@ -112,12 +112,12 @@ CPMPaymentResponse is the response body for CPM Payment. `referenceNo` is Condit
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `referenceNo` | `string` | Optional |
-| `partnerReferenceNo` | `string` | Optional |
-| `transactionDate` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -136,21 +136,21 @@ CPMPaymentNotificationRequest is the request body for Payment Notification (Serv
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `originalReferenceNo` | `string` | Optional |
-| `merchantId` | `string` | Mandatory |
-| `subMerchantId` | `string` | Optional |
-| `externalStoreId` | `string` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `latestTransactionStatus` | `string` | Mandatory |
-| `transactionStatusDesc` | `string` | Optional |
-| `customerNumber` | `string` | Optional |
-| `accountType` | `string` | Optional |
-| `destinationNumber` | `string` | Optional |
-| `destinationAccountName` | `string` | Optional |
-| `sessionId` | `string` | Optional |
-| `bankCode` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `merchantId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `latestTransactionStatus` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionStatusDesc` | `string` | <span class="badge-optional">Optional</span> |
+| `customerNumber` | `string` | <span class="badge-optional">Optional</span> |
+| `accountType` | `string` | <span class="badge-optional">Optional</span> |
+| `destinationNumber` | `string` | <span class="badge-optional">Optional</span> |
+| `destinationAccountName` | `string` | <span class="badge-optional">Optional</span> |
+| `sessionId` | `string` | <span class="badge-optional">Optional</span> |
+| `bankCode` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Your handler replies with &mdash; `CPMPaymentNotificationResponse`**
 
@@ -158,8 +158,8 @@ CPMPaymentNotificationResponse is envelope-only — just `responseCode` and `res
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
 
 
 ---
@@ -178,13 +178,13 @@ CPMQueryPaymentRequest is the request body for Query Payment. No field is Mandat
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalReferenceNo` | `string` | Optional |
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `originalExternalId` | `string` | Optional |
-| `merchantId` | `string` | Optional |
-| `subMerchantId` | `string` | Optional |
-| `externalStoreId` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Optional</span> |
+| `merchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `CPMQueryPaymentResponse`**
 
@@ -192,16 +192,16 @@ CPMQueryPaymentResponse is the response body for Query Payment. `latestTransacti
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `originalReferenceNo` | `string` | Optional |
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `originalExternalId` | `string` | Optional |
-| `title` | `string` | Optional |
-| `latestTransactionStatus` | `string` | Mandatory |
-| `transactionStatusDesc` | `string` | Optional |
-| `paidTime` | `string` | Mandatory |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Optional</span> |
+| `title` | `string` | <span class="badge-optional">Optional</span> |
+| `latestTransactionStatus` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionStatusDesc` | `string` | <span class="badge-optional">Optional</span> |
+| `paidTime` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -222,15 +222,15 @@ CPMCancelPaymentRequest is the request body for Cancel Payment. `originalPartner
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalPartnerReferenceNo` | `string` | Mandatory |
-| `originalReferenceNo` | `string` | Optional |
-| `originalExternalId` | `string` | Optional |
-| `merchantId` | `string` | Optional |
-| `subMerchantId` | `string` | Optional |
-| `externalStoreId` | `string` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `reason` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Optional</span> |
+| `merchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `reason` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `CPMCancelPaymentResponse`**
 
@@ -238,14 +238,14 @@ CPMCancelPaymentResponse is the response body for Cancel Payment. `originalRefer
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `originalReferenceNo` | `string` | Optional |
-| `originalExternalId` | `string` | Optional |
-| `cancelTime` | `string` | Optional |
-| `transactionDate` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Optional</span> |
+| `cancelTime` | `string` | <span class="badge-optional">Optional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -266,16 +266,16 @@ CPMRefundPaymentRequest is the request body for Refund Payment. `originalPartner
 
 | Field | Type | Presence |
 |---|---|---|
-| `merchantId` | `string` | Optional |
-| `subMerchantId` | `string` | Optional |
-| `externalStoreId` | `string` | Optional |
-| `originalPartnerReferenceNo` | `string` | Mandatory |
-| `originalReferenceNo` | `string` | Optional |
-| `originalExternalId` | `string` | Optional |
-| `partnerRefundNo` | `string` | Mandatory |
-| `refundAmount` | `*snap.Money` | Optional |
-| `reason` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `merchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Optional</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerRefundNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `refundAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `reason` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `CPMRefundPaymentResponse`**
 
@@ -283,13 +283,13 @@ CPMRefundPaymentResponse is the response body for Refund Payment. `refundNo` and
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `originalReferenceNo` | `string` | Optional |
-| `originalExternalId` | `string` | Optional |
-| `refundNo` | `string` | Mandatory |
-| `partnerRefundNo` | `string` | Optional |
-| `refundAmount` | `*snap.Money` | Optional |
-| `refundTime` | `string` | Mandatory |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Optional</span> |
+| `refundNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `partnerRefundNo` | `string` | <span class="badge-optional">Optional</span> |
+| `refundAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `refundTime` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |

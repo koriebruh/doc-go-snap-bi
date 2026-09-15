@@ -31,9 +31,9 @@ AccountInquiryInternalRequest is the request body for API Internal Account Inqui
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Optional |
-| `beneficiaryAccountNo` | `string` | Mandatory |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `AccountInquiryInternalResponse`**
 
@@ -41,16 +41,16 @@ AccountInquiryInternalResponse is the response body for API Internal Account Inq
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `referenceNo` | `string` | Optional |
-| `partnerReferenceNo` | `string` | Optional |
-| `beneficiaryAccountName` | `string` | Mandatory |
-| `beneficiaryAccountNo` | `string` | Mandatory |
-| `beneficiaryAccountStatus` | `string` | Optional |
-| `beneficiaryAccountType` | `string` | Optional |
-| `currency` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `beneficiaryAccountName` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryAccountStatus` | `string` | <span class="badge-optional">Optional</span> |
+| `beneficiaryAccountType` | `string` | <span class="badge-optional">Optional</span> |
+| `currency` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -69,10 +69,10 @@ AccountInquiryExternalRequest is the request body for API External Account Inqui
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Optional |
-| `beneficiaryAccountNo` | `string` | Mandatory |
-| `beneficiaryBankCode` | `string` | Mandatory |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryBankCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `AccountInquiryExternalResponse`**
 
@@ -80,13 +80,13 @@ AccountInquiryExternalResponse is the response body for API External Account Inq
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `referenceNo` | `string` | Optional |
-| `partnerReferenceNo` | `string` | Optional |
-| `beneficiaryAccountName` | `string` | Mandatory |
-| `beneficiaryAccountNo` | `string` | Mandatory |
-| `beneficiaryBankName` | `string` | Optional |
-| `currency` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `beneficiaryAccountName` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryBankName` | `string` | <span class="badge-optional">Optional</span> |
+| `currency` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 

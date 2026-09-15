@@ -42,6 +42,11 @@ enableInlineShortcodes = true
     weight = 4
     [menu.main.params]
       icon = "github"
+  [[menu.main]]
+    name = "Search"
+    weight = 5
+    [menu.main.params]
+      type = "search"
 
 [params]
   description = "A Go implementation of Bank Indonesia's SNAP payment standard."
@@ -51,19 +56,19 @@ enableInlineShortcodes = true
     displayToggle = true
 
   [params.page]
-    width = "wide"
+    width = "full"
 
   [params.navbar]
     displayTitle = true
     displayLogo = true
-    width = "wide"
+    width = "full"
     [params.navbar.logo]
       path = "images/snap-logo.png"
-      width = 28
-      height = 28
+      width = 40
+      height = 40
 
   [params.footer]
-    width = "wide"
+    width = "full"
     displayCopyright = false
     displayPoweredBy = false
 

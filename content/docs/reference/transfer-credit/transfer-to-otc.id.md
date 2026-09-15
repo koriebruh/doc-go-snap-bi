@@ -36,20 +36,20 @@ func TransferToOTCCreatePayment(ctx context.Context, t *snap.Transport, hb snap.
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Wajib |
-| `customerNumber` | `string` | Wajib |
-| `otp` | `string` | Wajib |
-| `amount` | `snap.Money` | Wajib |
-| `feeType` | `string` | Opsional |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `customerNumber` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `otp` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `amount` | `snap.Money` | <span class="badge-mandatory">Wajib</span> |
+| `feeType` | `string` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `TransferToOTCCreatePaymentResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `referenceNo` | `string` | Opsional |
-| `transactionDate` | `string` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -70,11 +70,11 @@ func TransferToOTCCancelPayment(ctx context.Context, t *snap.Transport, hb snap.
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalReferenceNo` | `string` | Opsional |
-| `originalPartnerReferenceNo` | `string` | Wajib |
-| `originalExternalId` | `string` | Opsional |
-| `customerNumber` | `string` | Wajib |
-| `reason` | `string` | Wajib |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerNumber` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `reason` | `string` | <span class="badge-mandatory">Wajib</span> |
 
 **Response &mdash; `TransferToOTCCancelPaymentResponse`**
 
@@ -82,11 +82,11 @@ func TransferToOTCCancelPayment(ctx context.Context, t *snap.Transport, hb snap.
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `originalReferenceNo` | `string` | Wajib |
-| `cancelTime` | `string` | Opsional |
-| `transactionDate` | `string` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originalReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `cancelTime` | `string` | <span class="badge-optional">Opsional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -105,14 +105,14 @@ Mengikuti bentuk yang sama dengan [`TransactionStatusInquiryBankRequest`](/id/do
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalPartnerReferenceNo` | `string` | Opsional |
-| `originalReferenceNo` | `string` | Opsional |
-| `originalExternalId` | `string` | Opsional |
-| `serviceCode` | `string` | Wajib |
-| `transactionDate` | `string` | Opsional |
-| `customerNumber` | `string` | Wajib |
-| `amount` | `snap.Money` | Wajib |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Opsional</span> |
+| `serviceCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerNumber` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `amount` | `snap.Money` | <span class="badge-mandatory">Wajib</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `TransferToOTCTransferStatusResponse`**
 
@@ -120,20 +120,20 @@ Identik field dengan [`TransactionStatusInquiryBankResponse`](/id/docs/reference
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `originalPartnerReferenceNo` | `string` | Opsional |
-| `originalReferenceNo` | `string` | Opsional |
-| `originalExternalId` | `string` | Opsional |
-| `serviceCode` | `string` | Opsional |
-| `transactionDate` | `string` | Opsional |
-| `amount` | `*snap.Money` | Opsional |
-| `beneficiaryAccountNo` | `string` | Wajib |
-| `beneficiaryBankCode` | `string` | Opsional |
-| `previousResponseCode` | `string` | Opsional |
-| `referenceNumber` | `string` | Wajib |
-| `sourceAccountNo` | `string` | Wajib |
-| `transactionId` | `string` | Opsional |
-| `latestTransactionStatus` | `string` | Wajib |
-| `transactionStatusDesc` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Opsional</span> |
+| `serviceCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryBankCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `previousResponseCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `referenceNumber` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `sourceAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `transactionId` | `string` | <span class="badge-optional">Opsional</span> |
+| `latestTransactionStatus` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `transactionStatusDesc` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |

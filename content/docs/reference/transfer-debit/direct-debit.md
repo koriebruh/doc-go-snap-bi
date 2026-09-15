@@ -33,33 +33,33 @@ DirectDebitPaymentRequest is the request body for Direct Debit Payment. `partner
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Mandatory |
-| `bankCardToken` | `string` | Optional |
-| `chargeToken` | `string` | Optional |
-| `otp` | `string` | Optional |
-| `otpTrxCode` | `string` | Optional |
-| `merchantId` | `string` | Optional |
-| `terminalId` | `string` | Optional |
-| `journeyId` | `string` | Optional |
-| `subMerchantId` | `string` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `urlParams` | `[]DirectDebitPaymentURLParam` | Optional |
-| `externalStoreId` | `string` | Optional |
-| `validUpTo` | `string` | Optional |
-| `pointOfInitiation` | `string` | Optional |
-| `feeType` | `string` | Optional |
-| `disabledPayMethods` | `string` | Optional |
-| `payOptionDetails` | `[]DirectDebitPayOptionDetail` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `bankCardToken` | `string` | <span class="badge-optional">Optional</span> |
+| `chargeToken` | `string` | <span class="badge-optional">Optional</span> |
+| `otp` | `string` | <span class="badge-optional">Optional</span> |
+| `otpTrxCode` | `string` | <span class="badge-optional">Optional</span> |
+| `merchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `terminalId` | `string` | <span class="badge-optional">Optional</span> |
+| `journeyId` | `string` | <span class="badge-optional">Optional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `urlParams` | `[]DirectDebitPaymentURLParam` | <span class="badge-optional">Optional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Optional</span> |
+| `validUpTo` | `string` | <span class="badge-optional">Optional</span> |
+| `pointOfInitiation` | `string` | <span class="badge-optional">Optional</span> |
+| `feeType` | `string` | <span class="badge-optional">Optional</span> |
+| `disabledPayMethods` | `string` | <span class="badge-optional">Optional</span> |
+| `payOptionDetails` | `[]DirectDebitPayOptionDetail` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 {{< details title="DirectDebitPaymentURLParam fields" >}}
 DirectDebitPaymentURLParam is one entry in the request's `urlParams[]` array — a redirect URL and how to use it. `isDeeplink` is a `"Y"`/`"N"` flag.
 
 | Field | Type | Presence |
 |---|---|---|
-| `url` | `string` | Mandatory |
-| `type` | `string` | Mandatory |
-| `isDeeplink` | `string` | Mandatory |
+| `url` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `type` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `isDeeplink` | `string` | <span class="badge-mandatory">Mandatory</span> |
 {{< /details >}}
 
 {{< details title="DirectDebitPayOptionDetail fields" >}}
@@ -67,13 +67,13 @@ DirectDebitPayOptionDetail is one entry in the request's `payOptionDetails[]` ar
 
 | Field | Type | Presence |
 |---|---|---|
-| `payMethod` | `string` | Mandatory |
-| `payOption` | `string` | Mandatory |
-| `transAmount` | `*snap.Money` | Optional |
-| `feeAmount` | `*snap.Money` | Optional |
-| `cardToken` | `string` | Optional |
-| `merchantToken` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `payMethod` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `payOption` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `feeAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `cardToken` | `string` | <span class="badge-optional">Optional</span> |
+| `merchantToken` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 **Response &mdash; `DirectDebitPaymentResponse`**
@@ -89,14 +89,14 @@ tampered or spoofed response could otherwise hand you an attacker-controlled URL
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `referenceNo` | `string` | Optional |
-| `partnerReferenceNo` | `string` | Optional |
-| `approvalCode` | `string` | Optional |
-| `appRedirectUrl` | `string` | Optional |
-| `webRedirectUrl` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `approvalCode` | `string` | <span class="badge-optional">Optional</span> |
+| `appRedirectUrl` | `string` | <span class="badge-optional">Optional</span> |
+| `webRedirectUrl` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -115,18 +115,18 @@ DirectDebitPaymentNotificationRequest is the request body for Direct Debit Payme
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `originalReferenceNo` | `string` | Mandatory |
-| `originalExternalId` | `string` | Optional |
-| `merchantId` | `string` | Optional |
-| `subMerchantId` | `string` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `latestTransactionStatus` | `string` | Mandatory |
-| `transactionStatusDesc` | `string` | Optional |
-| `createdTime` | `string` | Optional |
-| `finishedTime` | `string` | Optional |
-| `externalStoreId` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Optional</span> |
+| `merchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `latestTransactionStatus` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionStatusDesc` | `string` | <span class="badge-optional">Optional</span> |
+| `createdTime` | `string` | <span class="badge-optional">Optional</span> |
+| `finishedTime` | `string` | <span class="badge-optional">Optional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Your handler replies with &mdash; `DirectDebitPaymentNotificationResponse`**
 
@@ -134,9 +134,9 @@ DirectDebitPaymentNotificationResponse has one field beyond the envelope, `appro
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `approvalCode` | `string` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `approvalCode` | `string` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -155,15 +155,15 @@ DirectDebitPaymentStatusRequest is the request body for Direct Debit Payment Sta
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `originalReferenceNo` | `string` | Optional |
-| `originalExternalId` | `string` | Optional |
-| `serviceCode` | `string` | Mandatory |
-| `transactionDate` | `string` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `merchantId` | `string` | Optional |
-| `subMerchantId` | `string` | Optional |
-| `externalStoreId` | `string` | Optional |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Optional</span> |
+| `serviceCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `merchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `DirectDebitPaymentStatusResponse`**
 
@@ -171,37 +171,37 @@ DirectDebitPaymentStatusResponse is the response body for Direct Debit Payment S
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `originalReferenceNo` | `string` | Optional |
-| `originalExternalId` | `string` | Optional |
-| `serviceCode` | `string` | Optional |
-| `transactionDate` | `string` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `approvalCode` | `string` | Optional |
-| `latestTransactionStatus` | `string` | Mandatory |
-| `transactionStatusDesc` | `string` | Optional |
-| `originalResponseCode` | `string` | Optional |
-| `originalResponseMessage` | `string` | Optional |
-| `sessionId` | `string` | Optional |
-| `requestId` | `string` | Optional |
-| `refundHistory` | `[]DirectDebitRefundHistoryItem` | Optional |
-| `transAmount` | `*snap.Money` | Optional |
-| `feeAmount` | `*snap.Money` | Optional |
-| `paidTime` | `string` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Optional</span> |
+| `serviceCode` | `string` | <span class="badge-optional">Optional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `approvalCode` | `string` | <span class="badge-optional">Optional</span> |
+| `latestTransactionStatus` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionStatusDesc` | `string` | <span class="badge-optional">Optional</span> |
+| `originalResponseCode` | `string` | <span class="badge-optional">Optional</span> |
+| `originalResponseMessage` | `string` | <span class="badge-optional">Optional</span> |
+| `sessionId` | `string` | <span class="badge-optional">Optional</span> |
+| `requestId` | `string` | <span class="badge-optional">Optional</span> |
+| `refundHistory` | `[]DirectDebitRefundHistoryItem` | <span class="badge-optional">Optional</span> |
+| `transAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `feeAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `paidTime` | `string` | <span class="badge-optional">Optional</span> |
 
 {{< details title="DirectDebitRefundHistoryItem fields" >}}
 DirectDebitRefundHistoryItem is one entry in the response's `refundHistory[]` array — a past refund against this payment. `refundStatus` is one of `00`, `03`, or `06`.
 
 | Field | Type | Presence |
 |---|---|---|
-| `refundNo` | `string` | Optional |
-| `partnerRefundNo` | `string` | Mandatory |
-| `refundAmount` | `*snap.Money` | Optional |
-| `refundStatus` | `string` | Mandatory |
-| `refundDate` | `string` | Optional |
-| `reason` | `string` | Optional |
+| `refundNo` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerRefundNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `refundAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `refundStatus` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `refundDate` | `string` | <span class="badge-optional">Optional</span> |
+| `reason` | `string` | <span class="badge-optional">Optional</span> |
 {{< /details >}}
 
 
@@ -223,16 +223,16 @@ DirectDebitPaymentCancelRequest is the request body for Direct Debit Payment Can
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalPartnerReferenceNo` | `string` | Mandatory |
-| `originalReferenceNo` | `string` | Optional |
-| `approvalCode` | `string` | Optional |
-| `originalExternalId` | `string` | Optional |
-| `merchantId` | `string` | Optional |
-| `subMerchantId` | `string` | Optional |
-| `reason` | `string` | Optional |
-| `externalStoreId` | `string` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `approvalCode` | `string` | <span class="badge-optional">Optional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Optional</span> |
+| `merchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `reason` | `string` | <span class="badge-optional">Optional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `DirectDebitPaymentCancelResponse`**
 
@@ -240,14 +240,14 @@ DirectDebitPaymentCancelResponse is the response body for Direct Debit Payment C
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `originalReferenceNo` | `string` | Optional |
-| `originalExternalId` | `string` | Optional |
-| `cancelTime` | `string` | Optional |
-| `transactionDate` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Optional</span> |
+| `cancelTime` | `string` | <span class="badge-optional">Optional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -268,16 +268,16 @@ DirectDebitPaymentRefundRequest is the request body for Direct Debit Payment Ref
 
 | Field | Type | Presence |
 |---|---|---|
-| `merchantId` | `string` | Optional |
-| `subMerchantId` | `string` | Optional |
-| `originalPartnerReferenceNo` | `string` | Mandatory |
-| `originalReferenceNo` | `string` | Optional |
-| `originalExternalId` | `string` | Optional |
-| `partnerRefundNo` | `string` | Mandatory |
-| `refundAmount` | `*snap.Money` | Optional |
-| `externalStoreId` | `string` | Optional |
-| `reason` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `merchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerRefundNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `refundAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Optional</span> |
+| `reason` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `DirectDebitPaymentRefundResponse`**
 
@@ -285,14 +285,14 @@ DirectDebitPaymentRefundResponse is the response body for Direct Debit Payment R
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `originalReferenceNo` | `string` | Optional |
-| `originalExternalId` | `string` | Optional |
-| `partnerTrxId` | `string` | Optional |
-| `refundNo` | `string` | Mandatory |
-| `partnerRefundNo` | `string` | Mandatory |
-| `refundAmount` | `*snap.Money` | Optional |
-| `refundTime` | `string` | Mandatory |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerTrxId` | `string` | <span class="badge-optional">Optional</span> |
+| `refundNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `partnerRefundNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `refundAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `refundTime` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |

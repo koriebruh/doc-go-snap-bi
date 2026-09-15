@@ -31,24 +31,24 @@ func AccountInquiryInternal(ctx context.Context, t *snap.Transport, hb snap.Head
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Opsional |
-| `beneficiaryAccountNo` | `string` | Wajib |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `AccountInquiryInternalResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `referenceNo` | `string` | Opsional |
-| `partnerReferenceNo` | `string` | Opsional |
-| `beneficiaryAccountName` | `string` | Wajib |
-| `beneficiaryAccountNo` | `string` | Wajib |
-| `beneficiaryAccountStatus` | `string` | Opsional |
-| `beneficiaryAccountType` | `string` | Opsional |
-| `currency` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `beneficiaryAccountName` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryAccountStatus` | `string` | <span class="badge-optional">Opsional</span> |
+| `beneficiaryAccountType` | `string` | <span class="badge-optional">Opsional</span> |
+| `currency` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -67,21 +67,21 @@ func AccountInquiryExternal(ctx context.Context, t *snap.Transport, hb snap.Head
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Opsional |
-| `beneficiaryAccountNo` | `string` | Wajib |
-| `beneficiaryBankCode` | `string` | Wajib |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryBankCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `AccountInquiryExternalResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `referenceNo` | `string` | Opsional |
-| `partnerReferenceNo` | `string` | Opsional |
-| `beneficiaryAccountName` | `string` | Wajib |
-| `beneficiaryAccountNo` | `string` | Wajib |
-| `beneficiaryBankName` | `string` | Opsional |
-| `currency` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `beneficiaryAccountName` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryBankName` | `string` | <span class="badge-optional">Opsional</span> |
+| `currency` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |

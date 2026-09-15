@@ -41,16 +41,16 @@ DirectDebitBIFASTEMandateRegistrationRequest adalah request body untuk Registras
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Opsional |
-| `bankCode` | `string` | Wajib |
-| `sourceAccountNo` | `string` | Wajib |
-| `sourceAccountName` | `string` | Wajib |
-| `maxAmount` | `*snap.Money` | Opsional |
-| `billerId` | `string` | Wajib |
-| `billerName` | `string` | Wajib |
-| `customerId` | `string` | Wajib |
-| `expiredDatetime` | `string` | Wajib |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `bankCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `sourceAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `sourceAccountName` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `maxAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `billerId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `billerName` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `customerId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `expiredDatetime` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `DirectDebitBIFASTEMandateRegistrationResponse`**
 
@@ -58,12 +58,12 @@ DirectDebitBIFASTEMandateRegistrationResponse adalah response body untuk Registr
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `referenceNo` | `string` | Opsional |
-| `partnerReferenceNo` | `string` | Opsional |
-| `eMandateReffId` | `string` | Wajib |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `eMandateReffId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -84,20 +84,20 @@ DirectDebitBIFASTPaymentRequest adalah request body untuk Trigger Direct Debit T
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Wajib |
-| `currency` | `string` | Opsional |
-| `customerReference` | `string` | Wajib |
-| `feeType` | `string` | Opsional |
-| `remark` | `string` | Opsional |
-| `beneficiaryAccountNo` | `string` | Wajib |
-| `beneficiaryAccountName` | `string` | Wajib |
-| `transactionDate` | `string` | Wajib |
-| `bankCode` | `string` | Wajib |
-| `sourceAccountNo` | `string` | Wajib |
-| `sourceAccountName` | `string` | Wajib |
-| `amount` | `*snap.Money` | Opsional |
-| `eMandateReffId` | `string` | Wajib |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `currency` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerReference` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `feeType` | `string` | <span class="badge-optional">Opsional</span> |
+| `remark` | `string` | <span class="badge-optional">Opsional</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `beneficiaryAccountName` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `transactionDate` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `bankCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `sourceAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `sourceAccountName` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `eMandateReffId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `DirectDebitBIFASTPaymentResponse`**
 
@@ -105,11 +105,11 @@ DirectDebitBIFASTPaymentResponse adalah response body untuk Trigger Direct Debit
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `referenceNo` | `string` | Opsional |
-| `partnerReferenceNo` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -134,17 +134,17 @@ penamaan asli dari standar, dipertahankan apa adanya tanpa dinormalisasi.
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalReferenceNo` | `string` | Wajib |
-| `originalPartnerReferenceNo` | `string` | Opsional |
-| `originalExternalId` | `string` | Opsional |
-| `transactionStatus` | `string` | Wajib |
-| `transactionStatusDesc` | `string` | Opsional |
-| `eMandateReffId` | `string` | Wajib |
-| `sourceAccountNo` | `string` | Wajib |
-| `sourceAccountName` | `string` | Wajib |
-| `amount` | `*snap.Money` | Opsional |
-| `traceNo` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `originalReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Opsional</span> |
+| `transactionStatus` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `transactionStatusDesc` | `string` | <span class="badge-optional">Opsional</span> |
+| `eMandateReffId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `sourceAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `sourceAccountName` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `traceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Handler Anda membalas dengan &mdash; `DirectDebitBIFASTNotificationResponse`**
 
@@ -152,5 +152,5 @@ DirectDebitBIFASTNotificationResponse hanya berisi envelope — cuma `responseCo
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |

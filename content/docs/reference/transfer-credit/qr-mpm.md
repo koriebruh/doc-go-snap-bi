@@ -35,14 +35,14 @@ GenerateQRMPMRequest is the request body for API Generate QR MPM (Service Code 4
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `feeAmount` | `*snap.Money` | Optional |
-| `merchantId` | `string` | Optional |
-| `subMerchantId` | `string` | Optional |
-| `storeId` | `string` | Optional |
-| `terminalId` | `string` | Optional |
-| `validityPeriod` | `string` | Optional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `feeAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `merchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `storeId` | `string` | <span class="badge-optional">Optional</span> |
+| `terminalId` | `string` | <span class="badge-optional">Optional</span> |
+| `validityPeriod` | `string` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `GenerateQRMPMResponse`**
 
@@ -52,14 +52,14 @@ QRContent, QRURL, and QRImage form a one-of-three condition the type system cann
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `qrContent` | `string` | Optional |
-| `qrUrl` | `string` | Optional |
-| `redirectUrl` | `string` | Optional |
-| `merchantName` | `string` | Optional |
-| `storeId` | `string` | Optional |
-| `terminalId` | `string` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `qrContent` | `string` | <span class="badge-optional">Optional</span> |
+| `qrUrl` | `string` | <span class="badge-optional">Optional</span> |
+| `redirectUrl` | `string` | <span class="badge-optional">Optional</span> |
+| `merchantName` | `string` | <span class="badge-optional">Optional</span> |
+| `storeId` | `string` | <span class="badge-optional">Optional</span> |
+| `terminalId` | `string` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -82,17 +82,17 @@ ApplyOTTResponse is the response body for API Payment Redirect - Apply OTT.
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `userResources` | `[]ApplyOTTUserResource` | Mandatory |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `userResources` | `[]ApplyOTTUserResource` | <span class="badge-mandatory">Mandatory</span> |
 
 {{< details title="ApplyOTTUserResource fields" >}}
 ApplyOTTUserResource is one entry in an ApplyOTTResponse's userResources array. Despite sharing a field name with the request, this is a distinct shape (an object, not a bare string).
 
 | Field | Type | Presence |
 |---|---|---|
-| `resourceType` | `string` | Mandatory |
-| `value` | `string` | Mandatory |
+| `resourceType` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `value` | `string` | <span class="badge-mandatory">Mandatory</span> |
 {{< /details >}}
 
 
@@ -114,12 +114,12 @@ DecodeQRMPMRequest is the request body for API Decode QR MPM (Service Code 48). 
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Optional |
-| `qrContent` | `string` | Mandatory |
-| `amount` | `*snap.Money` | Optional |
-| `merchantId` | `string` | Optional |
-| `subMerchantId` | `string` | Optional |
-| `scanTime` | `string` | Mandatory |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `qrContent` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `merchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `scanTime` | `string` | <span class="badge-mandatory">Mandatory</span> |
 
 **Response &mdash; `DecodeQRMPMResponse`**
 
@@ -129,16 +129,16 @@ ReferenceNo and RedirectURL are both modeled Optional — the standard's own con
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `referenceNo` | `string` | Optional |
-| `redirectUrl` | `string` | Optional |
-| `merchantName` | `string` | Optional |
-| `merchantCategory` | `string` | Optional |
-| `merchantLocation` | `string` | Optional |
-| `merchantInfos` | `[]MPMMerchantInfo` | Mandatory |
-| `transactionAmount` | `*snap.Money` | Optional |
-| `feeAmount` | `*snap.Money` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `redirectUrl` | `string` | <span class="badge-optional">Optional</span> |
+| `merchantName` | `string` | <span class="badge-optional">Optional</span> |
+| `merchantCategory` | `string` | <span class="badge-optional">Optional</span> |
+| `merchantLocation` | `string` | <span class="badge-optional">Optional</span> |
+| `merchantInfos` | `[]MPMMerchantInfo` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `feeAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
 
 {{< details title="MPMMerchantInfo fields" >}}
 MPMMerchantInfo is one entry in a DecodeQRMPMResponse's merchantInfos array.
@@ -147,8 +147,8 @@ MerchantPAN is documented as numeric but sent quoted as a string on the wire —
 
 | Field | Type | Presence |
 |---|---|---|
-| `merchantPAN` | `json.RawMessage` | Mandatory |
-| `acquirerName` | `string` | Mandatory |
+| `merchantPAN` | `json.RawMessage` | <span class="badge-mandatory">Mandatory</span> |
+| `acquirerName` | `string` | <span class="badge-mandatory">Mandatory</span> |
 {{< /details >}}
 
 
@@ -172,13 +172,13 @@ VerificationID also appears on the response under the same name with a different
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Mandatory |
-| `merchantId` | `string` | Optional |
-| `subMerchantId` | `string` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `feeAmount` | `*snap.Money` | Optional |
-| `otp` | `string` | Optional |
-| `verificationId` | `string` | Optional |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `merchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `feeAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `otp` | `string` | <span class="badge-optional">Optional</span> |
+| `verificationId` | `string` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `QRMPMPaymentH2HResponse`**
 
@@ -186,11 +186,11 @@ QRMPMPaymentH2HResponse is the response body for API Payment - Host to Host.
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `referenceNo` | `string` | Optional |
-| `transactionDate` | `string` | Optional |
-| `verificationId` | `string` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Optional</span> |
+| `verificationId` | `string` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -207,17 +207,17 @@ QRMPMPaymentNotificationRequest is the request body for API Payment Notification
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalReferenceNo` | `string` | Mandatory |
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `latestTransactionStatus` | `string` | Mandatory |
-| `customerNumber` | `string` | Optional |
-| `accountType` | `string` | Optional |
-| `destinationNumber` | `string` | Optional |
-| `destinationAccountName` | `string` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `sessionId` | `string` | Optional |
-| `bankCode` | `string` | Optional |
-| `externalStoreId` | `string` | Optional |
+| `originalReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `latestTransactionStatus` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `customerNumber` | `string` | <span class="badge-optional">Optional</span> |
+| `accountType` | `string` | <span class="badge-optional">Optional</span> |
+| `destinationNumber` | `string` | <span class="badge-optional">Optional</span> |
+| `destinationAccountName` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `sessionId` | `string` | <span class="badge-optional">Optional</span> |
+| `bankCode` | `string` | <span class="badge-optional">Optional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Optional</span> |
 
 **Your handler replies with &mdash; `QRMPMPaymentNotificationResponse`**
 
@@ -225,8 +225,8 @@ QRMPMPaymentNotificationResponse is the response body your handler sends back �
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
 
 
 ---
@@ -247,16 +247,16 @@ QRMPMQueryPaymentRequest is the request body for API Query Payment (Service Code
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `originalReferenceNo` | `string` | Optional |
-| `originalExternalId` | `string` | Optional |
-| `serviceCode` | `string` | Mandatory |
-| `transactionDate` | `string` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `merchantId` | `string` | Optional |
-| `subMerchantId` | `string` | Optional |
-| `externalStoreId` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Optional</span> |
+| `serviceCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `merchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `QRMPMQueryPaymentResponse`**
 
@@ -264,25 +264,25 @@ QRMPMQueryPaymentResponse is the response body for API Query Payment — the sam
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `originalReferenceNo` | `string` | Optional |
-| `originalExternalId` | `string` | Optional |
-| `serviceCode` | `string` | Optional |
-| `transactionDate` | `string` | Optional |
-| `amount` | `*snap.Money` | Optional |
-| `beneficiaryAccountNo` | `string` | Mandatory |
-| `beneficiaryBankCode` | `string` | Optional |
-| `previousResponseCode` | `string` | Optional |
-| `referenceNumber` | `string` | Mandatory |
-| `sourceAccountNo` | `string` | Mandatory |
-| `transactionId` | `string` | Optional |
-| `latestTransactionStatus` | `string` | Mandatory |
-| `transactionStatusDesc` | `string` | Optional |
-| `additionalInfo` | `json.RawMessage` | Optional |
-| `paidTime` | `string` | Optional |
-| `terminalId` | `string` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Optional</span> |
+| `serviceCode` | `string` | <span class="badge-optional">Optional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Optional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `beneficiaryAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `beneficiaryBankCode` | `string` | <span class="badge-optional">Optional</span> |
+| `previousResponseCode` | `string` | <span class="badge-optional">Optional</span> |
+| `referenceNumber` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `sourceAccountNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionId` | `string` | <span class="badge-optional">Optional</span> |
+| `latestTransactionStatus` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `transactionStatusDesc` | `string` | <span class="badge-optional">Optional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Optional</span> |
+| `paidTime` | `string` | <span class="badge-optional">Optional</span> |
+| `terminalId` | `string` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -303,14 +303,14 @@ QRMPMCancelPaymentRequest is the request body for API Cancel Payment (Service Co
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalPartnerReferenceNo` | `string` | Optional |
-| `originalReferenceNo` | `string` | Optional |
-| `originalExternalId` | `string` | Optional |
-| `merchantId` | `string` | Mandatory |
-| `subMerchantId` | `string` | Optional |
-| `externalStoreId` | `string` | Optional |
-| `reason` | `string` | Mandatory |
-| `amount` | `*snap.Money` | Optional |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Optional</span> |
+| `merchantId` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Optional</span> |
+| `reason` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `QRMPMCancelPaymentResponse`**
 
@@ -318,10 +318,10 @@ QRMPMCancelPaymentResponse is the response body for API Cancel Payment. CancelTi
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `cancelTime` | `string` | Optional |
-| `transactionDate` | `string` | Optional |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `cancelTime` | `string` | <span class="badge-optional">Optional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Optional</span> |
 
 
 ---
@@ -342,15 +342,15 @@ QRMPMRefundPaymentRequest is the request body for API Refund Payment (Service Co
 
 | Field | Type | Presence |
 |---|---|---|
-| `merchantId` | `string` | Optional |
-| `subMerchantId` | `string` | Optional |
-| `externalStoreId` | `string` | Optional |
-| `originalPartnerReferenceNo` | `string` | Mandatory |
-| `originalReferenceNo` | `string` | Optional |
-| `originalExternalId` | `string` | Optional |
-| `partnerRefundNo` | `string` | Mandatory |
-| `refundAmount` | `*snap.Money` | Optional |
-| `reason` | `string` | Optional |
+| `merchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Optional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Optional</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Optional</span> |
+| `originalExternalId` | `string` | <span class="badge-optional">Optional</span> |
+| `partnerRefundNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `refundAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `reason` | `string` | <span class="badge-optional">Optional</span> |
 
 **Response &mdash; `QRMPMRefundPaymentResponse`**
 
@@ -358,10 +358,10 @@ QRMPMRefundPaymentResponse is the response body for API Refund Payment. RefundNo
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Mandatory |
-| `responseMessage` | `string` | Mandatory |
-| `refundNo` | `string` | Mandatory |
-| `partnerRefundNo` | `string` | Optional |
-| `refundAmount` | `*snap.Money` | Optional |
-| `refundTime` | `string` | Mandatory |
+| `responseCode` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `refundNo` | `string` | <span class="badge-mandatory">Mandatory</span> |
+| `partnerRefundNo` | `string` | <span class="badge-optional">Optional</span> |
+| `refundAmount` | `*snap.Money` | <span class="badge-optional">Optional</span> |
+| `refundTime` | `string` | <span class="badge-mandatory">Mandatory</span> |
 

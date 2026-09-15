@@ -33,12 +33,12 @@ func TransactionHistoryList(ctx context.Context, t *snap.Transport, hb snap.Head
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Opsional |
-| `fromDateTime` | `string` | Opsional |
-| `toDateTime` | `string` | Opsional |
-| `pageSize` | `string` | Opsional |
-| `pageNumber` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `fromDateTime` | `string` | <span class="badge-optional">Opsional</span> |
+| `toDateTime` | `string` | <span class="badge-optional">Opsional</span> |
+| `pageSize` | `string` | <span class="badge-optional">Opsional</span> |
+| `pageNumber` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `TransactionHistoryListResponse`**
 
@@ -46,25 +46,25 @@ Body response-nya.
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `referenceNo` | `string` | Opsional |
-| `partnerReferenceNo` | `string` | Opsional |
-| `detailData` | `[]TransactionDetail` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `detailData` | `[]TransactionDetail` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="TransactionDetail fields" >}}
 Satu entri di `detailData`.
 
 | Field | Type | Presence |
 |---|---|---|
-| `dateTime` | `string` | Opsional |
-| `amount` | `*snap.Money` | Opsional |
-| `remark` | `string` | Opsional |
-| `sourceOfFunds` | `[]SourceOfFund` | Opsional |
-| `status` | `string` | Wajib |
-| `type` | `string` | Wajib |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `dateTime` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `remark` | `string` | <span class="badge-optional">Opsional</span> |
+| `sourceOfFunds` | `[]SourceOfFund` | <span class="badge-optional">Opsional</span> |
+| `status` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `type` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 {{< details title="SourceOfFund fields" >}}
@@ -72,8 +72,8 @@ Mendeskripsikan satu sumber dana yang dipakai untuk sebuah transaksi. `source` b
 
 | Field | Type | Presence |
 |---|---|---|
-| `source` | `string` | Wajib |
-| `amount` | `*snap.Money` | Opsional |
+| `source` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 
@@ -91,8 +91,8 @@ func TransactionHistoryDetail(ctx context.Context, t *snap.Transport, hb snap.He
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalPartnerReferenceNo` | `string` | Wajib |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `TransactionHistoryDetailResponse`**
 
@@ -100,27 +100,27 @@ func TransactionHistoryDetail(ctx context.Context, t *snap.Transport, hb snap.He
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `referenceNo` | `string` | Opsional |
-| `partnerReferenceNo` | `string` | Opsional |
-| `amount` | `*snap.Money` | Opsional |
-| `cancelledTime` | `string` | Opsional |
-| `dateTime` | `string` | Wajib |
-| `refundAmount` | `*snap.Money` | Opsional |
-| `remark` | `string` | Opsional |
-| `sourceOfFunds` | `[]SourceOfFund` | Opsional |
-| `status` | `string` | Wajib |
-| `type` | `string` | Wajib |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `cancelledTime` | `string` | <span class="badge-optional">Opsional</span> |
+| `dateTime` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `refundAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `remark` | `string` | <span class="badge-optional">Opsional</span> |
+| `sourceOfFunds` | `[]SourceOfFund` | <span class="badge-optional">Opsional</span> |
+| `status` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `type` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="SourceOfFund fields" >}}
 Mendeskripsikan satu sumber dana yang dipakai untuk sebuah transaksi. `source` bersifat Wajib; `amount` berupa pointer karena hanya `value`/`currency` miliknya sendiri yang Wajib, bukan objek pembungkusnya.
 
 | Field | Type | Presence |
 |---|---|---|
-| `source` | `string` | Wajib |
-| `amount` | `*snap.Money` | Opsional |
+| `source` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 
@@ -140,12 +140,12 @@ func BankStatement(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Opsional |
-| `bankCardToken` | `string` | Opsional |
-| `accountNo` | `string` | Opsional |
-| `fromDateTime` | `string` | Opsional |
-| `toDateTime` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `bankCardToken` | `string` | <span class="badge-optional">Opsional</span> |
+| `accountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `fromDateTime` | `string` | <span class="badge-optional">Opsional</span> |
+| `toDateTime` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `BankStatementResponse`**
 
@@ -153,26 +153,26 @@ Body response-nya.
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `referenceNo` | `string` | Opsional |
-| `partnerReferenceNo` | `string` | Opsional |
-| `balance` | `[]BankStatementBalance` | Opsional |
-| `totalCreditEntries` | `*BankStatementEntryTotal` | Opsional |
-| `totalDebitEntries` | `*BankStatementEntryTotal` | Opsional |
-| `hasMore` | `string` | Opsional |
-| `lastRecordDateTime` | `string` | Opsional |
-| `detailData` | `[]BankStatementDetail` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `balance` | `[]BankStatementBalance` | <span class="badge-optional">Opsional</span> |
+| `totalCreditEntries` | `*BankStatementEntryTotal` | <span class="badge-optional">Opsional</span> |
+| `totalDebitEntries` | `*BankStatementEntryTotal` | <span class="badge-optional">Opsional</span> |
+| `hasMore` | `string` | <span class="badge-optional">Opsional</span> |
+| `lastRecordDateTime` | `string` | <span class="badge-optional">Opsional</span> |
+| `detailData` | `[]BankStatementDetail` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="BankStatementBalance fields" >}}
 Satu entri di `balance`: saldo berjalan sebelum/sesudah periode statement. Memakai `BankStatementBalanceAmount`, bukan `Money` polos, karena juga membawa `dateTime`.
 
 | Field | Type | Presence |
 |---|---|---|
-| `amount` | `BankStatementBalanceAmount` | Wajib |
-| `startingBalance` | `BankStatementBalanceAmount` | Wajib |
-| `endingBalance` | `BankStatementBalanceAmount` | Wajib |
+| `amount` | `BankStatementBalanceAmount` | <span class="badge-mandatory">Wajib</span> |
+| `startingBalance` | `BankStatementBalanceAmount` | <span class="badge-mandatory">Wajib</span> |
+| `endingBalance` | `BankStatementBalanceAmount` | <span class="badge-mandatory">Wajib</span> |
 {{< /details >}}
 
 {{< details title="BankStatementBalanceAmount fields" >}}
@@ -180,9 +180,9 @@ Bentuk `{value, currency, dateTime}` yang dipakai `BankStatementBalance` — sep
 
 | Field | Type | Presence |
 |---|---|---|
-| `value` | `string` | Wajib |
-| `currency` | `string` | Wajib |
-| `dateTime` | `string` | Wajib |
+| `value` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `currency` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `dateTime` | `string` | <span class="badge-mandatory">Wajib</span> |
 {{< /details >}}
 
 {{< details title="BankStatementEntryTotal fields" >}}
@@ -190,8 +190,8 @@ Bentuk yang dipakai bersama oleh `totalCreditEntries` dan `totalDebitEntries`. `
 
 | Field | Type | Presence |
 |---|---|---|
-| `numberOfEntries` | `string` | Opsional |
-| `amount` | `snap.Money` | Wajib |
+| `numberOfEntries` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `snap.Money` | <span class="badge-mandatory">Wajib</span> |
 {{< /details >}}
 
 {{< details title="BankStatementDetail fields" >}}
@@ -199,15 +199,15 @@ Satu entri di `detailData`: satu baris transaksi.
 
 | Field | Type | Presence |
 |---|---|---|
-| `detailBalance` | `*BankStatementDetailBalance` | Opsional |
-| `amount` | `*snap.Money` | Opsional |
-| `originAmount` | `*snap.Money` | Opsional |
-| `transactionDate` | `string` | Wajib |
-| `remark` | `string` | Wajib |
-| `transactionId` | `string` | Opsional |
-| `type` | `string` | Wajib |
-| `transactionDetailStatus` | `string` | Opsional |
-| `detailInfo` | `json.RawMessage` | Opsional |
+| `detailBalance` | `*BankStatementDetailBalance` | <span class="badge-optional">Opsional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `originAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `transactionDate` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `remark` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `transactionId` | `string` | <span class="badge-optional">Opsional</span> |
+| `type` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `transactionDetailStatus` | `string` | <span class="badge-optional">Opsional</span> |
+| `detailInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 {{< details title="BankStatementDetailBalance fields" >}}
@@ -215,8 +215,8 @@ Saldo tepat sebelum (`startAmount`) dan sesudah (`endAmount`) satu transaksi.
 
 | Field | Type | Presence |
 |---|---|---|
-| `startAmount` | `[]BankStatementDetailBalanceEntry` | Opsional |
-| `endAmount` | `[]BankStatementDetailBalanceEntry` | Opsional |
+| `startAmount` | `[]BankStatementDetailBalanceEntry` | <span class="badge-optional">Opsional</span> |
+| `endAmount` | `[]BankStatementDetailBalanceEntry` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 {{< details title="BankStatementDetailBalanceEntry fields" >}}
@@ -224,5 +224,5 @@ Satu entri di `startAmount`/`endAmount`.
 
 | Field | Type | Presence |
 |---|---|---|
-| `amount` | `*snap.Money` | Opsional |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}

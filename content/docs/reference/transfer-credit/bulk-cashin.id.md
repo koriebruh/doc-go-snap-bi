@@ -33,23 +33,23 @@ func SubmitBulkCashIn(ctx context.Context, t *snap.Transport, hb snap.HeaderBuil
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerBulkId` | `string` | Opsional |
-| `transactionDate` | `string` | Wajib |
-| `currency` | `string` | Opsional |
-| `bulkObject` | `[]BulkCashInItem` | Opsional |
-| `feeType` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerBulkId` | `string` | <span class="badge-optional">Opsional</span> |
+| `transactionDate` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `currency` | `string` | <span class="badge-optional">Opsional</span> |
+| `bulkObject` | `[]BulkCashInItem` | <span class="badge-optional">Opsional</span> |
+| `feeType` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="Field BulkCashInItem" >}}
 Satu entri dalam array `bulkObject[]` pada request Submit Bulk Cash In. `AccountNumber` dan `PartnerReferenceNo` wajib.
 
 | Field | Type | Presence |
 |---|---|---|
-| `accountNumber` | `string` | Wajib |
-| `accountName` | `string` | Opsional |
-| `amount` | `*snap.Money` | Opsional |
-| `partnerReferenceNo` | `string` | Wajib |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `accountNumber` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `accountName` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 **Response &mdash; `SubmitBulkCashInResponse`**
@@ -58,10 +58,10 @@ Perhatikan field-nya `bulkid` (huruf d kecil) — kemungkinan salah ketik di sta
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `bulkid` | `string` | Wajib |
-| `partnerBulkId` | `string` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `bulkid` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `partnerBulkId` | `string` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -78,23 +78,23 @@ Ini adalah callback settlement yang diterima PJP, bukan panggilan dari package i
 
 | Field | Type | Presence |
 |---|---|---|
-| `bulkId` | `string` | Wajib |
-| `partnerBulkId` | `string` | Wajib |
-| `bulkObject` | `[]BulkCashInNotificationItem` | Wajib |
+| `bulkId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `partnerBulkId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `bulkObject` | `[]BulkCashInNotificationItem` | <span class="badge-mandatory">Wajib</span> |
 
 {{< details title="Field BulkCashInNotificationItem" >}}
 Satu entri dalam array `bulkObject[]` notifikasi ini — bentuk hasil settlement, berbeda dari bentuk instruksi transfer `BulkCashInItem`. `CustomerNumber`, `ReferenceNo`, `PartnerReferenceNo`, `ResponseCode`, dan `ResponseMessage` semuanya wajib.
 
 | Field | Type | Presence |
 |---|---|---|
-| `customerNumber` | `string` | Wajib |
-| `customerName` | `string` | Opsional |
-| `amount` | `*snap.Money` | Opsional |
-| `referenceNo` | `string` | Wajib |
-| `partnerReferenceNo` | `string` | Wajib |
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `customerNumber` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `customerName` | `string` | <span class="badge-optional">Opsional</span> |
+| `amount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `referenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 **Handler Anda membalas dengan &mdash; `NotifyBulkCashInResponse`**
@@ -103,7 +103,7 @@ Satu entri dalam array `bulkObject[]` notifikasi ini — bentuk hasil settlement
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `bulkId` | `string` | Wajib |
-| `partnerBulkId` | `string` | Wajib |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `bulkId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `partnerBulkId` | `string` | <span class="badge-mandatory">Wajib</span> |

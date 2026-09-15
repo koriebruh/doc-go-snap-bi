@@ -34,37 +34,37 @@ func CreateVA(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Opsional |
-| `customerNo` | `string` | Opsional |
-| `virtualAccountNo` | `string` | Opsional |
-| `virtualAccountName` | `string` | Wajib |
-| `trxId` | `string` | Wajib |
-| `totalAmount` | `*snap.Money` | Opsional |
-| `billDetails` | `[]BillDetail` | Opsional |
-| `freeTexts` | `[]LocalizedText` | Opsional |
-| `virtualAccountTrxType` | `string` | Opsional |
-| `feeAmount` | `*snap.Money` | Opsional |
-| `expiredDate` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerServiceId` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `virtualAccountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `virtualAccountName` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `trxId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `totalAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `billDetails` | `[]BillDetail` | <span class="badge-optional">Opsional</span> |
+| `freeTexts` | `[]LocalizedText` | <span class="badge-optional">Opsional</span> |
+| `virtualAccountTrxType` | `string` | <span class="badge-optional">Opsional</span> |
+| `feeAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `expiredDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="BillDetail fields" >}}
 Satu entri dalam array `billDetails[]` (maksimal 24 entri) yang dipakai di seluruh kelompok Virtual Account. `billReferenceNo` bertipe `json.RawMessage` karena standarnya mendokumentasikan field ini sebagai Numeric tapi sebagian issuer mengirimnya sebagai angka JSON polos — kalau Anda mengisinya sendiri (mis. di `CreateVARequest`), berikan nilai JSON yang lengkap seperti `json.RawMessage(\`"BILLREF1"\`)` atau `json.RawMessage(\`123\`)`, bukan string Go biasa.
 
 | Field | Type | Presence |
 |---|---|---|
-| `billCode` | `string` | Opsional |
-| `billNo` | `string` | Opsional |
-| `billName` | `string` | Opsional |
-| `billShortName` | `string` | Opsional |
-| `billDescription` | `*LocalizedText` | Opsional |
-| `billSubCompany` | `string` | Opsional |
-| `billAmount` | `*snap.Money` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
-| `billAmountLabel` | `string` | Opsional |
-| `billAmountValue` | `string` | Opsional |
-| `billReferenceNo` | `json.RawMessage` | Opsional |
-| `status` | `string` | Opsional |
-| `reason` | `*LocalizedText` | Opsional |
+| `billCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `billNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `billName` | `string` | <span class="badge-optional">Opsional</span> |
+| `billShortName` | `string` | <span class="badge-optional">Opsional</span> |
+| `billDescription` | `*LocalizedText` | <span class="badge-optional">Opsional</span> |
+| `billSubCompany` | `string` | <span class="badge-optional">Opsional</span> |
+| `billAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `billAmountLabel` | `string` | <span class="badge-optional">Opsional</span> |
+| `billAmountValue` | `string` | <span class="badge-optional">Opsional</span> |
+| `billReferenceNo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `status` | `string` | <span class="badge-optional">Opsional</span> |
+| `reason` | `*LocalizedText` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 {{< details title="LocalizedText fields" >}}
@@ -72,35 +72,35 @@ Bentuk teks dwibahasa {english, indonesia} yang dipakai bersama di seluruh sub-k
 
 | Field | Type | Presence |
 |---|---|---|
-| `english` | `string` | Opsional |
-| `indonesia` | `string` | Opsional |
+| `english` | `string` | <span class="badge-optional">Opsional</span> |
+| `indonesia` | `string` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 **Response &mdash; `CreateVAResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `virtualAccountData` | `*CreateVAData` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `virtualAccountData` | `*CreateVAData` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="CreateVAData fields" >}}
 Objek `virtualAccountData` pada `CreateVAResponse`.
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Opsional |
-| `customerNo` | `string` | Opsional |
-| `virtualAccountNo` | `string` | Opsional |
-| `virtualAccountName` | `string` | Opsional |
-| `trxId` | `string` | Opsional |
-| `totalAmount` | `*snap.Money` | Opsional |
-| `billDetails` | `[]BillDetail` | Opsional |
-| `freeTexts` | `[]LocalizedText` | Opsional |
-| `virtualAccountTrxType` | `string` | Opsional |
-| `feeAmount` | `*snap.Money` | Opsional |
-| `expiredDate` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerServiceId` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `virtualAccountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `virtualAccountName` | `string` | <span class="badge-optional">Opsional</span> |
+| `trxId` | `string` | <span class="badge-optional">Opsional</span> |
+| `totalAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `billDetails` | `[]BillDetail` | <span class="badge-optional">Opsional</span> |
+| `freeTexts` | `[]LocalizedText` | <span class="badge-optional">Opsional</span> |
+| `virtualAccountTrxType` | `string` | <span class="badge-optional">Opsional</span> |
+| `feeAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `expiredDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 {{< details title="BillDetail fields" >}}
@@ -108,19 +108,19 @@ Satu entri dalam array `billDetails[]` (maksimal 24 entri) yang dipakai di selur
 
 | Field | Type | Presence |
 |---|---|---|
-| `billCode` | `string` | Opsional |
-| `billNo` | `string` | Opsional |
-| `billName` | `string` | Opsional |
-| `billShortName` | `string` | Opsional |
-| `billDescription` | `*LocalizedText` | Opsional |
-| `billSubCompany` | `string` | Opsional |
-| `billAmount` | `*snap.Money` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
-| `billAmountLabel` | `string` | Opsional |
-| `billAmountValue` | `string` | Opsional |
-| `billReferenceNo` | `json.RawMessage` | Opsional |
-| `status` | `string` | Opsional |
-| `reason` | `*LocalizedText` | Opsional |
+| `billCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `billNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `billName` | `string` | <span class="badge-optional">Opsional</span> |
+| `billShortName` | `string` | <span class="badge-optional">Opsional</span> |
+| `billDescription` | `*LocalizedText` | <span class="badge-optional">Opsional</span> |
+| `billSubCompany` | `string` | <span class="badge-optional">Opsional</span> |
+| `billAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `billAmountLabel` | `string` | <span class="badge-optional">Opsional</span> |
+| `billAmountValue` | `string` | <span class="badge-optional">Opsional</span> |
+| `billReferenceNo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `status` | `string` | <span class="badge-optional">Opsional</span> |
+| `reason` | `*LocalizedText` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 {{< details title="LocalizedText fields" >}}
@@ -128,8 +128,8 @@ Bentuk teks dwibahasa {english, indonesia} yang dipakai bersama di seluruh sub-k
 
 | Field | Type | Presence |
 |---|---|---|
-| `english` | `string` | Opsional |
-| `indonesia` | `string` | Opsional |
+| `english` | `string` | <span class="badge-optional">Opsional</span> |
+| `indonesia` | `string` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 ---
@@ -150,37 +150,37 @@ func UpdateVA(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Wajib |
-| `customerNo` | `string` | Wajib |
-| `virtualAccountNo` | `string` | Wajib |
-| `virtualAccountName` | `string` | Wajib |
-| `trxId` | `string` | Wajib |
-| `totalAmount` | `*snap.Money` | Opsional |
-| `billDetails` | `[]BillDetail` | Opsional |
-| `freeTexts` | `[]LocalizedText` | Opsional |
-| `virtualAccountTrxType` | `string` | Opsional |
-| `feeAmount` | `*snap.Money` | Opsional |
-| `expiredDate` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerServiceId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `customerNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `virtualAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `virtualAccountName` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `trxId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `totalAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `billDetails` | `[]BillDetail` | <span class="badge-optional">Opsional</span> |
+| `freeTexts` | `[]LocalizedText` | <span class="badge-optional">Opsional</span> |
+| `virtualAccountTrxType` | `string` | <span class="badge-optional">Opsional</span> |
+| `feeAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `expiredDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="BillDetail fields" >}}
 Satu entri dalam array `billDetails[]` (maksimal 24 entri) yang dipakai di seluruh kelompok Virtual Account. `billReferenceNo` bertipe `json.RawMessage` karena standarnya mendokumentasikan field ini sebagai Numeric tapi sebagian issuer mengirimnya sebagai angka JSON polos — kalau Anda mengisinya sendiri (mis. di `CreateVARequest`), berikan nilai JSON yang lengkap seperti `json.RawMessage(\`"BILLREF1"\`)` atau `json.RawMessage(\`123\`)`, bukan string Go biasa.
 
 | Field | Type | Presence |
 |---|---|---|
-| `billCode` | `string` | Opsional |
-| `billNo` | `string` | Opsional |
-| `billName` | `string` | Opsional |
-| `billShortName` | `string` | Opsional |
-| `billDescription` | `*LocalizedText` | Opsional |
-| `billSubCompany` | `string` | Opsional |
-| `billAmount` | `*snap.Money` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
-| `billAmountLabel` | `string` | Opsional |
-| `billAmountValue` | `string` | Opsional |
-| `billReferenceNo` | `json.RawMessage` | Opsional |
-| `status` | `string` | Opsional |
-| `reason` | `*LocalizedText` | Opsional |
+| `billCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `billNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `billName` | `string` | <span class="badge-optional">Opsional</span> |
+| `billShortName` | `string` | <span class="badge-optional">Opsional</span> |
+| `billDescription` | `*LocalizedText` | <span class="badge-optional">Opsional</span> |
+| `billSubCompany` | `string` | <span class="badge-optional">Opsional</span> |
+| `billAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `billAmountLabel` | `string` | <span class="badge-optional">Opsional</span> |
+| `billAmountValue` | `string` | <span class="badge-optional">Opsional</span> |
+| `billReferenceNo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `status` | `string` | <span class="badge-optional">Opsional</span> |
+| `reason` | `*LocalizedText` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 {{< details title="LocalizedText fields" >}}
@@ -188,37 +188,37 @@ Bentuk teks dwibahasa {english, indonesia} yang dipakai bersama di seluruh sub-k
 
 | Field | Type | Presence |
 |---|---|---|
-| `english` | `string` | Opsional |
-| `indonesia` | `string` | Opsional |
+| `english` | `string` | <span class="badge-optional">Opsional</span> |
+| `indonesia` | `string` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 **Response &mdash; `UpdateVAResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `virtualAccountData` | `*UpdateVAData` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `virtualAccountData` | `*UpdateVAData` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="UpdateVAData fields" >}}
 Objek `virtualAccountData` pada `UpdateVAResponse` — field data Create VA ditambah `LastUpdateDate` dan `PaymentDate`.
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Opsional |
-| `customerNo` | `string` | Opsional |
-| `virtualAccountNo` | `string` | Opsional |
-| `virtualAccountName` | `string` | Opsional |
-| `trxId` | `string` | Opsional |
-| `totalAmount` | `*snap.Money` | Opsional |
-| `billDetails` | `[]BillDetail` | Opsional |
-| `freeTexts` | `[]LocalizedText` | Opsional |
-| `virtualAccountTrxType` | `string` | Opsional |
-| `feeAmount` | `*snap.Money` | Opsional |
-| `expiredDate` | `string` | Opsional |
-| `lastUpdateDate` | `string` | Opsional |
-| `paymentDate` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerServiceId` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `virtualAccountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `virtualAccountName` | `string` | <span class="badge-optional">Opsional</span> |
+| `trxId` | `string` | <span class="badge-optional">Opsional</span> |
+| `totalAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `billDetails` | `[]BillDetail` | <span class="badge-optional">Opsional</span> |
+| `freeTexts` | `[]LocalizedText` | <span class="badge-optional">Opsional</span> |
+| `virtualAccountTrxType` | `string` | <span class="badge-optional">Opsional</span> |
+| `feeAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `expiredDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `lastUpdateDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `paymentDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 {{< details title="BillDetail fields" >}}
@@ -226,19 +226,19 @@ Satu entri dalam array `billDetails[]` (maksimal 24 entri) yang dipakai di selur
 
 | Field | Type | Presence |
 |---|---|---|
-| `billCode` | `string` | Opsional |
-| `billNo` | `string` | Opsional |
-| `billName` | `string` | Opsional |
-| `billShortName` | `string` | Opsional |
-| `billDescription` | `*LocalizedText` | Opsional |
-| `billSubCompany` | `string` | Opsional |
-| `billAmount` | `*snap.Money` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
-| `billAmountLabel` | `string` | Opsional |
-| `billAmountValue` | `string` | Opsional |
-| `billReferenceNo` | `json.RawMessage` | Opsional |
-| `status` | `string` | Opsional |
-| `reason` | `*LocalizedText` | Opsional |
+| `billCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `billNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `billName` | `string` | <span class="badge-optional">Opsional</span> |
+| `billShortName` | `string` | <span class="badge-optional">Opsional</span> |
+| `billDescription` | `*LocalizedText` | <span class="badge-optional">Opsional</span> |
+| `billSubCompany` | `string` | <span class="badge-optional">Opsional</span> |
+| `billAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `billAmountLabel` | `string` | <span class="badge-optional">Opsional</span> |
+| `billAmountValue` | `string` | <span class="badge-optional">Opsional</span> |
+| `billReferenceNo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `status` | `string` | <span class="badge-optional">Opsional</span> |
+| `reason` | `*LocalizedText` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 {{< details title="LocalizedText fields" >}}
@@ -246,8 +246,8 @@ Bentuk teks dwibahasa {english, indonesia} yang dipakai bersama di seluruh sub-k
 
 | Field | Type | Presence |
 |---|---|---|
-| `english` | `string` | Opsional |
-| `indonesia` | `string` | Opsional |
+| `english` | `string` | <span class="badge-optional">Opsional</span> |
+| `indonesia` | `string` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 ---
@@ -268,40 +268,40 @@ func UpdateStatusVA(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilde
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Wajib |
-| `customerNo` | `string` | Wajib |
-| `virtualAccountNo` | `string` | Wajib |
-| `trxId` | `string` | Wajib |
-| `paidStatus` | `string` | Wajib |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerServiceId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `customerNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `virtualAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `trxId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `paidStatus` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `UpdateStatusVAResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `virtualAccountData` | `*UpdateStatusVAData` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `virtualAccountData` | `*UpdateStatusVAData` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="UpdateStatusVAData fields" >}}
 Objek `virtualAccountData` pada `UpdateStatusVAResponse` — himpunan field yang sama dengan `UpdateVAData`, hanya beda nama tipe.
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Opsional |
-| `customerNo` | `string` | Opsional |
-| `virtualAccountNo` | `string` | Opsional |
-| `virtualAccountName` | `string` | Opsional |
-| `trxId` | `string` | Opsional |
-| `totalAmount` | `*snap.Money` | Opsional |
-| `billDetails` | `[]BillDetail` | Opsional |
-| `freeTexts` | `[]LocalizedText` | Opsional |
-| `virtualAccountTrxType` | `string` | Opsional |
-| `feeAmount` | `*snap.Money` | Opsional |
-| `expiredDate` | `string` | Opsional |
-| `lastUpdateDate` | `string` | Opsional |
-| `paymentDate` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerServiceId` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `virtualAccountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `virtualAccountName` | `string` | <span class="badge-optional">Opsional</span> |
+| `trxId` | `string` | <span class="badge-optional">Opsional</span> |
+| `totalAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `billDetails` | `[]BillDetail` | <span class="badge-optional">Opsional</span> |
+| `freeTexts` | `[]LocalizedText` | <span class="badge-optional">Opsional</span> |
+| `virtualAccountTrxType` | `string` | <span class="badge-optional">Opsional</span> |
+| `feeAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `expiredDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `lastUpdateDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `paymentDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 {{< details title="BillDetail fields" >}}
@@ -309,19 +309,19 @@ Satu entri dalam array `billDetails[]` (maksimal 24 entri) yang dipakai di selur
 
 | Field | Type | Presence |
 |---|---|---|
-| `billCode` | `string` | Opsional |
-| `billNo` | `string` | Opsional |
-| `billName` | `string` | Opsional |
-| `billShortName` | `string` | Opsional |
-| `billDescription` | `*LocalizedText` | Opsional |
-| `billSubCompany` | `string` | Opsional |
-| `billAmount` | `*snap.Money` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
-| `billAmountLabel` | `string` | Opsional |
-| `billAmountValue` | `string` | Opsional |
-| `billReferenceNo` | `json.RawMessage` | Opsional |
-| `status` | `string` | Opsional |
-| `reason` | `*LocalizedText` | Opsional |
+| `billCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `billNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `billName` | `string` | <span class="badge-optional">Opsional</span> |
+| `billShortName` | `string` | <span class="badge-optional">Opsional</span> |
+| `billDescription` | `*LocalizedText` | <span class="badge-optional">Opsional</span> |
+| `billSubCompany` | `string` | <span class="badge-optional">Opsional</span> |
+| `billAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `billAmountLabel` | `string` | <span class="badge-optional">Opsional</span> |
+| `billAmountValue` | `string` | <span class="badge-optional">Opsional</span> |
+| `billReferenceNo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `status` | `string` | <span class="badge-optional">Opsional</span> |
+| `reason` | `*LocalizedText` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 {{< details title="LocalizedText fields" >}}
@@ -329,8 +329,8 @@ Bentuk teks dwibahasa {english, indonesia} yang dipakai bersama di seluruh sub-k
 
 | Field | Type | Presence |
 |---|---|---|
-| `english` | `string` | Opsional |
-| `indonesia` | `string` | Opsional |
+| `english` | `string` | <span class="badge-optional">Opsional</span> |
+| `indonesia` | `string` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 ---
@@ -349,39 +349,39 @@ func InquiryVA(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, re
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Wajib |
-| `customerNo` | `string` | Wajib |
-| `virtualAccountNo` | `string` | Wajib |
-| `trxId` | `string` | Wajib |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerServiceId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `customerNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `virtualAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `trxId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `InquiryVAResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `virtualAccountData` | `*InquiryVAData` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `virtualAccountData` | `*InquiryVAData` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="InquiryVAData fields" >}}
 Objek `virtualAccountData` pada `InquiryVAResponse` — himpunan field yang sama dengan `UpdateVAData` (bentuknya sama seperti response Update VA), hanya beda nama tipe.
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Opsional |
-| `customerNo` | `string` | Opsional |
-| `virtualAccountNo` | `string` | Opsional |
-| `virtualAccountName` | `string` | Opsional |
-| `trxId` | `string` | Opsional |
-| `totalAmount` | `*snap.Money` | Opsional |
-| `billDetails` | `[]BillDetail` | Opsional |
-| `freeTexts` | `[]LocalizedText` | Opsional |
-| `virtualAccountTrxType` | `string` | Opsional |
-| `feeAmount` | `*snap.Money` | Opsional |
-| `expiredDate` | `string` | Opsional |
-| `lastUpdateDate` | `string` | Opsional |
-| `paymentDate` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerServiceId` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `virtualAccountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `virtualAccountName` | `string` | <span class="badge-optional">Opsional</span> |
+| `trxId` | `string` | <span class="badge-optional">Opsional</span> |
+| `totalAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `billDetails` | `[]BillDetail` | <span class="badge-optional">Opsional</span> |
+| `freeTexts` | `[]LocalizedText` | <span class="badge-optional">Opsional</span> |
+| `virtualAccountTrxType` | `string` | <span class="badge-optional">Opsional</span> |
+| `feeAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `expiredDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `lastUpdateDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `paymentDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 {{< details title="BillDetail fields" >}}
@@ -389,19 +389,19 @@ Satu entri dalam array `billDetails[]` (maksimal 24 entri) yang dipakai di selur
 
 | Field | Type | Presence |
 |---|---|---|
-| `billCode` | `string` | Opsional |
-| `billNo` | `string` | Opsional |
-| `billName` | `string` | Opsional |
-| `billShortName` | `string` | Opsional |
-| `billDescription` | `*LocalizedText` | Opsional |
-| `billSubCompany` | `string` | Opsional |
-| `billAmount` | `*snap.Money` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
-| `billAmountLabel` | `string` | Opsional |
-| `billAmountValue` | `string` | Opsional |
-| `billReferenceNo` | `json.RawMessage` | Opsional |
-| `status` | `string` | Opsional |
-| `reason` | `*LocalizedText` | Opsional |
+| `billCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `billNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `billName` | `string` | <span class="badge-optional">Opsional</span> |
+| `billShortName` | `string` | <span class="badge-optional">Opsional</span> |
+| `billDescription` | `*LocalizedText` | <span class="badge-optional">Opsional</span> |
+| `billSubCompany` | `string` | <span class="badge-optional">Opsional</span> |
+| `billAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `billAmountLabel` | `string` | <span class="badge-optional">Opsional</span> |
+| `billAmountValue` | `string` | <span class="badge-optional">Opsional</span> |
+| `billReferenceNo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `status` | `string` | <span class="badge-optional">Opsional</span> |
+| `reason` | `*LocalizedText` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 {{< details title="LocalizedText fields" >}}
@@ -409,8 +409,8 @@ Bentuk teks dwibahasa {english, indonesia} yang dipakai bersama di seluruh sub-k
 
 | Field | Type | Presence |
 |---|---|---|
-| `english` | `string` | Opsional |
-| `indonesia` | `string` | Opsional |
+| `english` | `string` | <span class="badge-optional">Opsional</span> |
+| `indonesia` | `string` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 ---
@@ -431,30 +431,30 @@ func DeleteVA(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Wajib |
-| `customerNo` | `string` | Wajib |
-| `virtualAccountNo` | `string` | Wajib |
-| `trxId` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerServiceId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `customerNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `virtualAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `trxId` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `DeleteVAResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `virtualAccountData` | `*DeleteVAData` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `virtualAccountData` | `*DeleteVAData` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="DeleteVAData fields" >}}
 Objek `virtualAccountData` pada `DeleteVAResponse` — bentuknya lebih kecil dibanding data object endpoint manajemen VA lainnya.
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Opsional |
-| `customerNo` | `string` | Opsional |
-| `virtualAccountNo` | `string` | Opsional |
-| `trxId` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerServiceId` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `virtualAccountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `trxId` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 ---
@@ -473,47 +473,47 @@ func VAInquiry(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, re
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Wajib |
-| `customerNo` | `json.RawMessage` | Wajib |
-| `virtualAccountNo` | `string` | Wajib |
-| `trxDateInit` | `string` | Opsional |
-| `channelCode` | `json.RawMessage` | Opsional |
-| `language` | `string` | Opsional |
-| `hashedSourceAccountNo` | `string` | Opsional |
-| `sourceBankCode` | `string` | Opsional |
-| `passApp` | `string` | Opsional |
-| `inquiryRequestId` | `string` | Wajib |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerServiceId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `customerNo` | `json.RawMessage` | <span class="badge-mandatory">Wajib</span> |
+| `virtualAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `trxDateInit` | `string` | <span class="badge-optional">Opsional</span> |
+| `channelCode` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `language` | `string` | <span class="badge-optional">Opsional</span> |
+| `hashedSourceAccountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `sourceBankCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `passApp` | `string` | <span class="badge-optional">Opsional</span> |
+| `inquiryRequestId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `VAInquiryResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `virtualAccountData` | `*VAInquiryData` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `virtualAccountData` | `*VAInquiryData` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="VAInquiryData fields" >}}
 Objek `virtualAccountData` pada `VAInquiryResponse`. Field selain identity triple tidak berlabel M/O di sumbernya, jadi semuanya Opsional (omitempty); `InquiryReason`, `TotalAmount`, dan `FeeAmount` berupa pointer karena omitempty tidak berlaku pada nilai struct non-pointer.
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Opsional |
-| `customerNo` | `json.RawMessage` | Opsional |
-| `virtualAccountNo` | `string` | Opsional |
-| `inquiryStatus` | `string` | Opsional |
-| `inquiryReason` | `*LocalizedText` | Opsional |
-| `virtualAccountName` | `string` | Opsional |
-| `virtualAccountEmail` | `string` | Opsional |
-| `virtualAccountPhone` | `string` | Opsional |
-| `inquiryRequestId` | `string` | Opsional |
-| `totalAmount` | `*snap.Money` | Opsional |
-| `subCompany` | `string` | Opsional |
-| `billDetails` | `[]BillDetail` | Opsional |
-| `freeTexts` | `[]LocalizedText` | Opsional |
-| `virtualAccountTrxType` | `string` | Opsional |
-| `feeAmount` | `*snap.Money` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerServiceId` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerNo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `virtualAccountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `inquiryStatus` | `string` | <span class="badge-optional">Opsional</span> |
+| `inquiryReason` | `*LocalizedText` | <span class="badge-optional">Opsional</span> |
+| `virtualAccountName` | `string` | <span class="badge-optional">Opsional</span> |
+| `virtualAccountEmail` | `string` | <span class="badge-optional">Opsional</span> |
+| `virtualAccountPhone` | `string` | <span class="badge-optional">Opsional</span> |
+| `inquiryRequestId` | `string` | <span class="badge-optional">Opsional</span> |
+| `totalAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `subCompany` | `string` | <span class="badge-optional">Opsional</span> |
+| `billDetails` | `[]BillDetail` | <span class="badge-optional">Opsional</span> |
+| `freeTexts` | `[]LocalizedText` | <span class="badge-optional">Opsional</span> |
+| `virtualAccountTrxType` | `string` | <span class="badge-optional">Opsional</span> |
+| `feeAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 {{< details title="LocalizedText fields" >}}
@@ -521,8 +521,8 @@ Bentuk teks dwibahasa {english, indonesia} yang dipakai bersama di seluruh sub-k
 
 | Field | Type | Presence |
 |---|---|---|
-| `english` | `string` | Opsional |
-| `indonesia` | `string` | Opsional |
+| `english` | `string` | <span class="badge-optional">Opsional</span> |
+| `indonesia` | `string` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 {{< details title="BillDetail fields" >}}
@@ -530,19 +530,19 @@ Satu entri dalam array `billDetails[]` (maksimal 24 entri) yang dipakai di selur
 
 | Field | Type | Presence |
 |---|---|---|
-| `billCode` | `string` | Opsional |
-| `billNo` | `string` | Opsional |
-| `billName` | `string` | Opsional |
-| `billShortName` | `string` | Opsional |
-| `billDescription` | `*LocalizedText` | Opsional |
-| `billSubCompany` | `string` | Opsional |
-| `billAmount` | `*snap.Money` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
-| `billAmountLabel` | `string` | Opsional |
-| `billAmountValue` | `string` | Opsional |
-| `billReferenceNo` | `json.RawMessage` | Opsional |
-| `status` | `string` | Opsional |
-| `reason` | `*LocalizedText` | Opsional |
+| `billCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `billNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `billName` | `string` | <span class="badge-optional">Opsional</span> |
+| `billShortName` | `string` | <span class="badge-optional">Opsional</span> |
+| `billDescription` | `*LocalizedText` | <span class="badge-optional">Opsional</span> |
+| `billSubCompany` | `string` | <span class="badge-optional">Opsional</span> |
+| `billAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `billAmountLabel` | `string` | <span class="badge-optional">Opsional</span> |
+| `billAmountValue` | `string` | <span class="badge-optional">Opsional</span> |
+| `billReferenceNo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `status` | `string` | <span class="badge-optional">Opsional</span> |
+| `reason` | `*LocalizedText` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 ---
@@ -563,46 +563,46 @@ func VAPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, re
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Wajib |
-| `customerNo` | `json.RawMessage` | Wajib |
-| `virtualAccountNo` | `string` | Wajib |
-| `trxId` | `string` | Opsional |
-| `paymentRequestId` | `string` | Wajib |
-| `channelCode` | `json.RawMessage` | Opsional |
-| `hashedSourceAccountNo` | `string` | Opsional |
-| `sourceBankCode` | `string` | Opsional |
-| `paidAmount` | `snap.Money` | Wajib |
-| `cumulativePaymentAmount` | `*snap.Money` | Opsional |
-| `paidBills` | `string` | Opsional |
-| `totalAmount` | `*snap.Money` | Opsional |
-| `trxDateTime` | `string` | Opsional |
-| `referenceNo` | `string` | Opsional |
-| `journalNum` | `string` | Opsional |
-| `paymentType` | `json.RawMessage` | Opsional |
-| `flagAdvise` | `string` | Opsional |
-| `subCompany` | `string` | Opsional |
-| `billDetails` | `[]BillDetail` | Opsional |
-| `freeTexts` | `[]LocalizedText` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerServiceId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `customerNo` | `json.RawMessage` | <span class="badge-mandatory">Wajib</span> |
+| `virtualAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `trxId` | `string` | <span class="badge-optional">Opsional</span> |
+| `paymentRequestId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `channelCode` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `hashedSourceAccountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `sourceBankCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `paidAmount` | `snap.Money` | <span class="badge-mandatory">Wajib</span> |
+| `cumulativePaymentAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `paidBills` | `string` | <span class="badge-optional">Opsional</span> |
+| `totalAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `trxDateTime` | `string` | <span class="badge-optional">Opsional</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `journalNum` | `string` | <span class="badge-optional">Opsional</span> |
+| `paymentType` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `flagAdvise` | `string` | <span class="badge-optional">Opsional</span> |
+| `subCompany` | `string` | <span class="badge-optional">Opsional</span> |
+| `billDetails` | `[]BillDetail` | <span class="badge-optional">Opsional</span> |
+| `freeTexts` | `[]LocalizedText` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="BillDetail fields" >}}
 Satu entri dalam array `billDetails[]` (maksimal 24 entri) yang dipakai di seluruh kelompok Virtual Account. `billReferenceNo` bertipe `json.RawMessage` karena standarnya mendokumentasikan field ini sebagai Numeric tapi sebagian issuer mengirimnya sebagai angka JSON polos — kalau Anda mengisinya sendiri (mis. di `CreateVARequest`), berikan nilai JSON yang lengkap seperti `json.RawMessage(\`"BILLREF1"\`)` atau `json.RawMessage(\`123\`)`, bukan string Go biasa.
 
 | Field | Type | Presence |
 |---|---|---|
-| `billCode` | `string` | Opsional |
-| `billNo` | `string` | Opsional |
-| `billName` | `string` | Opsional |
-| `billShortName` | `string` | Opsional |
-| `billDescription` | `*LocalizedText` | Opsional |
-| `billSubCompany` | `string` | Opsional |
-| `billAmount` | `*snap.Money` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
-| `billAmountLabel` | `string` | Opsional |
-| `billAmountValue` | `string` | Opsional |
-| `billReferenceNo` | `json.RawMessage` | Opsional |
-| `status` | `string` | Opsional |
-| `reason` | `*LocalizedText` | Opsional |
+| `billCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `billNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `billName` | `string` | <span class="badge-optional">Opsional</span> |
+| `billShortName` | `string` | <span class="badge-optional">Opsional</span> |
+| `billDescription` | `*LocalizedText` | <span class="badge-optional">Opsional</span> |
+| `billSubCompany` | `string` | <span class="badge-optional">Opsional</span> |
+| `billAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `billAmountLabel` | `string` | <span class="badge-optional">Opsional</span> |
+| `billAmountValue` | `string` | <span class="badge-optional">Opsional</span> |
+| `billReferenceNo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `status` | `string` | <span class="badge-optional">Opsional</span> |
+| `reason` | `*LocalizedText` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 {{< details title="LocalizedText fields" >}}
@@ -610,46 +610,46 @@ Bentuk teks dwibahasa {english, indonesia} yang dipakai bersama di seluruh sub-k
 
 | Field | Type | Presence |
 |---|---|---|
-| `english` | `string` | Opsional |
-| `indonesia` | `string` | Opsional |
+| `english` | `string` | <span class="badge-optional">Opsional</span> |
+| `indonesia` | `string` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 **Response &mdash; `VAPaymentResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `virtualAccountData` | `*VAPaymentData` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `virtualAccountData` | `*VAPaymentData` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="VAPaymentData fields" >}}
 Objek `virtualAccountData` pada `VAPaymentResponse` — mencerminkan field request-nya ditambah `paymentFlagReason` dan `paymentFlagStatus`.
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Opsional |
-| `customerNo` | `json.RawMessage` | Opsional |
-| `virtualAccountNo` | `string` | Opsional |
-| `trxId` | `string` | Opsional |
-| `paymentRequestId` | `string` | Opsional |
-| `channelCode` | `json.RawMessage` | Opsional |
-| `hashedSourceAccountNo` | `string` | Opsional |
-| `sourceBankCode` | `string` | Opsional |
-| `paidAmount` | `*snap.Money` | Opsional |
-| `cumulativePaymentAmount` | `*snap.Money` | Opsional |
-| `paidBills` | `string` | Opsional |
-| `totalAmount` | `*snap.Money` | Opsional |
-| `trxDateTime` | `string` | Opsional |
-| `referenceNo` | `string` | Opsional |
-| `journalNum` | `string` | Opsional |
-| `paymentType` | `json.RawMessage` | Opsional |
-| `flagAdvise` | `string` | Opsional |
-| `subCompany` | `string` | Opsional |
-| `billDetails` | `[]BillDetail` | Opsional |
-| `freeTexts` | `[]LocalizedText` | Opsional |
-| `paymentFlagReason` | `*LocalizedText` | Opsional |
-| `paymentFlagStatus` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerServiceId` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerNo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `virtualAccountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `trxId` | `string` | <span class="badge-optional">Opsional</span> |
+| `paymentRequestId` | `string` | <span class="badge-optional">Opsional</span> |
+| `channelCode` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `hashedSourceAccountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `sourceBankCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `paidAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `cumulativePaymentAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `paidBills` | `string` | <span class="badge-optional">Opsional</span> |
+| `totalAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `trxDateTime` | `string` | <span class="badge-optional">Opsional</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `journalNum` | `string` | <span class="badge-optional">Opsional</span> |
+| `paymentType` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `flagAdvise` | `string` | <span class="badge-optional">Opsional</span> |
+| `subCompany` | `string` | <span class="badge-optional">Opsional</span> |
+| `billDetails` | `[]BillDetail` | <span class="badge-optional">Opsional</span> |
+| `freeTexts` | `[]LocalizedText` | <span class="badge-optional">Opsional</span> |
+| `paymentFlagReason` | `*LocalizedText` | <span class="badge-optional">Opsional</span> |
+| `paymentFlagStatus` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 {{< details title="BillDetail fields" >}}
@@ -657,19 +657,19 @@ Satu entri dalam array `billDetails[]` (maksimal 24 entri) yang dipakai di selur
 
 | Field | Type | Presence |
 |---|---|---|
-| `billCode` | `string` | Opsional |
-| `billNo` | `string` | Opsional |
-| `billName` | `string` | Opsional |
-| `billShortName` | `string` | Opsional |
-| `billDescription` | `*LocalizedText` | Opsional |
-| `billSubCompany` | `string` | Opsional |
-| `billAmount` | `*snap.Money` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
-| `billAmountLabel` | `string` | Opsional |
-| `billAmountValue` | `string` | Opsional |
-| `billReferenceNo` | `json.RawMessage` | Opsional |
-| `status` | `string` | Opsional |
-| `reason` | `*LocalizedText` | Opsional |
+| `billCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `billNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `billName` | `string` | <span class="badge-optional">Opsional</span> |
+| `billShortName` | `string` | <span class="badge-optional">Opsional</span> |
+| `billDescription` | `*LocalizedText` | <span class="badge-optional">Opsional</span> |
+| `billSubCompany` | `string` | <span class="badge-optional">Opsional</span> |
+| `billAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `billAmountLabel` | `string` | <span class="badge-optional">Opsional</span> |
+| `billAmountValue` | `string` | <span class="badge-optional">Opsional</span> |
+| `billReferenceNo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `status` | `string` | <span class="badge-optional">Opsional</span> |
+| `reason` | `*LocalizedText` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 {{< details title="LocalizedText fields" >}}
@@ -677,8 +677,8 @@ Bentuk teks dwibahasa {english, indonesia} yang dipakai bersama di seluruh sub-k
 
 | Field | Type | Presence |
 |---|---|---|
-| `english` | `string` | Opsional |
-| `indonesia` | `string` | Opsional |
+| `english` | `string` | <span class="badge-optional">Opsional</span> |
+| `indonesia` | `string` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 ---
@@ -697,50 +697,50 @@ func VAInquiryStatus(ctx context.Context, t *snap.Transport, hb snap.HeaderBuild
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Wajib |
-| `customerNo` | `json.RawMessage` | Wajib |
-| `virtualAccountNo` | `string` | Wajib |
-| `inquiryRequestId` | `string` | Opsional |
-| `paymentRequestId` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerServiceId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `customerNo` | `json.RawMessage` | <span class="badge-mandatory">Wajib</span> |
+| `virtualAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `inquiryRequestId` | `string` | <span class="badge-optional">Opsional</span> |
+| `paymentRequestId` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `VAInquiryStatusResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `virtualAccountData` | `*VAInquiryStatusData` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `virtualAccountData` | `*VAInquiryStatusData` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="VAInquiryStatusData fields" >}}
 Objek `virtualAccountData` pada `VAInquiryStatusResponse` — bentuknya sama dengan `VAPaymentData` ditambah `transactionDate`, disimpan sebagai tipe sendiri karena Service Code-nya berbeda.
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Opsional |
-| `customerNo` | `json.RawMessage` | Opsional |
-| `virtualAccountNo` | `string` | Opsional |
-| `trxId` | `string` | Opsional |
-| `paymentRequestId` | `string` | Opsional |
-| `channelCode` | `json.RawMessage` | Opsional |
-| `hashedSourceAccountNo` | `string` | Opsional |
-| `sourceBankCode` | `string` | Opsional |
-| `paidAmount` | `*snap.Money` | Opsional |
-| `cumulativePaymentAmount` | `*snap.Money` | Opsional |
-| `paidBills` | `string` | Opsional |
-| `totalAmount` | `*snap.Money` | Opsional |
-| `trxDateTime` | `string` | Opsional |
-| `referenceNo` | `string` | Opsional |
-| `journalNum` | `string` | Opsional |
-| `paymentType` | `json.RawMessage` | Opsional |
-| `flagAdvise` | `string` | Opsional |
-| `subCompany` | `string` | Opsional |
-| `billDetails` | `[]BillDetail` | Opsional |
-| `freeTexts` | `[]LocalizedText` | Opsional |
-| `paymentFlagReason` | `*LocalizedText` | Opsional |
-| `paymentFlagStatus` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
-| `transactionDate` | `string` | Opsional |
+| `partnerServiceId` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerNo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `virtualAccountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `trxId` | `string` | <span class="badge-optional">Opsional</span> |
+| `paymentRequestId` | `string` | <span class="badge-optional">Opsional</span> |
+| `channelCode` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `hashedSourceAccountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `sourceBankCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `paidAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `cumulativePaymentAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `paidBills` | `string` | <span class="badge-optional">Opsional</span> |
+| `totalAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `trxDateTime` | `string` | <span class="badge-optional">Opsional</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `journalNum` | `string` | <span class="badge-optional">Opsional</span> |
+| `paymentType` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `flagAdvise` | `string` | <span class="badge-optional">Opsional</span> |
+| `subCompany` | `string` | <span class="badge-optional">Opsional</span> |
+| `billDetails` | `[]BillDetail` | <span class="badge-optional">Opsional</span> |
+| `freeTexts` | `[]LocalizedText` | <span class="badge-optional">Opsional</span> |
+| `paymentFlagReason` | `*LocalizedText` | <span class="badge-optional">Opsional</span> |
+| `paymentFlagStatus` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 {{< details title="BillDetail fields" >}}
@@ -748,19 +748,19 @@ Satu entri dalam array `billDetails[]` (maksimal 24 entri) yang dipakai di selur
 
 | Field | Type | Presence |
 |---|---|---|
-| `billCode` | `string` | Opsional |
-| `billNo` | `string` | Opsional |
-| `billName` | `string` | Opsional |
-| `billShortName` | `string` | Opsional |
-| `billDescription` | `*LocalizedText` | Opsional |
-| `billSubCompany` | `string` | Opsional |
-| `billAmount` | `*snap.Money` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
-| `billAmountLabel` | `string` | Opsional |
-| `billAmountValue` | `string` | Opsional |
-| `billReferenceNo` | `json.RawMessage` | Opsional |
-| `status` | `string` | Opsional |
-| `reason` | `*LocalizedText` | Opsional |
+| `billCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `billNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `billName` | `string` | <span class="badge-optional">Opsional</span> |
+| `billShortName` | `string` | <span class="badge-optional">Opsional</span> |
+| `billDescription` | `*LocalizedText` | <span class="badge-optional">Opsional</span> |
+| `billSubCompany` | `string` | <span class="badge-optional">Opsional</span> |
+| `billAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `billAmountLabel` | `string` | <span class="badge-optional">Opsional</span> |
+| `billAmountValue` | `string` | <span class="badge-optional">Opsional</span> |
+| `billReferenceNo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `status` | `string` | <span class="badge-optional">Opsional</span> |
+| `reason` | `*LocalizedText` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 {{< details title="LocalizedText fields" >}}
@@ -768,8 +768,8 @@ Bentuk teks dwibahasa {english, indonesia} yang dipakai bersama di seluruh sub-k
 
 | Field | Type | Presence |
 |---|---|---|
-| `english` | `string` | Opsional |
-| `indonesia` | `string` | Opsional |
+| `english` | `string` | <span class="badge-optional">Opsional</span> |
+| `indonesia` | `string` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 ---
@@ -788,37 +788,37 @@ func VAInquiryPaymentIntrabank(ctx context.Context, t *snap.Transport, hb snap.H
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Wajib |
-| `customerNo` | `json.RawMessage` | Wajib |
-| `virtualAccountNo` | `string` | Wajib |
-| `partnerReferenceNo` | `string` | Opsional |
-| `sourceAccountNo` | `string` | Opsional |
-| `sourceAccountType` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerServiceId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `customerNo` | `json.RawMessage` | <span class="badge-mandatory">Wajib</span> |
+| `virtualAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `sourceAccountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `sourceAccountType` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `VAInquiryPaymentIntrabankResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `virtualAccountdata` | `*VAInquiryPaymentIntrabankData` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `virtualAccountdata` | `*VAInquiryPaymentIntrabankData` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="VAInquiryPaymentIntrabankData fields" >}}
 Objek `virtualAccountdata` (huruf "d" kecil — sengaja mengikuti wire key standarnya, tidak seperti kebanyakan endpoint VA lain yang pakai `virtualAccountData`) pada `VAInquiryPaymentIntrabankResponse`.
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Opsional |
-| `customerNo` | `json.RawMessage` | Opsional |
-| `virtualAccountNo` | `string` | Opsional |
-| `partnerReferenceNo` | `string` | Opsional |
-| `sourceAccountNo` | `string` | Opsional |
-| `sourceAccountType` | `string` | Opsional |
-| `productName` | `string` | Opsional |
-| `billAmountLabel` | `string` | Opsional |
-| `billAmountValue` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerServiceId` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerNo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `virtualAccountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `sourceAccountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `sourceAccountType` | `string` | <span class="badge-optional">Opsional</span> |
+| `productName` | `string` | <span class="badge-optional">Opsional</span> |
+| `billAmountLabel` | `string` | <span class="badge-optional">Opsional</span> |
+| `billAmountValue` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 ---
@@ -839,46 +839,46 @@ func VAPaymentIntrabank(ctx context.Context, t *snap.Transport, hb snap.HeaderBu
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Wajib |
-| `customerNo` | `json.RawMessage` | Wajib |
-| `virtualAccountNo` | `string` | Wajib |
-| `sourceAccountNo` | `string` | Opsional |
-| `sourceAccountType` | `string` | Opsional |
-| `inquiryRequestId` | `string` | Opsional |
-| `partnerReferenceNo` | `string` | Wajib |
-| `paidAmount` | `snap.Money` | Wajib |
-| `cumulativePaymentAmount` | `*snap.Money` | Opsional |
-| `paidBills` | `string` | Opsional |
-| `paymentStatus` | `string` | Opsional |
-| `referenceNo` | `json.RawMessage` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerServiceId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `customerNo` | `json.RawMessage` | <span class="badge-mandatory">Wajib</span> |
+| `virtualAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `sourceAccountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `sourceAccountType` | `string` | <span class="badge-optional">Opsional</span> |
+| `inquiryRequestId` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `paidAmount` | `snap.Money` | <span class="badge-mandatory">Wajib</span> |
+| `cumulativePaymentAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `paidBills` | `string` | <span class="badge-optional">Opsional</span> |
+| `paymentStatus` | `string` | <span class="badge-optional">Opsional</span> |
+| `referenceNo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `VAPaymentIntrabankResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `virtualAccountdata` | `*VAPaymentIntrabankData` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `virtualAccountdata` | `*VAPaymentIntrabankData` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="VAPaymentIntrabankData fields" >}}
 Objek `virtualAccountdata` (huruf "d" kecil) pada `VAPaymentIntrabankResponse` — mencerminkan field request-nya sendiri.
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Opsional |
-| `customerNo` | `json.RawMessage` | Opsional |
-| `virtualAccountNo` | `string` | Opsional |
-| `sourceAccountNo` | `string` | Opsional |
-| `sourceAccountType` | `string` | Opsional |
-| `inquiryRequestId` | `string` | Opsional |
-| `partnerReferenceNo` | `string` | Opsional |
-| `paidAmount` | `*snap.Money` | Opsional |
-| `cumulativePaymentAmount` | `*snap.Money` | Opsional |
-| `paidBills` | `string` | Opsional |
-| `paymentStatus` | `string` | Opsional |
-| `referenceNo` | `json.RawMessage` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerServiceId` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerNo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `virtualAccountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `sourceAccountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `sourceAccountType` | `string` | <span class="badge-optional">Opsional</span> |
+| `inquiryRequestId` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `paidAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `cumulativePaymentAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `paidBills` | `string` | <span class="badge-optional">Opsional</span> |
+| `paymentStatus` | `string` | <span class="badge-optional">Opsional</span> |
+| `referenceNo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 ---
@@ -899,49 +899,49 @@ Berbeda dari notifikasi RTGS/SKNBI/Interbank-Bulk, yang ini outbound — kode An
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Wajib |
-| `customerNo` | `json.RawMessage` | Wajib |
-| `virtualAccountNo` | `string` | Wajib |
-| `inquiryRequestId` | `string` | Opsional |
-| `paymentRequestId` | `string` | Opsional |
-| `partnerReferenceNo` | `string` | Opsional |
-| `trxDateTime` | `string` | Opsional |
-| `paymentStatus` | `string` | Opsional |
-| `paymentFlagReason` | `*LocalizedText` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerServiceId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `customerNo` | `json.RawMessage` | <span class="badge-mandatory">Wajib</span> |
+| `virtualAccountNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `inquiryRequestId` | `string` | <span class="badge-optional">Opsional</span> |
+| `paymentRequestId` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `trxDateTime` | `string` | <span class="badge-optional">Opsional</span> |
+| `paymentStatus` | `string` | <span class="badge-optional">Opsional</span> |
+| `paymentFlagReason` | `*LocalizedText` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="LocalizedText fields" >}}
 Bentuk teks dwibahasa {english, indonesia} yang dipakai bersama di seluruh sub-kelompok Virtual Account (mis. inquiryReason, paymentFlagReason, billDescription, reason per-bill, entri freeTexts[]). Kedua field bertipe String, tidak ditandai M/O di sumbernya, jadi keduanya carry omitempty.
 
 | Field | Type | Presence |
 |---|---|---|
-| `english` | `string` | Opsional |
-| `indonesia` | `string` | Opsional |
+| `english` | `string` | <span class="badge-optional">Opsional</span> |
+| `indonesia` | `string` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 **Response &mdash; `VANotifyPaymentIntrabankResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `virtualAccountdata` | `*VANotifyPaymentIntrabankData` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `virtualAccountdata` | `*VANotifyPaymentIntrabankData` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="VANotifyPaymentIntrabankData fields" >}}
 Objek `virtualAccountdata` (huruf "d" kecil) pada `VANotifyPaymentIntrabankResponse` — mencerminkan sebagian besar field request-nya, ditambah envelope.
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Opsional |
-| `customerNo` | `json.RawMessage` | Opsional |
-| `virtualAccountNo` | `string` | Opsional |
-| `inquiryRequestId` | `string` | Opsional |
-| `paymentRequestId` | `string` | Opsional |
-| `partnerReferenceNo` | `string` | Opsional |
-| `trxDateTime` | `string` | Opsional |
-| `paymentStatus` | `string` | Opsional |
-| `paymentFlagReason` | `*LocalizedText` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerServiceId` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerNo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `virtualAccountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `inquiryRequestId` | `string` | <span class="badge-optional">Opsional</span> |
+| `paymentRequestId` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `trxDateTime` | `string` | <span class="badge-optional">Opsional</span> |
+| `paymentStatus` | `string` | <span class="badge-optional">Opsional</span> |
+| `paymentFlagReason` | `*LocalizedText` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 {{< details title="LocalizedText fields" >}}
@@ -949,8 +949,8 @@ Bentuk teks dwibahasa {english, indonesia} yang dipakai bersama di seluruh sub-k
 
 | Field | Type | Presence |
 |---|---|---|
-| `english` | `string` | Opsional |
-| `indonesia` | `string` | Opsional |
+| `english` | `string` | <span class="badge-optional">Opsional</span> |
+| `indonesia` | `string` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 ---
@@ -971,12 +971,12 @@ func VAGetReport(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, 
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `json.RawMessage` | Wajib |
-| `startDate` | `string` | Opsional |
-| `startTime` | `string` | Opsional |
-| `endDate` | `string` | Opsional |
-| `endTime` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerServiceId` | `json.RawMessage` | <span class="badge-mandatory">Wajib</span> |
+| `startDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `startTime` | `string` | <span class="badge-optional">Opsional</span> |
+| `endDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `endTime` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `VAGetReportResponse`**
 
@@ -984,39 +984,39 @@ Satu-satunya response VA di package ini yang field data-nya berupa array, bukan 
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `virtualAccountdata` | `[]GetReportData` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `virtualAccountdata` | `[]GetReportData` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="GetReportData fields" >}}
 Satu entri dalam array `virtualAccountdata` (huruf "d" kecil) pada `VAGetReportResponse` — bentuknya sama dengan `VAInquiryStatusData`, disimpan sebagai tipe sendiri karena Service Code-nya berbeda.
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerServiceId` | `string` | Opsional |
-| `customerNo` | `json.RawMessage` | Opsional |
-| `virtualAccountNo` | `string` | Opsional |
-| `trxId` | `string` | Opsional |
-| `paymentRequestId` | `string` | Opsional |
-| `channelCode` | `json.RawMessage` | Opsional |
-| `hashedSourceAccountNo` | `string` | Opsional |
-| `sourceBankCode` | `string` | Opsional |
-| `paidAmount` | `*snap.Money` | Opsional |
-| `cumulativePaymentAmount` | `*snap.Money` | Opsional |
-| `paidBills` | `string` | Opsional |
-| `totalAmount` | `*snap.Money` | Opsional |
-| `trxDateTime` | `string` | Opsional |
-| `referenceNo` | `string` | Opsional |
-| `journalNum` | `string` | Opsional |
-| `paymentType` | `json.RawMessage` | Opsional |
-| `flagAdvise` | `string` | Opsional |
-| `subCompany` | `string` | Opsional |
-| `billDetails` | `[]BillDetail` | Opsional |
-| `freeTexts` | `[]LocalizedText` | Opsional |
-| `paymentFlagReason` | `*LocalizedText` | Opsional |
-| `paymentFlagStatus` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
-| `transactionDate` | `string` | Opsional |
+| `partnerServiceId` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerNo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `virtualAccountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `trxId` | `string` | <span class="badge-optional">Opsional</span> |
+| `paymentRequestId` | `string` | <span class="badge-optional">Opsional</span> |
+| `channelCode` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `hashedSourceAccountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `sourceBankCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `paidAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `cumulativePaymentAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `paidBills` | `string` | <span class="badge-optional">Opsional</span> |
+| `totalAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `trxDateTime` | `string` | <span class="badge-optional">Opsional</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `journalNum` | `string` | <span class="badge-optional">Opsional</span> |
+| `paymentType` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `flagAdvise` | `string` | <span class="badge-optional">Opsional</span> |
+| `subCompany` | `string` | <span class="badge-optional">Opsional</span> |
+| `billDetails` | `[]BillDetail` | <span class="badge-optional">Opsional</span> |
+| `freeTexts` | `[]LocalizedText` | <span class="badge-optional">Opsional</span> |
+| `paymentFlagReason` | `*LocalizedText` | <span class="badge-optional">Opsional</span> |
+| `paymentFlagStatus` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 {{< details title="BillDetail fields" >}}
@@ -1024,19 +1024,19 @@ Satu entri dalam array `billDetails[]` (maksimal 24 entri) yang dipakai di selur
 
 | Field | Type | Presence |
 |---|---|---|
-| `billCode` | `string` | Opsional |
-| `billNo` | `string` | Opsional |
-| `billName` | `string` | Opsional |
-| `billShortName` | `string` | Opsional |
-| `billDescription` | `*LocalizedText` | Opsional |
-| `billSubCompany` | `string` | Opsional |
-| `billAmount` | `*snap.Money` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
-| `billAmountLabel` | `string` | Opsional |
-| `billAmountValue` | `string` | Opsional |
-| `billReferenceNo` | `json.RawMessage` | Opsional |
-| `status` | `string` | Opsional |
-| `reason` | `*LocalizedText` | Opsional |
+| `billCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `billNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `billName` | `string` | <span class="badge-optional">Opsional</span> |
+| `billShortName` | `string` | <span class="badge-optional">Opsional</span> |
+| `billDescription` | `*LocalizedText` | <span class="badge-optional">Opsional</span> |
+| `billSubCompany` | `string` | <span class="badge-optional">Opsional</span> |
+| `billAmount` | `*snap.Money` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `billAmountLabel` | `string` | <span class="badge-optional">Opsional</span> |
+| `billAmountValue` | `string` | <span class="badge-optional">Opsional</span> |
+| `billReferenceNo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `status` | `string` | <span class="badge-optional">Opsional</span> |
+| `reason` | `*LocalizedText` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 {{< details title="LocalizedText fields" >}}
@@ -1044,7 +1044,7 @@ Bentuk teks dwibahasa {english, indonesia} yang dipakai bersama di seluruh sub-k
 
 | Field | Type | Presence |
 |---|---|---|
-| `english` | `string` | Opsional |
-| `indonesia` | `string` | Opsional |
+| `english` | `string` | <span class="badge-optional">Opsional</span> |
+| `indonesia` | `string` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 

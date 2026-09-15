@@ -33,18 +33,18 @@ Beda dari endpoint lain di sini, ini bukan JSON — `GetOAuthURL` membangun quer
 
 | Query parameter | Type | Presence |
 |---|---|---|
-| `RedirectURL` | `string` | Wajib |
-| `Scopes` | `[]string` (digabung dengan `,`) | Wajib |
-| `State` | `string` | Wajib |
-| `MerchantID` | `string` | Opsional |
-| `SubMerchantID` | `string` | Opsional |
-| `Lang` | `string` (ISO 639-1) | Opsional |
-| `AllowRegistration` | `*bool` | Opsional |
-| `SeamlessData` | `string` | Opsional |
-| `MobileNumber` | `string` | Opsional |
-| `VerifiedTime` | `string` | Opsional |
-| `ExternalUID` | `string` | Opsional |
-| `DeviceID` | `string` | Opsional |
+| `RedirectURL` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `Scopes` | `[]string` (digabung dengan `,`) | <span class="badge-mandatory">Wajib</span> |
+| `State` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `MerchantID` | `string` | <span class="badge-optional">Opsional</span> |
+| `SubMerchantID` | `string` | <span class="badge-optional">Opsional</span> |
+| `Lang` | `string` (ISO 639-1) | <span class="badge-optional">Opsional</span> |
+| `AllowRegistration` | `*bool` | <span class="badge-optional">Opsional</span> |
+| `SeamlessData` | `string` | <span class="badge-optional">Opsional</span> |
+| `MobileNumber` | `string` | <span class="badge-optional">Opsional</span> |
+| `VerifiedTime` | `string` | <span class="badge-optional">Opsional</span> |
+| `ExternalUID` | `string` | <span class="badge-optional">Opsional</span> |
+| `DeviceID` | `string` | <span class="badge-optional">Opsional</span> |
 | `SeamlessSign` | `string` | Kondisional — wajib jika `SeamlessData` diisi |
 
 **Response &mdash; `GetOAuthURLResponse`**
@@ -53,10 +53,10 @@ Semua field Wajib.
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `authCode` | `string` | Wajib |
-| `state` | `string` | Wajib |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `authCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `state` | `string` | <span class="badge-mandatory">Wajib</span> |
 
 
 ---
@@ -77,35 +77,35 @@ Semua field Opsional — endpoint ini mencakup beberapa alur onboarding (seamles
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Opsional |
-| `countryCode` | `string` | Opsional |
-| `customerId` | `string` | Opsional |
-| `deviceInfo` | `*DeviceInfo` | Opsional |
-| `email` | `string` | Opsional |
-| `lang` | `string` | Opsional |
-| `locale` | `string` | Opsional |
-| `name` | `string` | Opsional |
-| `onboardingPartner` | `string` | Opsional |
-| `phoneNo` | `string` | Opsional |
-| `redirectUrl` | `string` | Opsional |
-| `scopes` | `string` | Opsional |
-| `seamlessData` | `string` | Opsional |
-| `seamlessSign` | `string` | Opsional |
-| `state` | `string` | Opsional |
-| `merchantId` | `string` | Opsional |
-| `subMerchantId` | `string` | Opsional |
-| `terminalType` | `json.RawMessage` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `countryCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerId` | `string` | <span class="badge-optional">Opsional</span> |
+| `deviceInfo` | `*DeviceInfo` | <span class="badge-optional">Opsional</span> |
+| `email` | `string` | <span class="badge-optional">Opsional</span> |
+| `lang` | `string` | <span class="badge-optional">Opsional</span> |
+| `locale` | `string` | <span class="badge-optional">Opsional</span> |
+| `name` | `string` | <span class="badge-optional">Opsional</span> |
+| `onboardingPartner` | `string` | <span class="badge-optional">Opsional</span> |
+| `phoneNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `redirectUrl` | `string` | <span class="badge-optional">Opsional</span> |
+| `scopes` | `string` | <span class="badge-optional">Opsional</span> |
+| `seamlessData` | `string` | <span class="badge-optional">Opsional</span> |
+| `seamlessSign` | `string` | <span class="badge-optional">Opsional</span> |
+| `state` | `string` | <span class="badge-optional">Opsional</span> |
+| `merchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `terminalType` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="DeviceInfo fields" >}}
 DeviceInfo mendeskripsikan perangkat yang memulai request registrasi.
 
 | Field | Type | Presence |
 |---|---|---|
-| `os` | `string` | Opsional |
-| `osVersion` | `string` | Opsional |
-| `model` | `string` | Opsional |
-| `manufacturer` | `string` | Opsional |
+| `os` | `string` | <span class="badge-optional">Opsional</span> |
+| `osVersion` | `string` | <span class="badge-optional">Opsional</span> |
+| `model` | `string` | <span class="badge-optional">Opsional</span> |
+| `manufacturer` | `string` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 **Response &mdash; `AccountCreationResponse`**
@@ -114,15 +114,15 @@ DeviceInfo mendeskripsikan perangkat yang memulai request registrasi.
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `referenceNo` | `string` | Opsional |
-| `partnerReferenceNo` | `string` | Opsional |
-| `authCode` | `string` | Opsional |
-| `apiKey` | `json.RawMessage` | Opsional |
-| `accountId` | `string` | Opsional |
-| `state` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `authCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `apiKey` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `accountId` | `string` | <span class="badge-optional">Opsional</span> |
+| `state` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -143,69 +143,69 @@ func AccountBinding(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilde
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Opsional |
-| `action` | `string` | Opsional |
-| `additionalData` | `json.RawMessage` | Opsional |
-| `userId` | `string` | Opsional |
-| `email` | `string` | Opsional |
-| `postalAddress` | `string` | Opsional |
-| `authCode` | `string` | Opsional |
-| `grantType` | `string` | Opsional |
-| `isBindAndPay` | `string` | Opsional |
-| `lang` | `string` | Opsional |
-| `locale` | `string` | Opsional |
-| `merchantId` | `string` | Wajib |
-| `subMerchantId` | `string` | Opsional |
-| `msisdn` | `string` | Opsional |
-| `otp` | `string` | Opsional |
-| `phoneNo` | `string` | Opsional |
-| `platformType` | `string` | Opsional |
-| `redirectUrl` | `string` | Opsional |
-| `referenceId` | `string` | Opsional |
-| `refreshToken` | `string` | Opsional |
-| `successParams` | `*BindingSuccessParams` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `action` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalData` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `userId` | `string` | <span class="badge-optional">Opsional</span> |
+| `email` | `string` | <span class="badge-optional">Opsional</span> |
+| `postalAddress` | `string` | <span class="badge-optional">Opsional</span> |
+| `authCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `grantType` | `string` | <span class="badge-optional">Opsional</span> |
+| `isBindAndPay` | `string` | <span class="badge-optional">Opsional</span> |
+| `lang` | `string` | <span class="badge-optional">Opsional</span> |
+| `locale` | `string` | <span class="badge-optional">Opsional</span> |
+| `merchantId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `msisdn` | `string` | <span class="badge-optional">Opsional</span> |
+| `otp` | `string` | <span class="badge-optional">Opsional</span> |
+| `phoneNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `platformType` | `string` | <span class="badge-optional">Opsional</span> |
+| `redirectUrl` | `string` | <span class="badge-optional">Opsional</span> |
+| `referenceId` | `string` | <span class="badge-optional">Opsional</span> |
+| `refreshToken` | `string` | <span class="badge-optional">Opsional</span> |
+| `successParams` | `*BindingSuccessParams` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="BindingSuccessParams fields" >}}
 Objek `successParams` di sisi request.
 
 | Field | Type | Presence |
 |---|---|---|
-| `accountId` | `string` | Opsional |
-| `terminalId` | `string` | Opsional |
-| `tokenRequestorId` | `string` | Opsional |
+| `accountId` | `string` | <span class="badge-optional">Opsional</span> |
+| `terminalId` | `string` | <span class="badge-optional">Opsional</span> |
+| `tokenRequestorId` | `string` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 **Response &mdash; `AccountBindingResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `referenceNo` | `string` | Opsional |
-| `partnerReferenceNo` | `string` | Opsional |
-| `accountToken` | `string` | Opsional |
-| `accessTokenInfo` | `*BindingAccessTokenInfo` | Opsional |
-| `linkId` | `string` | Opsional |
-| `nextAction` | `string` | Opsional |
-| `linkageToken` | `string` | Opsional |
-| `params` | `json.RawMessage` | Opsional |
-| `pinWebViewUrl` | `string` | Opsional |
-| `redirectToDeeplink` | `string` | Opsional |
-| `redirectUrl` | `string` | Opsional |
-| `userInfo` | `*BindingUserInfo` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `accountToken` | `string` | <span class="badge-optional">Opsional</span> |
+| `accessTokenInfo` | `*BindingAccessTokenInfo` | <span class="badge-optional">Opsional</span> |
+| `linkId` | `string` | <span class="badge-optional">Opsional</span> |
+| `nextAction` | `string` | <span class="badge-optional">Opsional</span> |
+| `linkageToken` | `string` | <span class="badge-optional">Opsional</span> |
+| `params` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `pinWebViewUrl` | `string` | <span class="badge-optional">Opsional</span> |
+| `redirectToDeeplink` | `string` | <span class="badge-optional">Opsional</span> |
+| `redirectUrl` | `string` | <span class="badge-optional">Opsional</span> |
+| `userInfo` | `*BindingUserInfo` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="BindingAccessTokenInfo fields" >}}
 Objek `accessTokenInfo` di sisi response. `expiresIn`/`reExpiresIn` di sini adalah string datetime ISO 8601 — beda bentuk dari `Token.ExpiresIn` milik endpoint access-token B2B/B2B2C (durasi hasil parsing dari hitungan detik). Nama field sama, endpoint beda, makna beda.
 
 | Field | Type | Presence |
 |---|---|---|
-| `accessToken` | `string` | Opsional |
-| `expiresIn` | `string` | Opsional |
-| `refreshToken` | `string` | Opsional |
-| `reExpiresIn` | `string` | Opsional |
-| `tokenStatus` | `string` | Opsional |
+| `accessToken` | `string` | <span class="badge-optional">Opsional</span> |
+| `expiresIn` | `string` | <span class="badge-optional">Opsional</span> |
+| `refreshToken` | `string` | <span class="badge-optional">Opsional</span> |
+| `reExpiresIn` | `string` | <span class="badge-optional">Opsional</span> |
+| `tokenStatus` | `string` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 {{< details title="BindingUserInfo fields" >}}
@@ -213,7 +213,7 @@ Objek `userInfo` di sisi response.
 
 | Field | Type | Presence |
 |---|---|---|
-| `publicUserId` | `string` | Opsional |
+| `publicUserId` | `string` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 
@@ -233,8 +233,8 @@ Standarnya tidak mendefinisikan field identifier account untuk panggilan ini; ji
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `AccountBindingInquiryResponse`**
 
@@ -242,17 +242,17 @@ Lebih flat dibanding `AccountBindingResponse` — tidak ada nesting `accessToken
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `referenceNo` | `string` | Opsional |
-| `partnerReferenceNo` | `string` | Opsional |
-| `accountCurrency` | `string` | Opsional |
-| `accountName` | `string` | Opsional |
-| `accountNo` | `string` | Opsional |
-| `accountTransactionLimit` | `json.RawMessage` | Opsional |
-| `endDatePeriod` | `string` | Opsional |
-| `startDatePeriod` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `accountCurrency` | `string` | <span class="badge-optional">Opsional</span> |
+| `accountName` | `string` | <span class="badge-optional">Opsional</span> |
+| `accountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `accountTransactionLimit` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `endDatePeriod` | `string` | <span class="badge-optional">Opsional</span> |
+| `startDatePeriod` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -273,26 +273,26 @@ func AccountUnbinding(ctx context.Context, t *snap.Transport, hb snap.HeaderBuil
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Opsional |
-| `linkId` | `string` | Opsional |
-| `merchantId` | `string` | Wajib |
-| `subMerchantId` | `string` | Opsional |
-| `tokenId` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `linkId` | `string` | <span class="badge-optional">Opsional</span> |
+| `merchantId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `tokenId` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `AccountUnbindingResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `referenceNo` | `string` | Opsional |
-| `partnerReferenceNo` | `string` | Opsional |
-| `merchantId` | `string` | Opsional |
-| `subMerchantId` | `string` | Opsional |
-| `linkId` | `string` | Opsional |
-| `unlinkResult` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `merchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `linkId` | `string` | <span class="badge-optional">Opsional</span> |
+| `unlinkResult` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -313,17 +313,17 @@ func OTP(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req OTPR
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Opsional |
-| `journeyId` | `string` | Wajib |
-| `merchantId` | `string` | Opsional |
-| `subMerchant` | `string` | Opsional |
-| `externalStoreId` | `string` | Opsional |
-| `trxDateTime` | `string` | Opsional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `journeyId` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `merchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `subMerchant` | `string` | <span class="badge-optional">Opsional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Opsional</span> |
+| `trxDateTime` | `string` | <span class="badge-optional">Opsional</span> |
 | `bankCardToken` | `string` | Kondisional |
-| `otpTrxCode` | `string` | Opsional |
-| `otpReasonCode` | `string` | Opsional |
-| `otpReasonMessage` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `otpTrxCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `otpReasonCode` | `string` | <span class="badge-optional">Opsional</span> |
+| `otpReasonMessage` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `OTPResponse`**
 
@@ -331,12 +331,12 @@ func OTP(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req OTPR
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `referenceNo` | `string` | Opsional |
-| `partnerReferenceNo` | `string` | Opsional |
-| `chargeToken` | `string` | Wajib |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `chargeToken` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -357,40 +357,40 @@ Semua field Opsional.
 
 | Field | Type | Presence |
 |---|---|---|
-| `originalPartnerReferenceNo` | `string` | Opsional |
-| `originalReferenceNo` | `string` | Opsional |
-| `action` | `string` | Opsional |
-| `merchantId` | `string` | Opsional |
-| `otp` | `string` | Opsional |
-| `chargeToken` | `string` | Opsional |
-| `type` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `action` | `string` | <span class="badge-optional">Opsional</span> |
+| `merchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `otp` | `string` | <span class="badge-optional">Opsional</span> |
+| `chargeToken` | `string` | <span class="badge-optional">Opsional</span> |
+| `type` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `VerifyOTPResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `originalReferenceNo` | `string` | Opsional |
-| `originalPartnerReferenceNo` | `string` | Opsional |
-| `accountNo` | `string` | Opsional |
-| `bankCardToken` | `string` | Opsional |
-| `cardPan` | `string` | Opsional |
-| `customerId` | `string` | Opsional |
-| `email` | `string` | Opsional |
-| `expiredDatetime` | `string` | Opsional |
-| `expiryDate` | `string` | Opsional |
-| `identificationNo` | `string` | Opsional |
-| `linkageToken` | `string` | Opsional |
-| `phoneNo` | `string` | Opsional |
-| `qParamsURL` | `string` | Opsional |
-| `qParams` | `json.RawMessage` | Opsional |
-| `sendOtpFlag` | `string` | Opsional |
-| `subscribeDatetime` | `string` | Opsional |
-| `tokenExpiryTime` | `string` | Opsional |
-| `transactionTimestamp` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `originalReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `originalPartnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `accountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `bankCardToken` | `string` | <span class="badge-optional">Opsional</span> |
+| `cardPan` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerId` | `string` | <span class="badge-optional">Opsional</span> |
+| `email` | `string` | <span class="badge-optional">Opsional</span> |
+| `expiredDatetime` | `string` | <span class="badge-optional">Opsional</span> |
+| `expiryDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `identificationNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `linkageToken` | `string` | <span class="badge-optional">Opsional</span> |
+| `phoneNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `qParamsURL` | `string` | <span class="badge-optional">Opsional</span> |
+| `qParams` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `sendOtpFlag` | `string` | <span class="badge-optional">Opsional</span> |
+| `subscribeDatetime` | `string` | <span class="badge-optional">Opsional</span> |
+| `tokenExpiryTime` | `string` | <span class="badge-optional">Opsional</span> |
+| `transactionTimestamp` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -411,45 +411,45 @@ func CardRegistration(ctx context.Context, t *snap.Transport, hb snap.HeaderBuil
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Opsional |
-| `accountName` | `string` | Opsional |
-| `cardData` | `json.RawMessage` | Opsional |
-| `bankAccountNo` | `string` | Opsional |
-| `bankCardNo` | `string` | Wajib |
-| `bankCardType` | `string` | Opsional |
-| `dateOfBirth` | `string` | Opsional |
-| `email` | `string` | Opsional |
-| `expiredDatetime` | `string` | Opsional |
-| `expiryDate` | `string` | Opsional |
-| `identificationNo` | `string` | Opsional |
-| `identificationType` | `string` | Opsional |
-| `custIdMerchant` | `string` | Wajib |
-| `isBindAndPay` | `string` | Opsional |
-| `merchantId` | `string` | Opsional |
-| `terminalId` | `string` | Opsional |
-| `journeyId` | `string` | Opsional |
-| `subMerchantId` | `string` | Opsional |
-| `externalStoreId` | `string` | Opsional |
-| `limit` | `json.RawMessage` | Opsional |
-| `merchantLogoUrl` | `string` | Opsional |
-| `phoneNo` | `string` | Opsional |
-| `sendOtpFlag` | `string` | Opsional |
-| `type` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `accountName` | `string` | <span class="badge-optional">Opsional</span> |
+| `cardData` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `bankAccountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `bankCardNo` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `bankCardType` | `string` | <span class="badge-optional">Opsional</span> |
+| `dateOfBirth` | `string` | <span class="badge-optional">Opsional</span> |
+| `email` | `string` | <span class="badge-optional">Opsional</span> |
+| `expiredDatetime` | `string` | <span class="badge-optional">Opsional</span> |
+| `expiryDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `identificationNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `identificationType` | `string` | <span class="badge-optional">Opsional</span> |
+| `custIdMerchant` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `isBindAndPay` | `string` | <span class="badge-optional">Opsional</span> |
+| `merchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `terminalId` | `string` | <span class="badge-optional">Opsional</span> |
+| `journeyId` | `string` | <span class="badge-optional">Opsional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `externalStoreId` | `string` | <span class="badge-optional">Opsional</span> |
+| `limit` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `merchantLogoUrl` | `string` | <span class="badge-optional">Opsional</span> |
+| `phoneNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `sendOtpFlag` | `string` | <span class="badge-optional">Opsional</span> |
+| `type` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `CardRegistrationResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `referenceNo` | `string` | Opsional |
-| `partnerReferenceNo` | `string` | Opsional |
-| `bankCardToken` | `string` | Wajib |
-| `chargeToken` | `string` | Opsional |
-| `randomString` | `string` | Opsional |
-| `tokenExpiryTime` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `bankCardToken` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `chargeToken` | `string` | <span class="badge-optional">Opsional</span> |
+| `randomString` | `string` | <span class="badge-optional">Opsional</span> |
+| `tokenExpiryTime` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -468,17 +468,17 @@ Endpoint ini tidak punya request body bertipe selain parameter panggilan di atas
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `accountList` | `[]CardRegistrationInquiryAccount` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `accountList` | `[]CardRegistrationInquiryAccount` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 {{< details title="CardRegistrationInquiryAccount fields" >}}
 Satu entri di `accountList`, membungkus objek `accountData` di dalamnya.
 
 | Field | Type | Presence |
 |---|---|---|
-| `accountData` | `CardRegistrationInquiryAccountData` | Wajib |
+| `accountData` | `CardRegistrationInquiryAccountData` | <span class="badge-mandatory">Wajib</span> |
 {{< /details >}}
 
 {{< details title="CardRegistrationInquiryAccountData fields" >}}
@@ -486,12 +486,12 @@ Objek `accountData` di dalamnya. `maxLimit` dan `credentialNo` adalah string tam
 
 | Field | Type | Presence |
 |---|---|---|
-| `accountId` | `string` | Opsional |
-| `createdDate` | `string` | Opsional |
-| `credentialNo` | `string` | Opsional |
-| `credentialType` | `string` | Opsional |
-| `maxLimit` | `string` | Opsional |
-| `status` | `string` | Opsional |
+| `accountId` | `string` | <span class="badge-optional">Opsional</span> |
+| `createdDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `credentialNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `credentialType` | `string` | <span class="badge-optional">Opsional</span> |
+| `maxLimit` | `string` | <span class="badge-optional">Opsional</span> |
+| `status` | `string` | <span class="badge-optional">Opsional</span> |
 {{< /details >}}
 
 
@@ -511,23 +511,23 @@ func CardRegistrationSetLimit(ctx context.Context, t *snap.Transport, hb snap.He
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Opsional |
-| `bankAccountNo` | `string` | Opsional |
-| `bankCardNo` | `string` | Opsional |
-| `limit` | `json.RawMessage` | Opsional |
-| `bankCardToken` | `string` | Wajib |
-| `otp` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `bankAccountNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `bankCardNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `limit` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
+| `bankCardToken` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `otp` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `CardRegistrationSetLimitResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `referenceNo` | `string` | Opsional |
-| `partnerReferenceNo` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 
 ---
@@ -548,28 +548,28 @@ func CardRegistrationUnbinding(ctx context.Context, t *snap.Transport, hb snap.H
 
 | Field | Type | Presence |
 |---|---|---|
-| `partnerReferenceNo` | `string` | Opsional |
-| `token` | `string` | Wajib |
-| `bankCardNo` | `string` | Opsional |
-| `type` | `string` | Opsional |
-| `part` | `string` | Opsional |
-| `merchantId` | `string` | Opsional |
-| `subMerchantId` | `string` | Opsional |
-| `terminalId` | `string` | Opsional |
-| `tokenRequestorId` | `string` | Opsional |
-| `journeyId` | `string` | Opsional |
-| `transactionDate` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `token` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `bankCardNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `type` | `string` | <span class="badge-optional">Opsional</span> |
+| `part` | `string` | <span class="badge-optional">Opsional</span> |
+| `merchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `subMerchantId` | `string` | <span class="badge-optional">Opsional</span> |
+| `terminalId` | `string` | <span class="badge-optional">Opsional</span> |
+| `tokenRequestorId` | `string` | <span class="badge-optional">Opsional</span> |
+| `journeyId` | `string` | <span class="badge-optional">Opsional</span> |
+| `transactionDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
 
 **Response &mdash; `CardRegistrationUnbindingResponse`**
 
 | Field | Type | Presence |
 |---|---|---|
-| `responseCode` | `string` | Wajib |
-| `responseMessage` | `string` | Wajib |
-| `referenceNo` | `string` | Opsional |
-| `partnerReferenceNo` | `string` | Opsional |
-| `message` | `string` | Opsional |
-| `customerId` | `string` | Opsional |
-| `unsubscribeDate` | `string` | Opsional |
-| `additionalInfo` | `json.RawMessage` | Opsional |
+| `responseCode` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `responseMessage` | `string` | <span class="badge-mandatory">Wajib</span> |
+| `referenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `partnerReferenceNo` | `string` | <span class="badge-optional">Opsional</span> |
+| `message` | `string` | <span class="badge-optional">Opsional</span> |
+| `customerId` | `string` | <span class="badge-optional">Opsional</span> |
+| `unsubscribeDate` | `string` | <span class="badge-optional">Opsional</span> |
+| `additionalInfo` | `json.RawMessage` | <span class="badge-optional">Opsional</span> |
