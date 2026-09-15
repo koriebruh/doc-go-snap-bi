@@ -37,6 +37,12 @@ samp {
   width: auto;
 }
 
+/* Language/theme switches now live in the navbar (menu.main type=language-switch
+   / theme-toggle); hide the theme's redundant sidebar-footer copy. */
+.hextra-sidebar-container div[class*="sticky"][class*="bottom-0"] {
+  display: none !important;
+}
+
 /* Column dividers: sidebar | content | TOC, and a line above the footer */
 .hextra-sidebar-container {
   border-right: 1px solid #e5e7eb;

@@ -47,6 +47,16 @@ enableInlineShortcodes = true
     weight = 5
     [menu.main.params]
       type = "search"
+  [[menu.main]]
+    name = "Language"
+    weight = 6
+    [menu.main.params]
+      type = "language-switch"
+  [[menu.main]]
+    name = "Theme"
+    weight = 7
+    [menu.main.params]
+      type = "theme-toggle"
 
 [params]
   description = "A Go implementation of Bank Indonesia's SNAP payment standard."
