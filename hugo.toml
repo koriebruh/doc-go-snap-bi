@@ -29,13 +29,17 @@ enableInlineShortcodes = true
     pageRef = "/docs"
     weight = 1
   [[menu.main]]
+    name = "FAQ"
+    pageRef = "/docs/concepts/faq"
+    weight = 2
+  [[menu.main]]
     name = "SNAP v1.0.2 (Sep 2024)"
     url = "/docs/introduction/"
-    weight = 2
+    weight = 3
   [[menu.main]]
     name = "GitHub"
     url = "https://github.com/koriebruh/go-snap-bi"
-    weight = 3
+    weight = 4
     [menu.main.params]
       icon = "github"
 
@@ -46,15 +50,20 @@ enableInlineShortcodes = true
     default = "light"
     displayToggle = true
 
+  [params.page]
+    width = "wide"
+
   [params.navbar]
     displayTitle = true
     displayLogo = true
+    width = "wide"
     [params.navbar.logo]
       path = "images/snap-logo.png"
       width = 28
       height = 28
 
   [params.footer]
+    width = "wide"
     displayCopyright = false
     displayPoweredBy = false
 

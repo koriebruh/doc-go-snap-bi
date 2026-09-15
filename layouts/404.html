@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="{{ .Site.Language.Lang | default "en" }}" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>404 — go-snap-bi</title>
+  </head>
+  <body
+    style='font-family:"Plus Jakarta Sans",system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; height:100vh; margin:0; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; background:linear-gradient(180deg,#ffffff 0%,#f3f4f6 100%); color:#111827;'
+  >
+    <main id="content" style="padding: 2rem;">
+      {{ $isID := eq .Site.Language.Lang "id" }}
+      <img src="{{ "images/snap-logo.png" | relURL }}" alt="SNAP" style="height:56px; margin-bottom:1.5rem;" />
+      <h1 style="font-size:64px; font-weight:800; margin:0; color:#145B91;">404</h1>
+      <h2 style="font-size:20px; font-weight:600; margin:0.5rem 0 1rem;">
+        {{ if $isID }}Halaman tidak ditemukan{{ else }}This page could not be found{{ end }}
+      </h2>
+      <p style="font-size:15px; color:#6B7280; max-width:32rem; margin:0 auto 2rem;">
+        {{ if $isID }}
+          Bagian ini mungkin belum tercakup di dokumentasi, atau tautannya sudah berubah. Coba mulai dari Dokumentasi atau API Reference.
+        {{ else }}
+          This section may not be covered yet in the documentation, or the link has changed. Try starting from the Documentation or API Reference.
+        {{ end }}
+      </p>
+      <div>
+        <a href="{{ (cond $isID "id/docs/" "docs/") | relURL }}" style="display:inline-block; margin:0 0.5rem; padding:0.6rem 1.4rem; border-radius:9999px; background:#145B91; color:#fff; text-decoration:none; font-weight:600;">
+          {{ if $isID }}Dokumentasi{{ else }}Documentation{{ end }}
+        </a>
+        <a href="{{ (cond $isID "id/" "") | relURL }}" style="display:inline-block; margin:0 0.5rem; padding:0.6rem 1.4rem; border-radius:9999px; border:1px solid #d1d5db; color:#111827; text-decoration:none; font-weight:600;">
+          {{ if $isID }}Beranda{{ else }}Home{{ end }}
+        </a>
+      </div>
+    </main>
+  </body>
+</html>
