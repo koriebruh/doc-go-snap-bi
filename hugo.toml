@@ -65,11 +65,11 @@ enableInlineShortcodes = true
     width = "full"
 
   [params.navbar]
-    displayTitle = true
+    displayTitle = false
     displayLogo = true
     width = "full"
     [params.navbar.logo]
-      path = "images/snap-logo.png"
+      path = "images/GO-SNAP.png"
       width = 40
       height = 40
 
