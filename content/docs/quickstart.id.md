@@ -13,6 +13,7 @@ go get github.com/koriebruh/go-snap-bi
 Membutuhkan Go 1.21 atau lebih baru.
 
 {{% steps %}}
+
 ### Dapatkan access token
 
 Setiap panggilan butuh bearer token terlebih dahulu. `TokenManager`
@@ -35,6 +36,7 @@ if err != nil {
 
 Lihat [Authentication](/id/docs/concepts/authentication/) untuk detail
 B2B2C dan caching token.
+
 ### Bangun header yang sudah ditandatangani
 
 `HeaderBuilder` menyusun kumpulan header wajib SNAP — `X-SIGNATURE`,
@@ -59,6 +61,7 @@ hb := snap.HeaderBuilder{
 
 Lihat [Headers & Signing](/id/docs/concepts/headers/) untuk setiap field
 dan apa yang terjadi bila salah satunya tidak diisi.
+
 ### Panggil sebuah endpoint
 
 Setiap package domain memakai bentuk pemanggilan yang sama:
@@ -82,6 +85,7 @@ Anda tidak perlu mengisi `hb.Body` sendiri — fungsi pemanggil
 melakukan marshal terhadap request bertipe itu dan mengaturnya
 sendiri, jadi byte yang sama persis dipakai untuk signing maupun
 request di wire.
+
 ### Tangani notifikasi masuk
 
 Beberapa alur (bulk cash-in, pembayaran QR/MPM, direct debit,

@@ -43,7 +43,7 @@ enableInlineShortcodes = true
   description = "A Go implementation of Bank Indonesia's SNAP payment standard."
 
   [params.theme]
-    default = "system"
+    default = "light"
     displayToggle = true
 
   [params.navbar]

@@ -23,7 +23,7 @@ Implementasi Go untuk standar pembayaran SNAP milik Bank Indonesia&nbsp;<br clas
 <div class="hx:mt-12"></div>
 
 {{< cards cols="2" >}}
-  {{< card link="/id/docs/introduction/" title="SNAP v1.0.2 (Sep 2024)" icon="badge-check" subtitle="Menargetkan dokumen standar SNAP September 2024, mencakup seluruh kategori API Service ASPI." >}}
+  {{< card link="/id/docs/introduction/" title="SNAP v1.0.2 (Sep 2024)" icon="badge-check" tag="terbaru" tagColor="orange" subtitle="Menargetkan dokumen standar SNAP September 2024, mencakup seluruh kategori API Service ASPI." >}}
   {{< card link="/id/docs/concepts/conventions/" title="Satu bentuk per endpoint" icon="shapes" subtitle="Setiap fungsi pemanggil memakai signature yang sama dan aturan HTTP-status-menang yang sama." >}}
   {{< card link="/id/docs/concepts/signing/" title="Signing symmetric & asymmetric" icon="key" subtitle="HMAC-SHA512 atau SHA256withRSA, sesuai kesepakatan dengan partner saat registrasi." >}}
   {{< card link="/id/docs/concepts/webhooks/" title="Verifikasi notifikasi masuk" icon="shield-check" subtitle="ServerVerifier memvalidasi signature pada callback pembayaran sebelum Anda memercayai isinya." >}}

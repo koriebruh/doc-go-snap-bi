@@ -13,6 +13,7 @@ go get github.com/koriebruh/go-snap-bi
 Requires Go 1.21 or later.
 
 {{% steps %}}
+
 ### Get an access token
 
 Every call needs a bearer token first. `TokenManager` fetches and
@@ -34,6 +35,7 @@ if err != nil {
 
 See [Authentication](/docs/concepts/authentication/) for B2B2C and token
 caching details.
+
 ### Build a signed header
 
 `HeaderBuilder` assembles the mandatory SNAP header set —
@@ -58,6 +60,7 @@ hb := snap.HeaderBuilder{
 
 See [Headers & Signing](/docs/concepts/headers/) for every field and what
 happens when one is missing.
+
 ### Call an endpoint
 
 Every domain package uses the same call shape:
@@ -80,6 +83,7 @@ if err != nil {
 You don't set `hb.Body` yourself — the calling function marshals the
 typed request and sets it, so the same bytes are used for both signing
 and the wire request.
+
 ### Handle inbound notifications
 
 Some flows (bulk cash-in, QR/MPM payments, direct debit, BI-FAST,

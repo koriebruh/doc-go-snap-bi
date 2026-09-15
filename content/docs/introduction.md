@@ -6,7 +6,7 @@ description: "A Go implementation of Bank Indonesia's SNAP payment standard"
 
 <div style="text-align: center; padding: 1.5rem 0 0.5rem">
   <img src="/images/snap-logo.png" alt="SNAP — terstandar, terintegrasi" style="height: 72px" />
-  <div style="height: 3px; width: 120px; margin: 1.25rem auto 0; border-radius: 2px; background: linear-gradient(90deg, #145B91 0%, #145B91 45%, #FFFFFF 45%, #FFFFFF 55%, #DC2626 55%, #DC2626 100%)" />
+  <div style="height: 3px; width: 120px; margin: 1.25rem auto 0; border-radius: 2px; background: linear-gradient(90deg, #145B91 0%, #145B91 45%, #FFFFFF 45%, #FFFFFF 55%, #F97316 55%, #F97316 100%)" />
 </div>
 
 **go-snap-bi** is a Go implementation of Bank Indonesia's **SNAP** (Standar

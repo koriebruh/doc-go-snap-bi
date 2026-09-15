@@ -9,6 +9,9 @@
     --primary-hue: 206deg;
     --primary-saturation: 76%;
     --primary-lightness: 32%;
+
+    /* #F97316 — secondary accent, used sparingly against the blue/white base */
+    --accent-orange: #F97316;
   }
 }
 
