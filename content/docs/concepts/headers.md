@@ -97,6 +97,6 @@ A bank-specific deviation is expressed as a small struct embedding
 ## Next
 
 {{< cards >}}
-  {{< card title="Signing" icon="signature" link="/docs/concepts/signing/" subtitle="The symmetric/asymmetric signing formulas `Build()` calls into." >}}
-  {{< card title="Transport" icon="server" link="/docs/concepts/transport/" subtitle="How a built header actually gets sent, and how the response is decoded." >}}
+  {{< card title="Signing" icon="signature" link="../signing/" subtitle="The symmetric/asymmetric signing formulas `Build()` calls into." >}}
+  {{< card title="Transport" icon="server" link="../transport/" subtitle="How a built header actually gets sent, and how the response is decoded." >}}
 {{< /cards >}}

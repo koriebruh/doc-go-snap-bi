@@ -97,6 +97,6 @@ you're only calling read/inquiry endpoints.
 ## Next steps
 
 {{< cards >}}
-  {{< card title="Core conventions" icon="book" link="/docs/concepts/conventions/" subtitle="Field presence, `json.RawMessage`, and the HTTP-status-wins error rule." >}}
-  {{< card title="API Reference" icon="square-terminal" link="/docs/reference/registration/" subtitle="Browse all 79 endpoint bindings by category." >}}
+  {{< card title="Core conventions" icon="book" link="../concepts/conventions/" subtitle="Field presence, `json.RawMessage`, and the HTTP-status-wins error rule." >}}
+  {{< card title="API Reference" icon="square-terminal" link="../reference/registration/" subtitle="Browse all 79 endpoint bindings by category." >}}
 {{< /cards >}}

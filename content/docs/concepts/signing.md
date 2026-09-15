@@ -96,6 +96,6 @@ All are wrapped with `%w`, so match them with `errors.Is`.
 ## Next
 
 {{< cards >}}
-  {{< card title="Authentication" icon="key" link="/docs/concepts/authentication/" subtitle="Using these primitives to fetch and cache a B2B/B2B2C access token." >}}
-  {{< card title="Verifying inbound requests" icon="shield-check" link="/docs/concepts/webhooks/" subtitle="The server-side counterpart: `ServerVerifier` and `KeyStore`." >}}
+  {{< card title="Authentication" icon="key" link="../authentication/" subtitle="Using these primitives to fetch and cache a B2B/B2B2C access token." >}}
+  {{< card title="Verifying inbound requests" icon="shield-check" link="../webhooks/" subtitle="The server-side counterpart: `ServerVerifier` and `KeyStore`." >}}
 {{< /cards >}}

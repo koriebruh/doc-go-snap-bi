@@ -87,6 +87,6 @@ floating-point rounding on money. `Currency` is ISO 4217 (e.g. `"IDR"`).
 ## Next
 
 {{< cards >}}
-  {{< card title="Headers & Signing" icon="key" link="/docs/concepts/headers/" subtitle="How `HeaderBuilder` assembles and signs a request." >}}
-  {{< card title="Errors" icon="triangle-alert" link="/docs/concepts/errors/" subtitle="Response codes, sentinel errors, and the HTTP-status-wins rule in detail." >}}
+  {{< card title="Headers & Signing" icon="key" link="../headers/" subtitle="How `HeaderBuilder` assembles and signs a request." >}}
+  {{< card title="Errors" icon="triangle-alert" link="../errors/" subtitle="Response codes, sentinel errors, and the HTTP-status-wins rule in detail." >}}
 {{< /cards >}}

@@ -92,6 +92,6 @@ sekitar nilai yang berasal dari pemanggil.
 ## Selanjutnya
 
 {{< cards >}}
-  {{< card title="Core Conventions" icon="book" link="/id/docs/concepts/conventions/" subtitle="Di mana ini cocok dalam pola pemanggilan satu-bentuk-per-endpoint." >}}
-  {{< card title="API Reference" icon="square-terminal" link="/id/docs/reference/registration/" subtitle="Lihat catatan idempotency/retry masing-masing endpoint." >}}
+  {{< card title="Core Conventions" icon="book" link="../conventions/" subtitle="Di mana ini cocok dalam pola pemanggilan satu-bentuk-per-endpoint." >}}
+  {{< card title="API Reference" icon="square-terminal" link="../../reference/registration/" subtitle="Lihat catatan idempotency/retry masing-masing endpoint." >}}
 {{< /cards >}}

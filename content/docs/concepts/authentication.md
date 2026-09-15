@@ -97,6 +97,6 @@ Pass `code` as either the OAuth authorization code (for
 ## Next
 
 {{< cards >}}
-  {{< card title="Headers & Signing" icon="key" link="/docs/concepts/headers/" subtitle="Using the token you got here to build a signed transaction request." >}}
-  {{< card title="Registration" icon="id-card" link="/docs/reference/registration/" subtitle="`GetOAuthURL` and `AccountBinding` — the B2B2C onboarding flow." >}}
+  {{< card title="Headers & Signing" icon="key" link="../headers/" subtitle="Using the token you got here to build a signed transaction request." >}}
+  {{< card title="Registration" icon="id-card" link="../../reference/registration/" subtitle="`GetOAuthURL` and `AccountBinding` — the B2B2C onboarding flow." >}}
 {{< /cards >}}

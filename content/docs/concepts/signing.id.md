@@ -102,6 +102,6 @@ Semuanya dibungkus dengan `%w`, jadi cocokkan dengan `errors.Is`.
 ## Selanjutnya
 
 {{< cards >}}
-  {{< card title="Authentication" icon="key" link="/id/docs/concepts/authentication/" subtitle="Memakai primitif-primitif ini untuk mengambil dan meng-cache access token B2B/B2B2C." >}}
-  {{< card title="Verifying inbound requests" icon="shield-check" link="/id/docs/concepts/webhooks/" subtitle="Rekan sisi server: `ServerVerifier` dan `KeyStore`." >}}
+  {{< card title="Authentication" icon="key" link="../authentication/" subtitle="Memakai primitif-primitif ini untuk mengambil dan meng-cache access token B2B/B2B2C." >}}
+  {{< card title="Verifying inbound requests" icon="shield-check" link="../webhooks/" subtitle="Rekan sisi server: `ServerVerifier` dan `KeyStore`." >}}
 {{< /cards >}}

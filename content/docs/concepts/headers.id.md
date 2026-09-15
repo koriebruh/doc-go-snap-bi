@@ -98,6 +98,6 @@ fork dari `HeaderBuilder`.
 ## Selanjutnya
 
 {{< cards >}}
-  {{< card title="Signing" icon="signature" link="/id/docs/concepts/signing/" subtitle="Formula signing symmetric/asymmetric yang dipanggil `Build()`." >}}
-  {{< card title="Transport" icon="server" link="/id/docs/concepts/transport/" subtitle="Bagaimana header yang sudah dibangun benar-benar dikirim, dan bagaimana responsnya didekode." >}}
+  {{< card title="Signing" icon="signature" link="../signing/" subtitle="Formula signing symmetric/asymmetric yang dipanggil `Build()`." >}}
+  {{< card title="Transport" icon="server" link="../transport/" subtitle="Bagaimana header yang sudah dibangun benar-benar dikirim, dan bagaimana responsnya didekode." >}}
 {{< /cards >}}

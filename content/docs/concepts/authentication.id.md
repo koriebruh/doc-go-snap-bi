@@ -99,6 +99,6 @@ sebelumnya (untuk `GrantTypeRefreshToken`).
 ## Selanjutnya
 
 {{< cards >}}
-  {{< card title="Headers & Signing" icon="key" link="/id/docs/concepts/headers/" subtitle="Memakai token yang Anda dapat di sini untuk membangun request transaksi yang ditandatangani." >}}
-  {{< card title="Registration" icon="id-card" link="/id/docs/reference/registration/" subtitle="`GetOAuthURL` dan `AccountBinding` — alur onboarding B2B2C." >}}
+  {{< card title="Headers & Signing" icon="key" link="../headers/" subtitle="Memakai token yang Anda dapat di sini untuk membangun request transaksi yang ditandatangani." >}}
+  {{< card title="Registration" icon="id-card" link="../../reference/registration/" subtitle="`GetOAuthURL` dan `AccountBinding` — alur onboarding B2B2C." >}}
 {{< /cards >}}

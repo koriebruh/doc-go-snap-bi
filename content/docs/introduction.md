@@ -4,8 +4,9 @@ title: "Introduction"
 description: "A Go implementation of Bank Indonesia's SNAP payment standard"
 ---
 
-<div style="text-align: center; padding: 1.5rem 0 0.5rem">
-  <img src="/images/snap-logo.png" alt="SNAP — terstandar, terintegrasi" style="height: 72px" />
+<div style="text-align: center; padding: 1.5rem 0 0.5rem" class="hero-logo-sm">
+
+![SNAP — terstandar, terintegrasi](/images/snap-logo.png)
   <div style="height: 3px; width: 120px; margin: 1.25rem auto 0; border-radius: 2px; background: linear-gradient(90deg, #145B91 0%, #145B91 45%, #FFFFFF 45%, #FFFFFF 55%, #F97316 55%, #F97316 100%)" />
 </div>
 
@@ -23,7 +24,7 @@ assuming a field or endpoint here still matches the latest spec.
 
 <p style="text-align: center; font-size: 0.8rem; color: var(--gray-500, #6B7280)">
   Independent, unofficial implementation of the standard published by Bank
-  Indonesia and [ASPI](https://apidevportal.aspi-indonesia.or.id/api-services) —
+  Indonesia and <a href="https://apidevportal.aspi-indonesia.or.id/api-services">ASPI</a> —
   not affiliated with or endorsed by either.
 </p>
 
@@ -63,6 +64,6 @@ token, so they're infrastructure, not a peer domain.
 ## Where to go next
 
 {{< cards >}}
-  {{< card title="Quickstart" icon="rocket" link="/docs/quickstart/" subtitle="Install the module and make your first signed request." >}}
-  {{< card title="Core conventions" icon="book" link="/docs/concepts/conventions/" subtitle="The one-shape-per-endpoint pattern, field presence, and error handling rules shared by every package." >}}
+  {{< card title="Quickstart" icon="rocket" link="../quickstart/" subtitle="Install the module and make your first signed request." >}}
+  {{< card title="Core conventions" icon="book" link="../concepts/conventions/" subtitle="The one-shape-per-endpoint pattern, field presence, and error handling rules shared by every package." >}}
 {{< /cards >}}

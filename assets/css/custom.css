@@ -26,3 +26,13 @@ kbd,
 samp {
   font-family: "JetBrains Mono", ui-monospace, monospace;
 }
+
+.hero-logo img {
+  height: 84px;
+  width: auto;
+}
+
+.hero-logo-sm img {
+  height: 72px;
+  width: auto;
+}

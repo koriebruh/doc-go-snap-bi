@@ -67,6 +67,6 @@ fallback sebaiknya mengacu ke `StatusCode`, pola yang sama yang dipakai
 ## Selanjutnya
 
 {{< cards >}}
-  {{< card title="Errors" icon="triangle-alert" link="/id/docs/concepts/errors/" subtitle="Mengubah `Envelope` menjadi sukses/gagal yang pasti dan error bertipe." >}}
-  {{< card title="Verifying inbound requests" icon="shield-check" link="/id/docs/concepts/webhooks/" subtitle="Sisi penerima, untuk endpoint di mana pemanggil package ini adalah server." >}}
+  {{< card title="Errors" icon="triangle-alert" link="../errors/" subtitle="Mengubah `Envelope` menjadi sukses/gagal yang pasti dan error bertipe." >}}
+  {{< card title="Verifying inbound requests" icon="shield-check" link="../webhooks/" subtitle="Sisi penerima, untuk endpoint di mana pemanggil package ini adalah server." >}}
 {{< /cards >}}

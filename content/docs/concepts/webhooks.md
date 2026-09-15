@@ -125,6 +125,6 @@ checks.
 ## Next
 
 {{< cards >}}
-  {{< card title="Signing" icon="signature" link="/docs/concepts/signing/" subtitle="The underlying `VerifySymmetric`/`VerifyAsymmetric` primitives." >}}
-  {{< card title="Bulk Cash In" icon="hand-coins" link="/docs/reference/transfer-credit/bulk-cashin/" subtitle="A worked example of an inbound notification type to verify and unmarshal." >}}
+  {{< card title="Signing" icon="signature" link="../signing/" subtitle="The underlying `VerifySymmetric`/`VerifyAsymmetric` primitives." >}}
+  {{< card title="Bulk Cash In" icon="hand-coins" link="../../reference/transfer-credit/bulk-cashin/" subtitle="A worked example of an inbound notification type to verify and unmarshal." >}}
 {{< /cards >}}

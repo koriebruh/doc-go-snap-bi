@@ -100,6 +100,6 @@ ini bila Anda hanya memanggil endpoint read/inquiry.
 ## Langkah berikutnya
 
 {{< cards >}}
-  {{< card title="Konvensi inti" icon="book" link="/id/docs/concepts/conventions/" subtitle="Presence field, `json.RawMessage`, dan aturan error status-HTTP-menang." >}}
-  {{< card title="API Reference" icon="square-terminal" link="/id/docs/reference/registration/" subtitle="Jelajahi seluruh 79 binding endpoint berdasarkan kategori." >}}
+  {{< card title="Konvensi inti" icon="book" link="../concepts/conventions/" subtitle="Presence field, `json.RawMessage`, dan aturan error status-HTTP-menang." >}}
+  {{< card title="API Reference" icon="square-terminal" link="../reference/registration/" subtitle="Jelajahi seluruh 79 binding endpoint berdasarkan kategori." >}}
 {{< /cards >}}

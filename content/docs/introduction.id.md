@@ -4,8 +4,9 @@ title: "Pendahuluan"
 description: "Implementasi Go untuk standar pembayaran SNAP milik Bank Indonesia"
 ---
 
-<div style="text-align: center; padding: 1.5rem 0 0.5rem">
-  <img src="/images/snap-logo.png" alt="SNAP — terstandar, terintegrasi" style="height: 72px" />
+<div style="text-align: center; padding: 1.5rem 0 0.5rem" class="hero-logo-sm">
+
+![SNAP — terstandar, terintegrasi](/images/snap-logo.png)
   <div style="height: 3px; width: 120px; margin: 1.25rem auto 0; border-radius: 2px; background: linear-gradient(90deg, #145B91 0%, #145B91 45%, #FFFFFF 45%, #FFFFFF 55%, #F97316 55%, #F97316 100%)" />
 </div>
 
@@ -25,7 +26,7 @@ dengan spesifikasi terbaru.
 
 <p style="text-align: center; font-size: 0.8rem; color: var(--gray-500, #6B7280)">
   Implementasi independen dan tidak resmi dari standar yang dipublikasikan
-  oleh Bank Indonesia dan [ASPI](https://apidevportal.aspi-indonesia.or.id/api-services) —
+  oleh Bank Indonesia dan <a href="https://apidevportal.aspi-indonesia.or.id/api-services">ASPI</a> —
   tidak berafiliasi dengan atau didukung oleh keduanya.
 </p>
 
@@ -65,6 +66,6 @@ mendapatkan token, jadi sifatnya infrastruktur, bukan domain yang setara.
 ## Langkah selanjutnya
 
 {{< cards >}}
-  {{< card title="Quickstart" icon="rocket" link="/id/docs/quickstart/" subtitle="Install module dan buat signed request pertama Anda." >}}
-  {{< card title="Konvensi inti" icon="book" link="/id/docs/concepts/conventions/" subtitle="Pola satu-bentuk-per-endpoint, presence field, dan aturan penanganan error yang dipakai bersama di setiap package." >}}
+  {{< card title="Quickstart" icon="rocket" link="../quickstart/" subtitle="Install module dan buat signed request pertama Anda." >}}
+  {{< card title="Konvensi inti" icon="book" link="../concepts/conventions/" subtitle="Pola satu-bentuk-per-endpoint, presence field, dan aturan penanganan error yang dipakai bersama di setiap package." >}}
 {{< /cards >}}

@@ -91,6 +91,6 @@ float, untuk menghindari pembulatan floating-point biner pada uang.
 ## Selanjutnya
 
 {{< cards >}}
-  {{< card title="Headers & Signing" icon="key" link="/id/docs/concepts/headers/" subtitle="Bagaimana `HeaderBuilder` menyusun dan menandatangani sebuah request." >}}
-  {{< card title="Errors" icon="triangle-alert" link="/id/docs/concepts/errors/" subtitle="Kode respons, sentinel error, dan aturan status-HTTP-menang secara detail." >}}
+  {{< card title="Headers & Signing" icon="key" link="../headers/" subtitle="Bagaimana `HeaderBuilder` menyusun dan menandatangani sebuah request." >}}
+  {{< card title="Errors" icon="triangle-alert" link="../errors/" subtitle="Kode respons, sentinel error, dan aturan status-HTTP-menang secara detail." >}}
 {{< /cards >}}

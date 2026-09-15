@@ -62,6 +62,6 @@ instead, the same pattern `TokenManager` uses internally.
 ## Next
 
 {{< cards >}}
-  {{< card title="Errors" icon="triangle-alert" link="/docs/concepts/errors/" subtitle="Turning an `Envelope` into a definitive success/failure and a typed error." >}}
-  {{< card title="Verifying inbound requests" icon="shield-check" link="/docs/concepts/webhooks/" subtitle="The receiving side, for endpoints where this package's caller is the server." >}}
+  {{< card title="Errors" icon="triangle-alert" link="../errors/" subtitle="Turning an `Envelope` into a definitive success/failure and a typed error." >}}
+  {{< card title="Verifying inbound requests" icon="shield-check" link="../webhooks/" subtitle="The receiving side, for endpoints where this package's caller is the server." >}}
 {{< /cards >}}

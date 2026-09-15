@@ -127,6 +127,6 @@ bug" versus "request ini dipalsukan atau dimanipulasi," lewat pengecekan
 ## Selanjutnya
 
 {{< cards >}}
-  {{< card title="Signing" icon="signature" link="/id/docs/concepts/signing/" subtitle="Primitif `VerifySymmetric`/`VerifyAsymmetric` yang mendasarinya." >}}
-  {{< card title="Bulk Cash In" icon="hand-coins" link="/id/docs/reference/transfer-credit/bulk-cashin/" subtitle="Contoh nyata sebuah tipe notifikasi masuk untuk diverifikasi dan di-unmarshal." >}}
+  {{< card title="Signing" icon="signature" link="../signing/" subtitle="Primitif `VerifySymmetric`/`VerifyAsymmetric` yang mendasarinya." >}}
+  {{< card title="Bulk Cash In" icon="hand-coins" link="../../reference/transfer-credit/bulk-cashin/" subtitle="Contoh nyata sebuah tipe notifikasi masuk untuk diverifikasi dan di-unmarshal." >}}
 {{< /cards >}}

@@ -88,6 +88,6 @@ error wrapping around a caller-supplied value.
 ## Next
 
 {{< cards >}}
-  {{< card title="Core Conventions" icon="book" link="/docs/concepts/conventions/" subtitle="Where this fits into the one-shape-per-endpoint call pattern." >}}
-  {{< card title="API Reference" icon="square-terminal" link="/docs/reference/registration/" subtitle="See each endpoint's own idempotency/retry notes." >}}
+  {{< card title="Core Conventions" icon="book" link="../conventions/" subtitle="Where this fits into the one-shape-per-endpoint call pattern." >}}
+  {{< card title="API Reference" icon="square-terminal" link="../../reference/registration/" subtitle="See each endpoint's own idempotency/retry notes." >}}
 {{< /cards >}}
