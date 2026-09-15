@@ -1,0 +1,98 @@
+---
+weight: 2
+title: "Quickstart"
+description: "Install go-snap-bi and make your first signed request"
+---
+
+## Install
+
+```bash
+go get github.com/koriebruh/go-snap-bi
+```
+
+Requires Go 1.21 or later.
+
+{{% steps %}}
+### Get an access token
+
+Every call needs a bearer token first. `TokenManager` fetches and
+caches it for you — concurrent callers during a refresh share one
+in-flight request instead of each firing their own.
+
+```go
+tm := &snap.TokenManager{
+	BaseURL:   "https://partner.example.com",
+	ClientKey: clientKey,
+	Signer:    rsaPrivateKey, // crypto.Signer, e.g. from snap.ParseRSAPrivateKeyPEM
+}
+
+accessToken, err := tm.AccessTokenB2B(ctx)
+if err != nil {
+	// handle error
+}
+```
+
+See [Authentication](/docs/concepts/authentication/) for B2B2C and token
+caching details.
+### Build a signed header
+
+`HeaderBuilder` assembles the mandatory SNAP header set —
+`X-SIGNATURE`, `X-TIMESTAMP`, `X-PARTNER-ID`, and the rest — and signs
+the request for you. Pick exactly one of `ClientSecret`
+(symmetric/HMAC) or `Signer` (asymmetric/RSA), matching what you
+agreed with your partner at registration.
+
+```go
+hb := snap.HeaderBuilder{
+	Method:       http.MethodPost,
+	EndpointURL:  "https://partner.example.com/v1.0/balance-inquiry",
+	AccessToken:  accessToken,
+	ClientKey:    clientKey,
+	PartnerID:    partnerID,
+	ExternalID:   externalID,
+	ChannelID:    channelID,
+	Symmetric:    true,
+	ClientSecret: clientSecret,
+}
+```
+
+See [Headers & Signing](/docs/concepts/headers/) for every field and what
+happens when one is missing.
+### Call an endpoint
+
+Every domain package uses the same call shape:
+`func Endpoint(ctx, *snap.Transport, snap.HeaderBuilder, Request) (Response, error)`.
+
+```go
+transport := &snap.Transport{}
+
+resp, err := balanceinfo.BalanceInquiry(ctx, transport, hb, balanceinfo.BalanceInquiryRequest{
+	PartnerReferenceNo: "2020102900000000000001",
+	AccountNo:          "1234567890",
+})
+if err != nil {
+	// errors.Is(err, snap.ErrBadRequest), snap.ErrUnauthorized, etc. —
+	// one sentinel per SNAP response-code HTTP-status class. See
+	// /concepts/errors.
+}
+```
+
+You don't set `hb.Body` yourself — the calling function marshals the
+typed request and sets it, so the same bytes are used for both signing
+and the wire request.
+### Handle inbound notifications
+
+Some flows (bulk cash-in, QR/MPM payments, direct debit, BI-FAST,
+RTGS, SKNBI) deliver their result as an inbound HTTP call to **your**
+service instead of a synchronous response. Verify every inbound
+request with `snap.ServerVerifier` before trusting its body — see
+[Verifying inbound requests](/docs/concepts/webhooks/). Skip this step if
+you're only calling read/inquiry endpoints.
+{{% /steps %}}
+
+## Next steps
+
+{{< cards >}}
+  {{< card title="Core conventions" icon="book" link="/docs/concepts/conventions/" subtitle="Field presence, `json.RawMessage`, and the HTTP-status-wins error rule." >}}
+  {{< card title="API Reference" icon="square-terminal" link="/docs/reference/registration/" subtitle="Browse all 79 endpoint bindings by category." >}}
+{{< /cards >}}

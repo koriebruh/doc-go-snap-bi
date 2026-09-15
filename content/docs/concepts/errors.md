@@ -1,0 +1,93 @@
+---
+weight: 6
+title: "Errors"
+description: "Response codes, sentinel errors, and the HTTP-status-wins rule"
+---
+
+SNAP encodes a response outcome two ways at once: the transport-level HTTP
+status, and a 7-digit `responseCode` embedded in the JSON body. This
+package treats the two as **not equally trustworthy**.
+
+## HTTP status is authoritative
+
+```go
+func CheckResponseStatus(responseCode string, httpStatus int) error
+```
+
+`CheckResponseStatus` is the single authoritative success/failure check
+used by every calling function. A non-2xx HTTP status is **never** treated
+as success, even if `responseCode` itself claims otherwise — for example, a
+stale cached body from a broken proxy. The reverse also holds: a 2xx
+status with a missing or malformed `responseCode` still counts as success,
+since there's nothing else to check it against.
+
+Returns `nil` for success, or one of the sentinel errors below.
+
+## `responseCode` structure
+
+```go
+func ParseResponseCode(code string) (httpStatus int, serviceCode, caseCode string, err error)
+```
+
+Splits a 7-character SNAP `responseCode` into `HTTPStatus(3)` +
+`ServiceCode(2)` + `CaseCode(2)`. Returns a non-nil error for anything not
+exactly 7 digits.
+
+```go
+func ResponseCodeError(code string) error
+```
+
+Parses `code` and returns the sentinel matching its HTTP-status class,
+wrapped with `%w` around the raw code so you can recover it while still
+matching the class via `errors.Is`. An unrecognized class returns
+`ErrUnmappedResponseCode`, wrapped the same way — never `nil`.
+
+## Sentinel errors
+
+One sentinel per HTTP-status class documented in the standard's
+response-code table. Match with `errors.Is`, regardless of the specific
+case code:
+
+| Sentinel | HTTP class |
+|---|---|
+| `ErrBadRequest` | 400 |
+| `ErrUnauthorized` | 401 |
+| `ErrForbidden` | 403 |
+| `ErrNotFound` | 404 |
+| `ErrInternalServerError` | 500 |
+| `ErrServiceUnavailable` | 503 |
+| `ErrTimeout` | 504 |
+| `ErrUnmappedResponseCode` | any other/malformed class |
+
+```go
+resp, err := balanceinfo.BalanceInquiry(ctx, transport, hb, req)
+if err != nil {
+	if errors.Is(err, snap.ErrUnauthorized) {
+		// refresh the access token and retry
+	}
+	if errors.Is(err, snap.ErrTimeout) {
+		// safe to retry only if this call is idempotent — see each
+		// endpoint's reference page for its own idempotency note
+	}
+}
+```
+
+## Untrusted input in error messages
+
+```go
+func TruncateForError(s string) string
+```
+
+Caps an untrusted string before it's interpolated into an error message,
+so a pathologically large input can't produce a proportionally large (and
+typically logged) error string. Exported so domain subpackages' own
+untrusted-input error paths (e.g. `registration.CardRegistrationInquiry`'s
+`custIDMerchant`) can use it too — reach for it if you build your own
+error wrapping around a caller-supplied value.
+
+## Next
+
+{{< cards >}}
+  {{< card title="Core Conventions" icon="book" link="/docs/concepts/conventions/" subtitle="Where this fits into the one-shape-per-endpoint call pattern." >}}
+  {{< card title="API Reference" icon="square-terminal" link="/docs/reference/registration/" subtitle="See each endpoint's own idempotency/retry notes." >}}
+{{< /cards >}}

@@ -1,0 +1,130 @@
+---
+weight: 7
+title: "Verifying Inbound Requests"
+description: "ServerVerifier and KeyStore — validating a signature before trusting an inbound SNAP call"
+---
+
+For endpoints where **this package's caller is the server** — payment
+notifications and callbacks (see each reference page's "Inbound only"
+sections) — use `ServerVerifier` to validate the signature on an incoming
+request before trusting its body. It's the inverse of the client-side
+signing in [`HeaderBuilder`](/docs/concepts/headers/) and
+[`TokenManager`](/docs/concepts/authentication/).
+
+## `KeyStore` — you implement this
+
+```go
+type KeyStore interface {
+	PublicKey(clientKey string) (crypto.PublicKey, error)
+	ClientSecret(clientKey string) (string, error)
+}
+```
+
+Key/secret storage is your application's job (database, vault, whatever
+you use) — this package doesn't own it. One rule: for an unrecognized
+`clientKey`, your implementation **must** return a non-nil error, never a
+zero value with `nil`. A nil error means "lookup succeeded," so returning
+one for an unknown key would surface later as a confusing
+`ErrSignatureMismatch` instead of a clear "unknown client" failure.
+
+## `SignatureMode`
+
+```go
+type SignatureMode int
+
+const (
+	SignatureModeAsymmetric SignatureMode = iota // default zero value; matches HeaderBuilder{}'s default (Symmetric: false)
+	SignatureModeSymmetric                       // matches HeaderBuilder{Symmetric: true}
+)
+```
+
+The transaction-level signing mode agreed with a partner at registration —
+config, not a per-request runtime choice. The zero value is
+`SignatureModeAsymmetric`, mirroring `HeaderBuilder.Symmetric`'s own zero
+value (`false`) for the same partner configuration on the client side.
+
+## `IncomingRequest`
+
+```go
+type IncomingRequest struct {
+	Method      string // HTTP method, e.g. "POST"
+	EndpointURL string // full endpoint URL exactly as used in the signing formula
+	Body        []byte // exact request body bytes as received
+	Timestamp   string // X-TIMESTAMP header value
+	ClientKey   string // X-CLIENT-KEY header value
+	Signature   string // X-SIGNATURE header value
+	AccessToken string // Authorization header's token, without "Bearer "; required for symmetric verification, ignored otherwise
+	ExternalID  string // X-EXTERNAL-ID header value; carried through for your own replay defense, not checked by this package
+}
+```
+
+You extract these fields yourself from whatever HTTP framework you use —
+this package doesn't parse `*http.Request` directly, to stay
+framework-agnostic.
+
+## `ServerVerifier`
+
+```go
+type ServerVerifier struct {
+	KeyStore        KeyStore
+	Mode            SignatureMode // access-token requests are always asymmetric regardless of this
+	TimestampWindow time.Duration // freshness tolerance; zero means DefaultTimestampWindow
+	Profile         Profile       // optional; nil means DefaultProfile{}
+	Now             func() time.Time
+}
+```
+
+```go
+func (v *ServerVerifier) VerifyAccessTokenRequest(req IncomingRequest) error
+func (v *ServerVerifier) VerifyTransactionRequest(req IncomingRequest) error
+```
+
+```go
+verifier := &snap.ServerVerifier{
+	KeyStore: myKeyStore,
+	Mode:     snap.SignatureModeSymmetric,
+}
+
+if err := verifier.VerifyTransactionRequest(snap.IncomingRequest{
+	Method:      r.Method,
+	EndpointURL: fullURL,
+	Body:        bodyBytes,
+	Timestamp:   r.Header.Get("X-TIMESTAMP"),
+	ClientKey:   r.Header.Get("X-CLIENT-KEY"),
+	Signature:   r.Header.Get("X-SIGNATURE"),
+	ExternalID:  r.Header.Get("X-EXTERNAL-ID"),
+}); err != nil {
+	// reject the request — do not unmarshal Body yet
+	return
+}
+
+var notif transfercredit.NotifyBulkCashInRequest
+json.Unmarshal(bodyBytes, &notif)
+```
+
+The standard requires checking that a request's timestamp is fresh, so
+leaving `TimestampWindow` unset doesn't skip that check — it defaults to
+`DefaultTimestampWindow` (5 minutes). To turn freshness checking off on
+purpose, set `TimestampWindow` to `DisableTimestampFreshnessCheck`
+explicitly; the zero value always means "use the default," never
+"disabled."
+
+## Sentinel errors
+
+| Sentinel | Meaning |
+|---|---|
+| `ErrNoKeyStore` | `ServerVerifier.KeyStore` is nil |
+| `ErrEmptyClientSecret` | `KeyStore.ClientSecret` succeeded but returned `""` — a config bug, not a forged request |
+| `ErrSignatureMismatch` | signature failed to verify against an otherwise-successful key lookup, for either signing mode |
+
+`ErrEmptyClientSecret` and `ErrSignatureMismatch` are deliberately
+distinct so you can alert differently on "your `KeyStore` has a bug" versus
+"this request was tampered with or forged," via separate `errors.Is`
+checks.
+
+## Next
+
+{{< cards >}}
+  {{< card title="Signing" icon="signature" link="/docs/concepts/signing/" subtitle="The underlying `VerifySymmetric`/`VerifyAsymmetric` primitives." >}}
+  {{< card title="Bulk Cash In" icon="hand-coins" link="/docs/reference/transfer-credit/bulk-cashin/" subtitle="A worked example of an inbound notification type to verify and unmarshal." >}}
+{{< /cards >}}

@@ -1,0 +1,332 @@
+---
+weight: 1
+title: "Auth Payment"
+description: "Card-style authorize/capture/void/refund flow: hold funds with AuthPayment, then capture, void, or refund; each write has a matching query call."
+---
+
+## Auth Payment
+
+Card-style authorize/capture/void/refund flow: hold funds with AuthPayment, then capture, void, or refund; each write has a matching query call.
+
+```go
+resp, err := transferdebit.AuthPayment(ctx, transport, hb, transferdebit.AuthPaymentRequest{
+	PartnerReferenceNo: "2020102900000000000001",
+	MerchantID: "...",
+	Title: "...",
+})
+if err != nil {
+	// errors.Is(err, snap.ErrBadRequest), snap.ErrUnauthorized, etc.
+}
+```
+
+### `AuthPayment`
+
+AuthPayment calls the SNAP Auth Payment endpoint (Service Code 63, HTTP POST). It places a hold on funds without charging them. Pass `hb` with everything except `Body` already set — `AuthPayment` marshals the request itself and uses those exact bytes for both signing and the wire body.
+
+This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it.
+
+```go
+func AuthPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req AuthPaymentRequest) (AuthPaymentResponse, error)
+```
+
+**Request &mdash; `AuthPaymentRequest`**
+
+AuthPaymentRequest is the request body for Auth Payment. It places a hold on funds — Capture (65) later charges some or all of it, Void (67) releases what wasn't captured.
+
+`items` (a list of purchased goods) has no fixed schema in the standard, so it's typed `json.RawMessage` — the same treatment as `additionalInfo` and every other field the standard leaves genuinely untyped.
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Mandatory |
+| `merchantId` | `string` | Mandatory |
+| `subMerchantId` | `string` | Optional |
+| `amount` | `*snap.Money` | Optional |
+| `feeType` | `string` | Optional |
+| `mcc` | `string` | Optional |
+| `productCode` | `string` | Optional |
+| `title` | `string` | Mandatory |
+| `items` | `json.RawMessage` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+**Response &mdash; `AuthPaymentResponse`**
+
+AuthPaymentResponse is the response body for Auth Payment. `referenceNo` is Conditional — present only on success.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Mandatory |
+| `responseMessage` | `string` | Mandatory |
+| `referenceNo` | `string` | Optional |
+| `partnerReferenceNo` | `string` | Optional |
+| `amount` | `snap.Money` | Mandatory |
+| `paidTime` | `string` | Mandatory |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+
+---
+
+### `AuthPaymentQuery`
+
+AuthPaymentQuery calls the SNAP Payment Query endpoint (Service Code 64, HTTP POST) to check a previous Auth Payment's status. Pass `hb` with everything except `Body` already set — `AuthPaymentQuery` marshals the request itself.
+
+```go
+func AuthPaymentQuery(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req AuthPaymentQueryRequest) (AuthPaymentQueryResponse, error)
+```
+
+**Request &mdash; `AuthPaymentQueryRequest`**
+
+AuthPaymentQueryRequest is the request body for Payment Query. No field is Mandatory — query by whichever reference, merchant, or store ID you have.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originalPartnerReferenceNo` | `string` | Optional |
+| `originalReferenceNo` | `string` | Optional |
+| `merchantId` | `string` | Optional |
+| `subMerchantId` | `string` | Optional |
+| `externalStoreId` | `string` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+**Response &mdash; `AuthPaymentQueryResponse`**
+
+AuthPaymentQueryResponse is the response body for Payment Query. `paidTime` and `latestTransactionStatus` are Mandatory.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Mandatory |
+| `responseMessage` | `string` | Mandatory |
+| `originalPartnerReferenceNo` | `string` | Optional |
+| `originalReferenceNo` | `string` | Optional |
+| `amount` | `*snap.Money` | Optional |
+| `paidTime` | `string` | Mandatory |
+| `latestTransactionStatus` | `string` | Mandatory |
+| `transactionStatusDesc` | `string` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+
+---
+
+### `AuthCapture`
+
+AuthCapture calls the SNAP Capture endpoint (Service Code 65, HTTP POST). Pass `hb` with everything except `Body` already set — `AuthCapture` marshals the request itself.
+
+This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it.
+
+```go
+func AuthCapture(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req AuthCaptureRequest) (AuthCaptureResponse, error)
+```
+
+**Request &mdash; `AuthCaptureRequest`**
+
+AuthCaptureRequest is the request body for Capture. It charges some or all of an amount held by Auth Payment (63) — call it multiple times for partial captures.
+
+`lastCapture` is a string holding `"true"`/`"false"`, not a real boolean — set it to mark the final capture in a partial-capture sequence.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originalReferenceNo` | `string` | Mandatory |
+| `originalPartnerReferenceNo` | `string` | Mandatory |
+| `merchantId` | `string` | Mandatory |
+| `subMerchantId` | `string` | Optional |
+| `partnerCaptureNo` | `string` | Mandatory |
+| `captureAmount` | `*snap.Money` | Optional |
+| `title` | `string` | Mandatory |
+| `lastCapture` | `string` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+**Response &mdash; `AuthCaptureResponse`**
+
+AuthCaptureResponse is the response body for Capture. `captureNo` and `captureTime` are Conditional — present only on success.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Mandatory |
+| `responseMessage` | `string` | Mandatory |
+| `originalReferenceNo` | `string` | Optional |
+| `originalPartnerReferenceNo` | `string` | Optional |
+| `partnerCaptureNo` | `string` | Optional |
+| `captureNo` | `string` | Optional |
+| `captureAmount` | `snap.Money` | Mandatory |
+| `captureTime` | `string` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+
+---
+
+### `AuthCaptureQuery`
+
+AuthCaptureQuery calls the SNAP Capture Query endpoint (Service Code 66, HTTP POST) to check a previous Capture's status. Pass `hb` with everything except `Body` already set — `AuthCaptureQuery` marshals the request itself.
+
+```go
+func AuthCaptureQuery(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req AuthCaptureQueryRequest) (AuthCaptureQueryResponse, error)
+```
+
+**Request &mdash; `AuthCaptureQueryRequest`**
+
+AuthCaptureQueryRequest is the request body for Capture Query (Service Code 66). `originalReferenceNo`, `merchantId`, and `partnerCaptureNo` are Mandatory.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originalReferenceNo` | `string` | Mandatory |
+| `originalPartnerReferenceNo` | `string` | Optional |
+| `merchantId` | `string` | Mandatory |
+| `subMerchantId` | `string` | Optional |
+| `captureNo` | `string` | Optional |
+| `partnerCaptureNo` | `string` | Mandatory |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+**Response &mdash; `AuthCaptureQueryResponse`**
+
+AuthCaptureQueryResponse is the response body for Capture Query. `captureAmount` and `partnerCaptureNo` are Mandatory here — unlike Capture's own response, where `partnerCaptureNo` is Optional. `latestCaptureStatus` is one of `INIT`, `SUCCESS`, or `FAILED`.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Mandatory |
+| `responseMessage` | `string` | Mandatory |
+| `originalReferenceNo` | `string` | Optional |
+| `originalPartnerReferenceNo` | `string` | Optional |
+| `captureNo` | `string` | Optional |
+| `captureAmount` | `snap.Money` | Mandatory |
+| `captureTime` | `string` | Optional |
+| `latestCaptureStatus` | `string` | Optional |
+| `partnerCaptureNo` | `string` | Mandatory |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+
+---
+
+### `AuthVoid`
+
+AuthVoid calls the SNAP Void endpoint (Service Code 67, HTTP POST). Pass `hb` with everything except `Body` already set — `AuthVoid` marshals the request itself.
+
+This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it.
+
+```go
+func AuthVoid(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req AuthVoidRequest) (AuthVoidResponse, error)
+```
+
+**Request &mdash; `AuthVoidRequest`**
+
+AuthVoidRequest is the request body for Void. It releases funds a hold from Auth Payment (63) never captured.
+
+`voidRemainingAmount` is a string holding `"true"`/`"false"`, the same convention as Capture's `lastCapture`.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originalReferenceNo` | `string` | Mandatory |
+| `originalPartnerReferenceNo` | `string` | Mandatory |
+| `merchantId` | `string` | Mandatory |
+| `subMerchantId` | `string` | Optional |
+| `voidAmount` | `*snap.Money` | Optional |
+| `partnerVoidNo` | `string` | Mandatory |
+| `voidRemainingAmount` | `string` | Optional |
+| `reason` | `string` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+**Response &mdash; `AuthVoidResponse`**
+
+AuthVoidResponse is the response body for Void. `voidNo` and `voidTime` are Conditional — present only on success.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Mandatory |
+| `responseMessage` | `string` | Mandatory |
+| `originalReferenceNo` | `string` | Optional |
+| `originalPartnerReferenceNo` | `string` | Optional |
+| `voidNo` | `string` | Optional |
+| `partnerVoidNo` | `string` | Mandatory |
+| `voidAmount` | `snap.Money` | Mandatory |
+| `voidTime` | `string` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+
+---
+
+### `AuthVoidQuery`
+
+AuthVoidQuery calls the SNAP Void Query endpoint (Service Code 68, HTTP POST) to check a previous Void's status. Pass `hb` with everything except `Body` already set — `AuthVoidQuery` marshals the request itself.
+
+```go
+func AuthVoidQuery(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req AuthVoidQueryRequest) (AuthVoidQueryResponse, error)
+```
+
+**Request &mdash; `AuthVoidQueryRequest`**
+
+AuthVoidQueryRequest is the request body for Void Query. `originalReferenceNo`, `merchantId`, and `partnerVoidNo` are Mandatory.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originalReferenceNo` | `string` | Mandatory |
+| `originalPartnerReferenceNo` | `string` | Optional |
+| `merchantId` | `string` | Mandatory |
+| `subMerchantId` | `string` | Optional |
+| `voidNo` | `string` | Optional |
+| `partnerVoidNo` | `string` | Mandatory |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+**Response &mdash; `AuthVoidQueryResponse`**
+
+AuthVoidQueryResponse is the response body for Void Query. `voidAmount` is Mandatory; `partnerVoidNo` is Optional here — unlike Void's own response, where it's Mandatory. `latestVoidStatus` is one of `INIT`, `SUCCESS`, or `FAILED`.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Mandatory |
+| `responseMessage` | `string` | Mandatory |
+| `originalReferenceNo` | `string` | Optional |
+| `originalPartnerReferenceNo` | `string` | Optional |
+| `voidNo` | `string` | Optional |
+| `voidAmount` | `snap.Money` | Mandatory |
+| `voidTime` | `string` | Optional |
+| `latestVoidStatus` | `string` | Optional |
+| `partnerVoidNo` | `string` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+
+---
+
+### `AuthRefund`
+
+AuthRefund calls the SNAP Refund endpoint (Service Code 69, HTTP POST). Pass `hb` with everything except `Body` already set — `AuthRefund` marshals the request itself.
+
+This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it.
+
+```go
+func AuthRefund(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req AuthRefundRequest) (AuthRefundResponse, error)
+```
+
+**Request &mdash; `AuthRefundRequest`**
+
+AuthRefundRequest is the request body for Refund. It reverses an amount already captured by Auth Capture (65).
+
+`originalCaptureNo` is Conditional — unlike most Conditional fields in this package, it's required when the *original* transaction failed, not when it succeeded.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originalPartnerReferenceNo` | `string` | Mandatory |
+| `originalReferenceNo` | `string` | Optional |
+| `partnerRefundNo` | `string` | Mandatory |
+| `merchantId` | `string` | Optional |
+| `subMerchantId` | `string` | Optional |
+| `originalCaptureNo` | `string` | Optional |
+| `refundAmount` | `*snap.Money` | Optional |
+| `externalStoreId` | `string` | Optional |
+| `reason` | `string` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+**Response &mdash; `AuthRefundResponse`**
+
+AuthRefundResponse is the response body for Refund. `refundNo` and `refundTime` are Mandatory; `partnerRefundNo` is Optional.
+
+`originalCaptureNo` and `originalReferenceNo` are both Conditional but on opposite triggers: `originalCaptureNo` appears when the transaction failed, `originalReferenceNo` when it succeeded.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Mandatory |
+| `responseMessage` | `string` | Mandatory |
+| `originalCaptureNo` | `string` | Optional |
+| `originalReferenceNo` | `string` | Optional |
+| `originalPartnerReferenceNo` | `string` | Optional |
+| `partnerRefundNo` | `string` | Optional |
+| `refundNo` | `string` | Mandatory |
+| `refundAmount` | `*snap.Money` | Optional |
+| `refundTime` | `string` | Mandatory |
+| `additionalInfo` | `json.RawMessage` | Optional |

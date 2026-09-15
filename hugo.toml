@@ -1,0 +1,73 @@
+baseURL = "https://koriebruh.github.io/doc-go-snap-bi/"
+title = "go-snap-bi"
+theme = "github.com/imfing/hextra"
+defaultContentLanguage = "en"
+enableRobotsTXT = true
+enableInlineShortcodes = true
+
+[markup]
+  [markup.highlight]
+    noClasses = false
+  [markup.goldmark.renderer]
+    unsafe = true
+
+[module]
+  [[module.imports]]
+    path = "github.com/imfing/hextra"
+
+[languages]
+  [languages.en]
+    label = "English"
+    weight = 1
+  [languages.id]
+    label = "Bahasa Indonesia"
+    weight = 2
+
+[menu]
+  [[menu.main]]
+    name = "Documentation"
+    pageRef = "/docs"
+    weight = 1
+  [[menu.main]]
+    name = "SNAP v1.0.2 (Sep 2024)"
+    url = "/docs/introduction/"
+    weight = 2
+  [[menu.main]]
+    name = "GitHub"
+    url = "https://github.com/koriebruh/go-snap-bi"
+    weight = 3
+    [menu.main.params]
+      icon = "github"
+
+[params]
+  description = "A Go implementation of Bank Indonesia's SNAP payment standard."
+
+  [params.theme]
+    default = "system"
+    displayToggle = true
+
+  [params.navbar]
+    displayTitle = true
+    displayLogo = true
+    [params.navbar.logo]
+      path = "images/snap-logo.png"
+      link = "/"
+      width = 28
+      height = 28
+
+  [params.footer]
+    displayCopyright = true
+    displayPoweredBy = false
+
+  [params.search]
+    enable = true
+    type = "flexsearch"
+    [params.search.flexsearch]
+      index = "content"
+      tokenize = "forward"
+
+  [params.editURL]
+    enable = false
+
+  [params.toc]
+    enable = true

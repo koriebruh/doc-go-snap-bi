@@ -1,0 +1,367 @@
+---
+weight: 8
+title: "QR / MPM"
+description: "Merchant-Presented-Mode QR: generate, decode, pay host-to-host, query, cancel, and refund — plus the One-Time-Token flow used by ApplyOTT."
+---
+
+## QR / MPM
+
+Merchant-Presented-Mode QR: generate, decode, pay host-to-host, query, cancel, and refund — plus the One-Time-Token flow used by ApplyOTT.
+
+```go
+resp, err := transfercredit.GenerateQRMPM(ctx, transport, hb, transfercredit.GenerateQRMPMRequest{
+	PartnerReferenceNo: "2020102900000000000001",
+	Amount: &snap.Money{Value: "500000.00", Currency: "IDR"},
+	FeeAmount: &snap.Money{Value: "500000.00", Currency: "IDR"},
+})
+if err != nil {
+	// errors.Is(err, snap.ErrBadRequest), snap.ErrUnauthorized, etc.
+}
+```
+
+### `GenerateQRMPM`
+
+GenerateQRMPM calls the SNAP Generate QR MPM endpoint (Service Code 47, path .../{version}/qr/qr-mpm-generate, HTTP POST — no method override). hb must already carry every field snap.HeaderBuilder needs except Body, which GenerateQRMPM sets itself so the exact marshaled bytes are used for both signing and the wire body.
+
+This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it.
+
+```go
+func GenerateQRMPM(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req GenerateQRMPMRequest) (GenerateQRMPMResponse, error)
+```
+
+**Request &mdash; `GenerateQRMPMRequest`**
+
+GenerateQRMPMRequest is the request body for API Generate QR MPM (Service Code 47). Every field is Optional per the Guides tab — no field in this request is documented Mandatory.
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Optional |
+| `amount` | `*snap.Money` | Optional |
+| `feeAmount` | `*snap.Money` | Optional |
+| `merchantId` | `string` | Optional |
+| `subMerchantId` | `string` | Optional |
+| `storeId` | `string` | Optional |
+| `terminalId` | `string` | Optional |
+| `validityPeriod` | `string` | Optional |
+
+**Response &mdash; `GenerateQRMPMResponse`**
+
+GenerateQRMPMResponse is the response body for API Generate QR MPM.
+
+QRContent, QRURL, and QRImage form a one-of-three condition the type system cannot express: per the Guides tab, "if [qrContent is] null, qrUrl or qrImage must be filled." All three are Optional here; callers must check which of the three came back non-empty.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Mandatory |
+| `responseMessage` | `string` | Mandatory |
+| `qrContent` | `string` | Optional |
+| `qrUrl` | `string` | Optional |
+| `redirectUrl` | `string` | Optional |
+| `merchantName` | `string` | Optional |
+| `storeId` | `string` | Optional |
+| `terminalId` | `string` | Optional |
+
+
+---
+
+### `ApplyOTT`
+
+ApplyOTT calls the SNAP Payment Redirect - Apply OTT endpoint (Service Code 49, path .../{version}/qr/apply-ott, HTTP POST — no method override). hb must already carry every field snap.HeaderBuilder needs except Body, which ApplyOTT sets itself so the exact marshaled bytes are used for both signing and the wire body.
+
+This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it.
+
+```go
+func ApplyOTT(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req ApplyOTTRequest) (ApplyOTTResponse, error)
+```
+
+This endpoint takes no typed request body beyond the call parameters shown above.
+
+**Response &mdash; `ApplyOTTResponse`**
+
+ApplyOTTResponse is the response body for API Payment Redirect - Apply OTT.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Mandatory |
+| `responseMessage` | `string` | Mandatory |
+| `userResources` | `[]ApplyOTTUserResource` | Mandatory |
+
+{{< details title="ApplyOTTUserResource fields" >}}
+ApplyOTTUserResource is one entry in an ApplyOTTResponse's userResources array. Despite sharing a field name with the request, this is a distinct shape (an object, not a bare string).
+
+| Field | Type | Presence |
+|---|---|---|
+| `resourceType` | `string` | Mandatory |
+| `value` | `string` | Mandatory |
+{{< /details >}}
+
+
+---
+
+### `DecodeQRMPM`
+
+DecodeQRMPM calls the SNAP Decode QR MPM endpoint (Service Code 48, path .../{version}/qr/qr-mpm-decode, HTTP POST — no method override). hb must already carry every field snap.HeaderBuilder needs except Body, which DecodeQRMPM sets itself so the exact marshaled bytes are used for both signing and the wire body.
+
+This is a read-only decode; unlike GenerateQRMPM it carries no non-idempotency note.
+
+```go
+func DecodeQRMPM(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req DecodeQRMPMRequest) (DecodeQRMPMResponse, error)
+```
+
+**Request &mdash; `DecodeQRMPMRequest`**
+
+DecodeQRMPMRequest is the request body for API Decode QR MPM (Service Code 48). QRContent and ScanTime are Mandatory per the Guides tab.
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Optional |
+| `qrContent` | `string` | Mandatory |
+| `amount` | `*snap.Money` | Optional |
+| `merchantId` | `string` | Optional |
+| `subMerchantId` | `string` | Optional |
+| `scanTime` | `string` | Mandatory |
+
+**Response &mdash; `DecodeQRMPMResponse`**
+
+DecodeQRMPMResponse is the response body for API Decode QR MPM.
+
+ReferenceNo and RedirectURL are both modeled Optional — the standard's own conditions for when each is required are contradictory, so neither is asserted here.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Mandatory |
+| `responseMessage` | `string` | Mandatory |
+| `referenceNo` | `string` | Optional |
+| `redirectUrl` | `string` | Optional |
+| `merchantName` | `string` | Optional |
+| `merchantCategory` | `string` | Optional |
+| `merchantLocation` | `string` | Optional |
+| `merchantInfos` | `[]MPMMerchantInfo` | Mandatory |
+| `transactionAmount` | `*snap.Money` | Optional |
+| `feeAmount` | `*snap.Money` | Optional |
+
+{{< details title="MPMMerchantInfo fields" >}}
+MPMMerchantInfo is one entry in a DecodeQRMPMResponse's merchantInfos array.
+
+MerchantPAN is documented as numeric but sent quoted as a string on the wire — an ambiguous shape, so it's typed `json.RawMessage` rather than `string` or a numeric type.
+
+| Field | Type | Presence |
+|---|---|---|
+| `merchantPAN` | `json.RawMessage` | Mandatory |
+| `acquirerName` | `string` | Mandatory |
+{{< /details >}}
+
+
+---
+
+### `QRMPMPaymentH2H`
+
+QRMPMPaymentH2H calls the SNAP Payment - Host to Host endpoint (Service Code 50, path .../{version}/qr/qr-mpm-payment, HTTP POST — no method override). hb must already carry every field snap.HeaderBuilder needs except Body, which QRMPMPaymentH2H sets itself so the exact marshaled bytes are used for both signing and the wire body.
+
+This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it.
+
+```go
+func QRMPMPaymentH2H(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req QRMPMPaymentH2HRequest) (QRMPMPaymentH2HResponse, error)
+```
+
+**Request &mdash; `QRMPMPaymentH2HRequest`**
+
+QRMPMPaymentH2HRequest is the request body for API Payment - Host to Host (Service Code 50). PartnerReferenceNo is Mandatory; every other field is Optional per the Guides tab.
+
+VerificationID also appears on the response under the same name with a different documented max length — both are plain `string` in Go, this package doesn't enforce length limits.
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Mandatory |
+| `merchantId` | `string` | Optional |
+| `subMerchantId` | `string` | Optional |
+| `amount` | `*snap.Money` | Optional |
+| `feeAmount` | `*snap.Money` | Optional |
+| `otp` | `string` | Optional |
+| `verificationId` | `string` | Optional |
+
+**Response &mdash; `QRMPMPaymentH2HResponse`**
+
+QRMPMPaymentH2HResponse is the response body for API Payment - Host to Host.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Mandatory |
+| `responseMessage` | `string` | Mandatory |
+| `referenceNo` | `string` | Optional |
+| `transactionDate` | `string` | Optional |
+| `verificationId` | `string` | Optional |
+
+
+---
+
+### `QR MPM Payment Notification`
+
+{{< callout type="info" >}}
+Inbound only &mdash; this package does not call an endpoint for this. A partner/switcher POSTs it to **your** callback URL; unmarshal the body into `QRMPMPaymentNotificationRequest` after verifying it with `snap.ServerVerifier` (see [Verifying inbound requests](/docs/concepts/webhooks/)), then reply with the shape below.
+{{< /callout >}}
+
+**Received &mdash; `QRMPMPaymentNotificationRequest`**
+
+QRMPMPaymentNotificationRequest is the request body for API Payment Notification (Service Code 52, path .../{version}/qr/qr-mpm-notify). This is a settlement callback the PJP receives, not a call this package makes — wire your own HTTP handler for this path, authenticate the request with `ServerVerifier.VerifyTransactionRequest`, then `json.Unmarshal` the body into this type. OriginalReferenceNo and LatestTransactionStatus are Mandatory; every other field is Optional.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originalReferenceNo` | `string` | Mandatory |
+| `originalPartnerReferenceNo` | `string` | Optional |
+| `latestTransactionStatus` | `string` | Mandatory |
+| `customerNumber` | `string` | Optional |
+| `accountType` | `string` | Optional |
+| `destinationNumber` | `string` | Optional |
+| `destinationAccountName` | `string` | Optional |
+| `amount` | `*snap.Money` | Optional |
+| `sessionId` | `string` | Optional |
+| `bankCode` | `string` | Optional |
+| `externalStoreId` | `string` | Optional |
+
+**Your handler replies with &mdash; `QRMPMPaymentNotificationResponse`**
+
+QRMPMPaymentNotificationResponse is the response body your handler sends back — no fields beyond the standard `responseCode`/`responseMessage` envelope.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Mandatory |
+| `responseMessage` | `string` | Mandatory |
+
+
+---
+
+### `QRMPMQueryPayment`
+
+QRMPMQueryPayment calls the SNAP Query Payment endpoint (Service Code 51, path .../{version}/qr/qr-mpm-query, HTTP POST — no method override). hb must already carry every field snap.HeaderBuilder needs except Body, which QRMPMQueryPayment sets itself so the exact marshaled bytes are used for both signing and the wire body.
+
+This is a read-only status query; unlike the package's mutating calls it carries no non-idempotency note, matching TransactionStatusInquiryBank's precedent.
+
+```go
+func QRMPMQueryPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req QRMPMQueryPaymentRequest) (QRMPMQueryPaymentResponse, error)
+```
+
+**Request &mdash; `QRMPMQueryPaymentRequest`**
+
+QRMPMQueryPaymentRequest is the request body for API Query Payment (Service Code 51) — the same base fields as [`TransactionStatusInquiryBankRequest`](/docs/reference/transfer-credit/transaction-status/), plus MerchantID, SubMerchantID, and ExternalStoreID. ServiceCode is the only Mandatory field.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originalPartnerReferenceNo` | `string` | Optional |
+| `originalReferenceNo` | `string` | Optional |
+| `originalExternalId` | `string` | Optional |
+| `serviceCode` | `string` | Mandatory |
+| `transactionDate` | `string` | Optional |
+| `amount` | `*snap.Money` | Optional |
+| `merchantId` | `string` | Optional |
+| `subMerchantId` | `string` | Optional |
+| `externalStoreId` | `string` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+
+**Response &mdash; `QRMPMQueryPaymentResponse`**
+
+QRMPMQueryPaymentResponse is the response body for API Query Payment — the same fields as [`TransactionStatusInquiryBankResponse`](/docs/reference/transfer-credit/transaction-status/), plus PaidTime and TerminalID.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Mandatory |
+| `responseMessage` | `string` | Mandatory |
+| `originalPartnerReferenceNo` | `string` | Optional |
+| `originalReferenceNo` | `string` | Optional |
+| `originalExternalId` | `string` | Optional |
+| `serviceCode` | `string` | Optional |
+| `transactionDate` | `string` | Optional |
+| `amount` | `*snap.Money` | Optional |
+| `beneficiaryAccountNo` | `string` | Mandatory |
+| `beneficiaryBankCode` | `string` | Optional |
+| `previousResponseCode` | `string` | Optional |
+| `referenceNumber` | `string` | Mandatory |
+| `sourceAccountNo` | `string` | Mandatory |
+| `transactionId` | `string` | Optional |
+| `latestTransactionStatus` | `string` | Mandatory |
+| `transactionStatusDesc` | `string` | Optional |
+| `additionalInfo` | `json.RawMessage` | Optional |
+| `paidTime` | `string` | Optional |
+| `terminalId` | `string` | Optional |
+
+
+---
+
+### `QRMPMCancelPayment`
+
+QRMPMCancelPayment calls the SNAP Cancel Payment endpoint (Service Code 77, path .../{version}/qr/qr-mpm-cancel, HTTP POST — no method override). hb must already carry every field snap.HeaderBuilder needs except Body, which QRMPMCancelPayment sets itself so the exact marshaled bytes are used for both signing and the wire body.
+
+This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it.
+
+```go
+func QRMPMCancelPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req QRMPMCancelPaymentRequest) (QRMPMCancelPaymentResponse, error)
+```
+
+**Request &mdash; `QRMPMCancelPaymentRequest`**
+
+QRMPMCancelPaymentRequest is the request body for API Cancel Payment (Service Code 77). Unlike the package's other originalX-pattern endpoints, this row documents no serviceCode field and all three originalX fields as Optional — MerchantID and Reason are the only Mandatory fields.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originalPartnerReferenceNo` | `string` | Optional |
+| `originalReferenceNo` | `string` | Optional |
+| `originalExternalId` | `string` | Optional |
+| `merchantId` | `string` | Mandatory |
+| `subMerchantId` | `string` | Optional |
+| `externalStoreId` | `string` | Optional |
+| `reason` | `string` | Mandatory |
+| `amount` | `*snap.Money` | Optional |
+
+**Response &mdash; `QRMPMCancelPaymentResponse`**
+
+QRMPMCancelPaymentResponse is the response body for API Cancel Payment. CancelTime is Conditional (modeled Optional, per this package's usual handling — see [Core Conventions](/docs/concepts/conventions/)); TransactionDate is Optional.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Mandatory |
+| `responseMessage` | `string` | Mandatory |
+| `cancelTime` | `string` | Optional |
+| `transactionDate` | `string` | Optional |
+
+
+---
+
+### `QRMPMRefundPayment`
+
+QRMPMRefundPayment calls the SNAP Refund Payment endpoint (Service Code 78, path .../{version}/qr/qr-mpm-refund, HTTP POST — no method override). hb must already carry every field snap.HeaderBuilder needs except Body, which QRMPMRefundPayment sets itself so the exact marshaled bytes are used for both signing and the wire body.
+
+This operation is not idempotent and this package does not retry. Callers that retry a failed or timed-out call should reuse the same X-EXTERNAL-ID, since the server's own duplicate-detection keys on it.
+
+```go
+func QRMPMRefundPayment(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req QRMPMRefundPaymentRequest) (QRMPMRefundPaymentResponse, error)
+```
+
+**Request &mdash; `QRMPMRefundPaymentRequest`**
+
+QRMPMRefundPaymentRequest is the request body for API Refund Payment (Service Code 78). OriginalPartnerReferenceNo and PartnerRefundNo are Mandatory; every other field is Optional per the Guides tab.
+
+| Field | Type | Presence |
+|---|---|---|
+| `merchantId` | `string` | Optional |
+| `subMerchantId` | `string` | Optional |
+| `externalStoreId` | `string` | Optional |
+| `originalPartnerReferenceNo` | `string` | Mandatory |
+| `originalReferenceNo` | `string` | Optional |
+| `originalExternalId` | `string` | Optional |
+| `partnerRefundNo` | `string` | Mandatory |
+| `refundAmount` | `*snap.Money` | Optional |
+| `reason` | `string` | Optional |
+
+**Response &mdash; `QRMPMRefundPaymentResponse`**
+
+QRMPMRefundPaymentResponse is the response body for API Refund Payment. RefundNo and RefundTime are Mandatory; PartnerRefundNo and RefundAmount are Optional (echoed back, not guaranteed).
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Mandatory |
+| `responseMessage` | `string` | Mandatory |
+| `refundNo` | `string` | Mandatory |
+| `partnerRefundNo` | `string` | Optional |
+| `refundAmount` | `*snap.Money` | Optional |
+| `refundTime` | `string` | Mandatory |
+

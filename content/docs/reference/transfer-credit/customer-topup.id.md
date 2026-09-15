@@ -1,0 +1,150 @@
+---
+weight: 4
+title: "Top Up Pelanggan"
+description: "Top-up akun e-money/e-wallet: cek rekening, top-up, dan cek status."
+---
+
+## Top Up Pelanggan
+
+Top-up akun e-money/e-wallet: cek rekening, top-up, dan cek status.
+
+```go
+resp, err := transfercredit.CustomerTopUp(ctx, transport, hb, transfercredit.CustomerTopUpRequest{
+	PartnerReferenceNo: "2020102900000000000001",
+})
+if err != nil {
+	// errors.Is(err, snap.ErrBadRequest), snap.ErrUnauthorized, etc.
+}
+```
+
+### `AccountInquiryCustomerTopUp`
+
+Memanggil endpoint SNAP Account Inquiry - Customer Top Up (Service Code 37, path .../{version}/emoney/account-inquiry). `hb` harus sudah diisi semua field yang dibutuhkan `snap.HeaderBuilder` kecuali `Body` — fungsi ini yang mengisinya sendiri agar byte yang sama persis dipakai untuk signing maupun request di wire.
+
+```go
+func AccountInquiryCustomerTopUp(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req AccountInquiryCustomerTopUpRequest) (AccountInquiryCustomerTopUpResponse, error)
+```
+
+**Request &mdash; `AccountInquiryCustomerTopUpRequest`**
+
+`Amount` satu-satunya field Wajib. `CustomerNumber` Kondisional — wajib diisi kecuali access token B2B2C sudah mengidentifikasi pelanggannya.
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Opsional |
+| `customerNumber` | `string` | Opsional |
+| `amount` | `snap.Money` | Wajib |
+| `transactionDate` | `string` | Opsional |
+
+**Response &mdash; `AccountInquiryCustomerTopUpResponse`**
+
+`customerNumber` dikembalikan dalam bentuk masked (mis. `"XXXXXXXXX1857"`). `customerMonthlyInLimit` bertipe `json.RawMessage` karena standarnya menampilkan nilai ini sebagai angka berkutip — field string biasa tidak bisa mengasumsikan semua issuer mengirimnya dengan format yang sama.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `referenceNo` | `string` | Opsional |
+| `partnerReferenceNo` | `string` | Opsional |
+| `sessionId` | `string` | Opsional |
+| `customerNumber` | `string` | Opsional |
+| `customerName` | `string` | Wajib |
+| `customerMonthlyInLimit` | `json.RawMessage` | Opsional |
+| `minAmount` | `*snap.Money` | Opsional |
+| `maxAmount` | `*snap.Money` | Opsional |
+| `amount` | `*snap.Money` | Opsional |
+| `feeAmount` | `*snap.Money` | Opsional |
+| `feeType` | `string` | Opsional |
+
+
+---
+
+### `CustomerTopUp`
+
+Memanggil endpoint SNAP Customer Top Up (Service Code 38, path .../{version}/emoney/topup). `hb` harus sudah diisi semua field yang dibutuhkan `snap.HeaderBuilder` kecuali `Body` — fungsi ini yang mengisinya sendiri agar byte yang sama persis dipakai untuk signing maupun request di wire.
+
+Tidak idempoten dan tidak di-retry otomatis. Kalau me-retry request yang gagal/timeout, pakai `X-EXTERNAL-ID` yang sama — server mendeteksi duplikat lewat header ini, jadi ID baru berisiko bikin top-up ganda.
+
+```go
+func CustomerTopUp(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req CustomerTopUpRequest) (CustomerTopUpResponse, error)
+```
+
+**Request &mdash; `CustomerTopUpRequest`**
+
+`partnerReferenceNo` satu-satunya field Wajib. `categoryId` bertipe `json.RawMessage` dengan alasan sama seperti `customerMonthlyInLimit` di atas: standarnya menampilkan nilai ini sebagai angka berkutip, bukan string yang pasti.
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Wajib |
+| `customerNumber` | `string` | Opsional |
+| `customerName` | `string` | Opsional |
+| `amount` | `*snap.Money` | Opsional |
+| `feeAmount` | `*snap.Money` | Opsional |
+| `transactionDate` | `string` | Opsional |
+| `sessionId` | `string` | Opsional |
+| `categoryId` | `json.RawMessage` | Opsional |
+| `notes` | `string` | Opsional |
+
+**Response &mdash; `CustomerTopUpResponse`**
+
+`referenceNumber` tidak ada di tabel field standarnya, tapi muncul di contoh resminya, jadi tetap dicantumkan di sini.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `referenceNo` | `string` | Opsional |
+| `partnerReferenceNo` | `string` | Opsional |
+| `sessionId` | `string` | Opsional |
+| `customerNumber` | `string` | Opsional |
+| `amount` | `*snap.Money` | Opsional |
+| `referenceNumber` | `string` | Opsional |
+
+
+---
+
+### `CustomerTopUpInquiryStatus`
+
+Memanggil endpoint SNAP Customer Top Up Inquiry Status (Service Code 39, path .../{version}/emoney/topup-status). `hb` harus sudah diisi semua field yang dibutuhkan `snap.HeaderBuilder` kecuali `Body` — fungsi ini yang mengisinya sendiri agar byte yang sama persis dipakai untuk signing maupun request di wire.
+
+```go
+func CustomerTopUpInquiryStatus(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req CustomerTopUpInquiryStatusRequest) (CustomerTopUpInquiryStatusResponse, error)
+```
+
+**Request &mdash; `CustomerTopUpInquiryStatusRequest`**
+
+Bentuknya sama dengan [`TransactionStatusInquiryBankRequest`](/id/docs/reference/transfer-credit/transaction-status/), hanya beda nama tipe. `serviceCode` satu-satunya field Wajib.
+
+| Field | Type | Presence |
+|---|---|---|
+| `originalPartnerReferenceNo` | `string` | Opsional |
+| `originalReferenceNo` | `string` | Opsional |
+| `originalExternalId` | `string` | Opsional |
+| `serviceCode` | `string` | Wajib |
+| `transactionDate` | `string` | Opsional |
+| `amount` | `*snap.Money` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+**Response &mdash; `CustomerTopUpInquiryStatusResponse`**
+
+Bentuknya sama dengan `TransactionStatusInquiryBankResponse`, hanya beda nama tipe.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `originalPartnerReferenceNo` | `string` | Opsional |
+| `originalReferenceNo` | `string` | Opsional |
+| `originalExternalId` | `string` | Opsional |
+| `serviceCode` | `string` | Opsional |
+| `transactionDate` | `string` | Opsional |
+| `amount` | `*snap.Money` | Opsional |
+| `beneficiaryAccountNo` | `string` | Wajib |
+| `beneficiaryBankCode` | `string` | Opsional |
+| `previousResponseCode` | `string` | Opsional |
+| `referenceNumber` | `string` | Wajib |
+| `sourceAccountNo` | `string` | Wajib |
+| `transactionId` | `string` | Opsional |
+| `latestTransactionStatus` | `string` | Wajib |
+| `transactionStatusDesc` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |

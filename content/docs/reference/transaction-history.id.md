@@ -1,0 +1,228 @@
+---
+weight: 3
+title: "Riwayat Transaksi"
+description: "Riwayat Transaksi — Service Code 12-14 — 3 endpoint"
+---
+
+## Riwayat Transaksi
+
+Pencarian list, detail, dan statement atas transaksi yang sudah settle — package `transactionhistory` (Service Code 12-14).
+
+```go
+resp, err := transactionhistory.TransactionHistoryList(ctx, transport, hb, transactionhistory.TransactionHistoryListRequest{
+	PartnerReferenceNo: "2020102900000000000001",
+	FromDateTime: "2026-09-14T10:00:00+07:00",
+	ToDateTime: "2026-09-14T10:00:00+07:00",
+})
+if err != nil {
+	// errors.Is(err, snap.ErrBadRequest), snap.ErrUnauthorized, etc.
+}
+```
+
+### `TransactionHistoryList`
+
+Menampilkan daftar transaksi lampau dalam rentang tanggal (Service Code 12).
+
+```go
+func TransactionHistoryList(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req TransactionHistoryListRequest) (TransactionHistoryListResponse, error)
+```
+
+**Request &mdash; `TransactionHistoryListRequest`**
+
+`pageSize` dan `pageNumber` bertipe `string`, bukan `int` — standarnya mengirim keduanya sebagai angka berkutip di wire (contoh: `"10"`).
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Opsional |
+| `fromDateTime` | `string` | Opsional |
+| `toDateTime` | `string` | Opsional |
+| `pageSize` | `string` | Opsional |
+| `pageNumber` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+**Response &mdash; `TransactionHistoryListResponse`**
+
+Body response-nya.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `referenceNo` | `string` | Opsional |
+| `partnerReferenceNo` | `string` | Opsional |
+| `detailData` | `[]TransactionDetail` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+{{< details title="TransactionDetail fields" >}}
+Satu entri di `detailData`.
+
+| Field | Type | Presence |
+|---|---|---|
+| `dateTime` | `string` | Opsional |
+| `amount` | `*snap.Money` | Opsional |
+| `remark` | `string` | Opsional |
+| `sourceOfFunds` | `[]SourceOfFund` | Opsional |
+| `status` | `string` | Wajib |
+| `type` | `string` | Wajib |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+{{< /details >}}
+
+{{< details title="SourceOfFund fields" >}}
+Mendeskripsikan satu sumber dana yang dipakai untuk sebuah transaksi. `source` bersifat Wajib; `amount` berupa pointer karena hanya `value`/`currency` miliknya sendiri yang Wajib, bukan objek pembungkusnya.
+
+| Field | Type | Presence |
+|---|---|---|
+| `source` | `string` | Wajib |
+| `amount` | `*snap.Money` | Opsional |
+{{< /details >}}
+
+
+---
+
+### `TransactionHistoryDetail`
+
+Mengambil detail lengkap satu transaksi (Service Code 13).
+
+```go
+func TransactionHistoryDetail(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req TransactionHistoryDetailRequest) (TransactionHistoryDetailResponse, error)
+```
+
+**Request &mdash; `TransactionHistoryDetailRequest`**
+
+| Field | Type | Presence |
+|---|---|---|
+| `originalPartnerReferenceNo` | `string` | Wajib |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+**Response &mdash; `TransactionHistoryDetailResponse`**
+
+`amount` dan `refundAmount` berupa pointer karena objek pembungkusnya sendiri Opsional, meskipun `value`/`currency` milik `Money` Wajib.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `referenceNo` | `string` | Opsional |
+| `partnerReferenceNo` | `string` | Opsional |
+| `amount` | `*snap.Money` | Opsional |
+| `cancelledTime` | `string` | Opsional |
+| `dateTime` | `string` | Wajib |
+| `refundAmount` | `*snap.Money` | Opsional |
+| `remark` | `string` | Opsional |
+| `sourceOfFunds` | `[]SourceOfFund` | Opsional |
+| `status` | `string` | Wajib |
+| `type` | `string` | Wajib |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+{{< details title="SourceOfFund fields" >}}
+Mendeskripsikan satu sumber dana yang dipakai untuk sebuah transaksi. `source` bersifat Wajib; `amount` berupa pointer karena hanya `value`/`currency` miliknya sendiri yang Wajib, bukan objek pembungkusnya.
+
+| Field | Type | Presence |
+|---|---|---|
+| `source` | `string` | Wajib |
+| `amount` | `*snap.Money` | Opsional |
+{{< /details >}}
+
+
+---
+
+### `BankStatement`
+
+Mengambil daftar transaksi bergaya rekening koran (bank statement) lengkap dengan saldo berjalan (Service Code 14).
+
+```go
+func BankStatement(ctx context.Context, t *snap.Transport, hb snap.HeaderBuilder, req BankStatementRequest) (BankStatementResponse, error)
+```
+
+**Request &mdash; `BankStatementRequest`**
+
+`bankCardToken` dan `accountNo` saling eksklusif — isi tepat salah satu. Package ini tidak memaksakan aturan itu; servernya yang melakukan.
+
+| Field | Type | Presence |
+|---|---|---|
+| `partnerReferenceNo` | `string` | Opsional |
+| `bankCardToken` | `string` | Opsional |
+| `accountNo` | `string` | Opsional |
+| `fromDateTime` | `string` | Opsional |
+| `toDateTime` | `string` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+**Response &mdash; `BankStatementResponse`**
+
+Body response-nya.
+
+| Field | Type | Presence |
+|---|---|---|
+| `responseCode` | `string` | Wajib |
+| `responseMessage` | `string` | Wajib |
+| `referenceNo` | `string` | Opsional |
+| `partnerReferenceNo` | `string` | Opsional |
+| `balance` | `[]BankStatementBalance` | Opsional |
+| `totalCreditEntries` | `*BankStatementEntryTotal` | Opsional |
+| `totalDebitEntries` | `*BankStatementEntryTotal` | Opsional |
+| `hasMore` | `string` | Opsional |
+| `lastRecordDateTime` | `string` | Opsional |
+| `detailData` | `[]BankStatementDetail` | Opsional |
+| `additionalInfo` | `json.RawMessage` | Opsional |
+
+{{< details title="BankStatementBalance fields" >}}
+Satu entri di `balance`: saldo berjalan sebelum/sesudah periode statement. Memakai `BankStatementBalanceAmount`, bukan `Money` polos, karena juga membawa `dateTime`.
+
+| Field | Type | Presence |
+|---|---|---|
+| `amount` | `BankStatementBalanceAmount` | Wajib |
+| `startingBalance` | `BankStatementBalanceAmount` | Wajib |
+| `endingBalance` | `BankStatementBalanceAmount` | Wajib |
+{{< /details >}}
+
+{{< details title="BankStatementBalanceAmount fields" >}}
+Bentuk `{value, currency, dateTime}` yang dipakai `BankStatementBalance` — seperti `Money`, ditambah timestamp.
+
+| Field | Type | Presence |
+|---|---|---|
+| `value` | `string` | Wajib |
+| `currency` | `string` | Wajib |
+| `dateTime` | `string` | Wajib |
+{{< /details >}}
+
+{{< details title="BankStatementEntryTotal fields" >}}
+Bentuk yang dipakai bersama oleh `totalCreditEntries` dan `totalDebitEntries`. `numberOfEntries` bertipe `string`, bukan `int` — alasannya sama seperti `pageSize`/`pageNumber` di atas.
+
+| Field | Type | Presence |
+|---|---|---|
+| `numberOfEntries` | `string` | Opsional |
+| `amount` | `snap.Money` | Wajib |
+{{< /details >}}
+
+{{< details title="BankStatementDetail fields" >}}
+Satu entri di `detailData`: satu baris transaksi.
+
+| Field | Type | Presence |
+|---|---|---|
+| `detailBalance` | `*BankStatementDetailBalance` | Opsional |
+| `amount` | `*snap.Money` | Opsional |
+| `originAmount` | `*snap.Money` | Opsional |
+| `transactionDate` | `string` | Wajib |
+| `remark` | `string` | Wajib |
+| `transactionId` | `string` | Opsional |
+| `type` | `string` | Wajib |
+| `transactionDetailStatus` | `string` | Opsional |
+| `detailInfo` | `json.RawMessage` | Opsional |
+{{< /details >}}
+
+{{< details title="BankStatementDetailBalance fields" >}}
+Saldo tepat sebelum (`startAmount`) dan sesudah (`endAmount`) satu transaksi.
+
+| Field | Type | Presence |
+|---|---|---|
+| `startAmount` | `[]BankStatementDetailBalanceEntry` | Opsional |
+| `endAmount` | `[]BankStatementDetailBalanceEntry` | Opsional |
+{{< /details >}}
+
+{{< details title="BankStatementDetailBalanceEntry fields" >}}
+Satu entri di `startAmount`/`endAmount`.
+
+| Field | Type | Presence |
+|---|---|---|
+| `amount` | `*snap.Money` | Opsional |
+{{< /details >}}
