@@ -37,6 +37,46 @@ samp {
   width: auto;
 }
 
+.hero-logo-lg img {
+  height: 140px;
+  width: auto;
+}
+
+.hero-split {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: nowrap;
+  width: 100%;
+  max-width: 100%;
+}
+
+.hero-split-left {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.hero-split-right {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+@media (max-width: 860px) {
+  .hero-split {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-split-left,
+  .hero-split-right {
+    max-width: 100%;
+  }
+}
+
+.hero-split-right pre {
+  margin: 0;
+}
+
 .hero-logo-sm img {
   height: 72px;
   width: auto;

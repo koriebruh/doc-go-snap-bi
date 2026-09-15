@@ -3,23 +3,47 @@ title: "go-snap-bi"
 layout: hextra-home
 ---
 
-<div class="hx:mt-6 hx:mb-6 hx:flex hx:justify-center hero-logo">
+<div class="hero-split">
+<div class="hero-split-left">
 
-![SNAP](/images/snap-logo.png)
+<div class="hero-logo-lg">
+
+![go-snap-bi](/images/GO-SNAP-hero.png)
 
 </div>
-
-{{< hextra/hero-headline >}}
-go-snap-bi
-{{< /hextra/hero-headline >}}
 
 {{< hextra/hero-subtitle >}}
 A Go implementation of Bank Indonesia's SNAP payment standard&nbsp;<br class="hx:sm:block hx:hidden" />79 typed endpoint bindings, zero third-party dependencies
 {{< /hextra/hero-subtitle >}}
 
-<div class="hx:mt-6 hx:mb-6 hx:flex hx:justify-center hx:gap-4">
+<div class="hx:mt-6 hx:mb-6 hx:flex hx:gap-4">
   {{< hextra/hero-button text="Get Started" link="docs/quickstart/" >}}
   {{< hextra/hero-button text="API Reference" link="docs/reference/registration/" >}}
+</div>
+
+</div>
+<div class="hero-split-right">
+
+```go
+tm := &snap.TokenManager{
+	BaseURL:   "https://partner.example.com",
+	ClientKey: clientKey,
+	Signer:    rsaPrivateKey,
+}
+
+resp, err := balanceinfo.BalanceInquiry(
+	ctx, transport, hb,
+	balanceinfo.BalanceInquiryRequest{
+		PartnerReferenceNo: "202010290000001",
+		AccountNo:          "1234567890",
+	},
+)
+if err != nil {
+	// errors.Is(err, snap.ErrUnauthorized), etc.
+}
+```
+
+</div>
 </div>
 
 <div class="hx:mt-12"></div>
