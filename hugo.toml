@@ -33,23 +33,19 @@ enableInlineShortcodes = true
     pageRef = "/docs/concepts/faq"
     weight = 2
   [[menu.main]]
-    name = "SNAP v1.0.2 (Sep 2024)"
-    url = "/docs/introduction/"
-    weight = 3
-  [[menu.main]]
     name = "GitHub"
     url = "https://github.com/koriebruh/go-snap-bi"
-    weight = 4
+    weight = 3
     [menu.main.params]
       icon = "github"
   [[menu.main]]
     name = "Search"
-    weight = 5
+    weight = 4
     [menu.main.params]
       type = "search"
   [[menu.main]]
     name = "Language"
-    weight = 6
+    weight = 5
     [menu.main.params]
       type = "language-switch"
   [[menu.main]]

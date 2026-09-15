@@ -15,6 +15,11 @@
   }
 }
 
+/* Prevent the navbar site title from wrapping onto multiple lines. */
+.hx\:font-extrabold.hx\:select-none {
+  white-space: nowrap;
+}
+
 body,
 .content {
   font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
