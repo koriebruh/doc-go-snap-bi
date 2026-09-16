@@ -148,6 +148,56 @@ body {
   padding-left: calc(0.5rem - 3px) !important;
 }
 
+/* Site footer: link row + bottom row (copyright + social icons) */
+.site-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 1rem;
+}
+
+.site-footer-links a:hover {
+  color: #145b91;
+}
+
+.site-footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.site-footer-copyright {
+  font-size: 0.8125rem;
+  color: #9ca3af;
+}
+
+.site-footer-social {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.site-footer-social a {
+  color: #6b7280;
+  display: inline-flex;
+  align-items: center;
+}
+
+.site-footer-social a:hover {
+  color: #145b91;
+}
+
+:root.dark .site-footer-bottom {
+  border-top-color: #262626;
+}
+
 /* Syntax highlighting: github (light, default) */
 /* Error */ .chroma .err { color:#f6f8fa;background-color:#82071e }
 /* LineLink */ .chroma .lnlinks { outline:none;text-decoration:none;color:inherit }
