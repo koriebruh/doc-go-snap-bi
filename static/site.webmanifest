@@ -1,0 +1,20 @@
+{
+  "name": "go-snap-bi",
+  "short_name": "go-snap-bi",
+  "start_url": "index.html",
+  "icons": [
+    {
+      "src": "android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#145B91",
+  "background_color": "#ffffff",
+  "display": "standalone"
+}
