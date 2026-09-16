@@ -2,6 +2,8 @@
 weight: 5
 title: "FAQ"
 description: "Common questions when integrating go-snap-bi"
+aliases:
+  - /docs/concepts/faq/
 ---
 
   {{< details title="Which signing mode should I use — Symmetric or Asymmetric?" >}}

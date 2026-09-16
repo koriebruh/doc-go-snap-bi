@@ -3,6 +3,8 @@ title: "go-snap-bi"
 layout: hextra-home
 ---
 
+<h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">go-snap-bi</h1>
+
 <div class="hx:mt-6 hx:mb-6 hx:flex hx:justify-center hero-logo-lg">
 
 ![go-snap-bi](/images/GO-SNAP-hero.png)

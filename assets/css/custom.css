@@ -24,11 +24,6 @@ main#content > .hx\:flex.hx\:flex-col.hx\:items-start {
   align-items: center;
 }
 
-/* Prevent the navbar site title from wrapping onto multiple lines. */
-.hx\:font-extrabold.hx\:select-none {
-  white-space: nowrap;
-}
-
 body,
 .content {
   font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
@@ -41,11 +36,6 @@ samp {
   font-family: "JetBrains Mono", ui-monospace, monospace;
 }
 
-.hero-logo img {
-  height: 84px;
-  width: auto;
-}
-
 .hero-logo-lg img {
   height: 140px;
   width: auto;
@@ -56,22 +46,20 @@ samp {
   width: auto;
 }
 
-.hero-logo-sm img {
-  height: 72px;
-  width: auto;
-}
-
 /* Language/theme switches now live in the navbar (menu.main type=language-switch
    / theme-toggle); hide the theme's redundant sidebar-footer copy. */
 .hextra-sidebar-container div[class*="sticky"][class*="bottom-0"] {
   display: none !important;
 }
 
-/* Same duplicate also appears at the very top of the site-wide footer
-   on every page (Hugo's cross-page .Store state for this theme isn't
-   scoped per-page, so it leaks onto pages without a sidebar too). */
+/* The theme also renders the same switches (plus a divider <hr>) at
+   the very top of the site-wide footer, but only on pages with no
+   sidebar (home, tags, categories) — sidebar.html sets
+   enableFooterSwitches for exactly those. Hide both here too. */
 .hextra-footer > div:has(button.hextra-language-switcher),
-.hextra-footer > div:has(button.hextra-theme-toggle) {
+.hextra-footer > div:has(button.hextra-theme-toggle),
+.hextra-footer > div:has(button.hextra-language-switcher) + hr,
+.hextra-footer > div:has(button.hextra-theme-toggle) + hr {
   display: none !important;
 }
 

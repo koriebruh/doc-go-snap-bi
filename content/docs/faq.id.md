@@ -2,6 +2,8 @@
 weight: 5
 title: "FAQ"
 description: "Pertanyaan umum saat mengintegrasikan go-snap-bi"
+aliases:
+  - /docs/concepts/faq/
 ---
 
   {{< details title="Mode signing mana yang harus saya pakai — Symmetric atau Asymmetric?" >}}
