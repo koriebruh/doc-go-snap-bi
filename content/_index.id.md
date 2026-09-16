@@ -3,10 +3,7 @@ title: "go-snap-bi"
 layout: hextra-home
 ---
 
-<div class="hero-split">
-<div class="hero-split-left">
-
-<div class="hero-logo-lg">
+<div class="hx:mt-6 hx:mb-6 hx:flex hx:justify-center hero-logo-lg">
 
 ![go-snap-bi](/images/GO-SNAP-hero.png)
 
@@ -16,34 +13,9 @@ layout: hextra-home
 Implementasi Go untuk standar pembayaran SNAP milik Bank Indonesia&nbsp;<br class="hx:sm:block hx:hidden" />79 binding endpoint bertipe, tanpa dependensi pihak ketiga
 {{< /hextra/hero-subtitle >}}
 
-<div class="hx:mt-6 hx:mb-6 hx:flex hx:gap-4">
+<div class="hx:mt-6 hx:mb-6 hx:flex hx:justify-center hx:gap-4">
   {{< hextra/hero-button text="Mulai" link="docs/quickstart/" >}}
   {{< hextra/hero-button text="API Reference" link="docs/reference/registration/" >}}
-</div>
-
-</div>
-<div class="hero-split-right">
-
-```go
-tm := &snap.TokenManager{
-	BaseURL:   "https://partner.example.com",
-	ClientKey: clientKey,
-	Signer:    rsaPrivateKey,
-}
-
-resp, err := balanceinfo.BalanceInquiry(
-	ctx, transport, hb,
-	balanceinfo.BalanceInquiryRequest{
-		PartnerReferenceNo: "202010290000001",
-		AccountNo:          "1234567890",
-	},
-)
-if err != nil {
-	// errors.Is(err, snap.ErrUnauthorized), dst.
-}
-```
-
-</div>
 </div>
 
 <div class="hx:mt-12"></div>
