@@ -157,6 +157,30 @@ body {
   padding-left: calc(0.5rem - 3px) !important;
 }
 
+/* Doc body h2 section headings: small colored accent bar instead of
+   plain black text, so a long reference page reads as a sequence of
+   distinct sections rather than a wall of uniform headings. */
+.content h2 {
+  margin-top: 2.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.content h2::before {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 0.9em;
+  margin-right: 0.6rem;
+  vertical-align: -0.05em;
+  border-radius: 2px;
+  background: #145b91;
+}
+
+:root.dark .content h2 {
+  border-bottom-color: #262626;
+}
+
 /* Site footer: link row + bottom row (copyright + social icons) */
 .site-footer-links {
   display: flex;

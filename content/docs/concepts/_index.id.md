@@ -15,5 +15,4 @@ sekali, dan setiap halaman referensi endpoint jadi mudah ditebak.
   {{< card link="errors/" title="Errors" icon="triangle-alert" subtitle="Kode respons, sentinel error, dan aturan status-HTTP-menang." >}}
   {{< card link="webhooks/" title="Verifying Inbound Requests" icon="shield-check" subtitle="ServerVerifier dan KeyStore untuk sisi penerima." >}}
   {{< card link="glossary/" title="Glossary" icon="book" subtitle="Istilah SNAP dan domain pembayaran yang dipakai di seluruh dokumentasi ini." >}}
-  {{< card link="faq/" title="FAQ" icon="info" subtitle="Pertanyaan umum saat mengintegrasikan go-snap-bi." >}}
 {{< /cards >}}

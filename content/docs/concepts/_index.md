@@ -15,5 +15,4 @@ and every endpoint reference page becomes predictable.
   {{< card link="errors/" title="Errors" icon="triangle-alert" subtitle="Response codes, sentinel errors, and the HTTP-status-wins rule." >}}
   {{< card link="webhooks/" title="Verifying Inbound Requests" icon="shield-check" subtitle="ServerVerifier and KeyStore for the receiving side." >}}
   {{< card link="glossary/" title="Glossary" icon="book" subtitle="SNAP and payments-domain terms used throughout this documentation." >}}
-  {{< card link="faq/" title="FAQ" icon="info" subtitle="Common questions when integrating go-snap-bi." >}}
 {{< /cards >}}

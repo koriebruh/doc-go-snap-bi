@@ -30,7 +30,7 @@ enableInlineShortcodes = true
     weight = 1
   [[menu.main]]
     name = "FAQ"
-    pageRef = "/docs/concepts/faq"
+    pageRef = "/docs/faq"
     weight = 2
   [[menu.main]]
     name = "GitHub"

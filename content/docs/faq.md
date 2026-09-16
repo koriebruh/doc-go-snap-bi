@@ -1,5 +1,5 @@
 ---
-weight: 9
+weight: 5
 title: "FAQ"
 description: "Common questions when integrating go-snap-bi"
 ---

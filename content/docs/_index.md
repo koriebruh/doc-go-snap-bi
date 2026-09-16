@@ -10,4 +10,5 @@ cascade:
   {{< card link="quickstart/" title="Quickstart" icon="rocket" subtitle="Install the module and make your first signed request." >}}
   {{< card link="concepts/conventions/" title="Concepts" icon="book" subtitle="Field presence, signing, transport, and error-handling rules shared by every package." >}}
   {{< card link="reference/registration/" title="API Reference" icon="square-terminal" subtitle="All 79 endpoint bindings, grouped by ASPI portal category." >}}
+  {{< card link="faq/" title="FAQ" icon="info" subtitle="Common questions when integrating go-snap-bi." >}}
 {{< /cards >}}
