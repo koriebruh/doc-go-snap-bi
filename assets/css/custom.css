@@ -15,6 +15,15 @@
   }
 }
 
+/* Hextra's own hextra-home.html wraps page content in a column flex
+   with align-items:flex-start, so every hero child (logo, subtitle,
+   buttons, cards grid) shrinks to its own content width and sticks to
+   the left edge instead of centering — invisible at narrow dev-server
+   widths, glaring on a real wide monitor (huge dead space on the right). */
+main#content > .hx\:flex.hx\:flex-col.hx\:items-start {
+  align-items: center;
+}
+
 /* Prevent the navbar site title from wrapping onto multiple lines. */
 .hx\:font-extrabold.hx\:select-none {
   white-space: nowrap;
