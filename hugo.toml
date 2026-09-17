@@ -1,5 +1,5 @@
 baseURL = "https://koriebruh.github.io/doc-go-snap-bi/"
-title = "go-snap-bi"
+title = "go-snap-bi — Go SDK for Bank Indonesia SNAP API"
 theme = "github.com/imfing/hextra"
 defaultContentLanguage = "en"
 enableRobotsTXT = true
@@ -21,6 +21,7 @@ enableInlineShortcodes = true
     weight = 1
   [languages.id]
     label = "Bahasa Indonesia"
+    title = "go-snap-bi — SDK Go untuk API SNAP Bank Indonesia"
     weight = 2
 
 [menu]
@@ -55,7 +56,7 @@ enableInlineShortcodes = true
       type = "theme-toggle"
 
 [params]
-  description = "A Go implementation of Bank Indonesia's SNAP payment standard."
+  description = "go-snap-bi is an open-source Go SDK for Bank Indonesia's SNAP (Standar Nasional Open API Pembayaran) payment API — typed, zero-dependency bindings."
 
   [params.theme]
     default = "light"
