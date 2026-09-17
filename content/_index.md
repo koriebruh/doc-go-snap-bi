@@ -21,12 +21,19 @@ A Go implementation of Bank Indonesia's SNAP payment standard&nbsp;<br class="hx
   {{< hextra/hero-button text="API Reference" link="docs/reference/registration/" >}}
 </div>
 
-<p class="hx:mt-6 hx:mb-2 hx:text-center hx:text-sm hx:text-gray-500 hx:max-w-2xl hx:mx-auto">
+<p class="hx:mt-6 hx:mb-4 hx:text-center hx:text-sm hx:text-gray-500 hx:max-w-2xl hx:mx-auto">
 <strong>go-snap-bi</strong> is an open-source Go SDK for Bank Indonesia's <strong>SNAP</strong>
 (Standar Nasional Open API Pembayaran) payment API, for Go developers integrating
-registration, balance, transfer, and authentication endpoints. Install with
-<code>go get github.com/koriebruh/go-snap-bi</code>.
+registration, balance, transfer, and authentication endpoints.
 </p>
+
+<div class="hx:max-w-md hx:mx-auto hx:mb-6">
+
+```bash
+go get github.com/koriebruh/go-snap-bi
+```
+
+</div>
 
 <div class="hx:mt-12"></div>
 
